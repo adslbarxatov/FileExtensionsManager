@@ -47,6 +47,8 @@
 			this.BasesCombo = new System.Windows.Forms.ComboBox();
 			this.AddBase = new System.Windows.Forms.Button();
 			this.GetHelp = new System.Windows.Forms.Button();
+			this.RegExtension = new System.Windows.Forms.Button();
+			this.FindIcon = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.MainTable)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -69,7 +71,7 @@
 			dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
 			dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
 			this.MainTable.DefaultCellStyle = dataGridViewCellStyle1;
-			this.MainTable.GridColor = System.Drawing.SystemColors.ControlText;
+			this.MainTable.GridColor = System.Drawing.Color.Black;
 			this.MainTable.Location = new System.Drawing.Point(12, 43);
 			this.MainTable.MultiSelect = false;
 			this.MainTable.Name = "MainTable";
@@ -79,68 +81,80 @@
 			this.MainTable.RowsDefaultCellStyle = dataGridViewCellStyle2;
 			this.MainTable.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.MainTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.MainTable.Size = new System.Drawing.Size(468, 214);
+			this.MainTable.Size = new System.Drawing.Size(668, 214);
 			this.MainTable.TabIndex = 0;
 			this.MainTable.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MainTable_CellDoubleClick);
 			// 
 			// AddRecord
 			// 
-			this.AddRecord.Location = new System.Drawing.Point(12, 305);
+			this.AddRecord.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+			this.AddRecord.ForeColor = System.Drawing.Color.Black;
+			this.AddRecord.Location = new System.Drawing.Point(212, 305);
 			this.AddRecord.Name = "AddRecord";
 			this.AddRecord.Size = new System.Drawing.Size(130, 25);
 			this.AddRecord.TabIndex = 5;
 			this.AddRecord.Text = "&Добавить";
-			this.AddRecord.UseVisualStyleBackColor = true;
+			this.AddRecord.UseVisualStyleBackColor = false;
 			this.AddRecord.Click += new System.EventHandler(this.AddRecord_Click);
 			// 
 			// DeleteRecord
 			// 
-			this.DeleteRecord.Location = new System.Drawing.Point(148, 305);
+			this.DeleteRecord.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+			this.DeleteRecord.ForeColor = System.Drawing.Color.Black;
+			this.DeleteRecord.Location = new System.Drawing.Point(550, 305);
 			this.DeleteRecord.Name = "DeleteRecord";
 			this.DeleteRecord.Size = new System.Drawing.Size(130, 25);
 			this.DeleteRecord.TabIndex = 6;
 			this.DeleteRecord.Text = "&Удалить";
-			this.DeleteRecord.UseVisualStyleBackColor = true;
+			this.DeleteRecord.UseVisualStyleBackColor = false;
 			this.DeleteRecord.Click += new System.EventHandler(this.DeleteRecord_Click);
 			// 
 			// LoadRegFile
 			// 
-			this.LoadRegFile.Location = new System.Drawing.Point(284, 305);
+			this.LoadRegFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(200)))), ((int)(((byte)(255)))));
+			this.LoadRegFile.ForeColor = System.Drawing.Color.Black;
+			this.LoadRegFile.Location = new System.Drawing.Point(348, 305);
 			this.LoadRegFile.Name = "LoadRegFile";
 			this.LoadRegFile.Size = new System.Drawing.Size(196, 25);
 			this.LoadRegFile.TabIndex = 7;
-			this.LoadRegFile.Text = "&Загрузить из файла реестра";
-			this.LoadRegFile.UseVisualStyleBackColor = true;
+			this.LoadRegFile.Text = "Загрузить из файла &реестра";
+			this.LoadRegFile.UseVisualStyleBackColor = false;
 			this.LoadRegFile.Click += new System.EventHandler(this.LoadRegFile_Click);
 			// 
 			// Apply
 			// 
+			this.Apply.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(200)))), ((int)(((byte)(128)))));
+			this.Apply.ForeColor = System.Drawing.Color.Black;
 			this.Apply.Location = new System.Drawing.Point(12, 336);
 			this.Apply.Name = "Apply";
 			this.Apply.Size = new System.Drawing.Size(130, 25);
 			this.Apply.TabIndex = 2;
 			this.Apply.Text = "&Применить";
-			this.Apply.UseVisualStyleBackColor = true;
+			this.Apply.UseVisualStyleBackColor = false;
 			this.Apply.Click += new System.EventHandler(this.Apply_Click);
 			// 
 			// ApplyAll
 			// 
+			this.ApplyAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+			this.ApplyAll.ForeColor = System.Drawing.Color.Black;
 			this.ApplyAll.Location = new System.Drawing.Point(148, 336);
 			this.ApplyAll.Name = "ApplyAll";
 			this.ApplyAll.Size = new System.Drawing.Size(196, 25);
 			this.ApplyAll.TabIndex = 3;
 			this.ApplyAll.Text = "Применить &все";
-			this.ApplyAll.UseVisualStyleBackColor = true;
+			this.ApplyAll.UseVisualStyleBackColor = false;
 			this.ApplyAll.Click += new System.EventHandler(this.ApplyAll_Click);
 			// 
 			// Exit
 			// 
-			this.Exit.Location = new System.Drawing.Point(350, 336);
+			this.Exit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+			this.Exit.ForeColor = System.Drawing.Color.Black;
+			this.Exit.Location = new System.Drawing.Point(550, 336);
 			this.Exit.Name = "Exit";
 			this.Exit.Size = new System.Drawing.Size(130, 25);
 			this.Exit.TabIndex = 4;
 			this.Exit.Text = "В&ыход";
-			this.Exit.UseVisualStyleBackColor = true;
+			this.Exit.UseVisualStyleBackColor = false;
 			this.Exit.Click += new System.EventHandler(this.Exit_Click);
 			// 
 			// Applied
@@ -172,7 +186,7 @@
 			this.NoAccess.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
 			this.NoAccess.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
 			this.NoAccess.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-			this.NoAccess.Location = new System.Drawing.Point(281, 282);
+			this.NoAccess.Location = new System.Drawing.Point(480, 282);
 			this.NoAccess.Name = "NoAccess";
 			this.NoAccess.Size = new System.Drawing.Size(200, 15);
 			this.NoAccess.TabIndex = 10;
@@ -184,7 +198,7 @@
 			this.PartiallyApplied.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
 			this.PartiallyApplied.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
 			this.PartiallyApplied.ForeColor = System.Drawing.Color.Navy;
-			this.PartiallyApplied.Location = new System.Drawing.Point(281, 262);
+			this.PartiallyApplied.Location = new System.Drawing.Point(480, 262);
 			this.PartiallyApplied.Name = "PartiallyApplied";
 			this.PartiallyApplied.Size = new System.Drawing.Size(200, 15);
 			this.PartiallyApplied.TabIndex = 9;
@@ -237,11 +251,37 @@
 			this.GetHelp.UseVisualStyleBackColor = true;
 			this.GetHelp.Click += new System.EventHandler(this.GetHelp_Click);
 			// 
+			// RegExtension
+			// 
+			this.RegExtension.BackColor = System.Drawing.Color.Lime;
+			this.RegExtension.ForeColor = System.Drawing.Color.Black;
+			this.RegExtension.Location = new System.Drawing.Point(12, 305);
+			this.RegExtension.Name = "RegExtension";
+			this.RegExtension.Size = new System.Drawing.Size(194, 25);
+			this.RegExtension.TabIndex = 13;
+			this.RegExtension.Text = "&Зарегистрировать расширение";
+			this.RegExtension.UseVisualStyleBackColor = false;
+			this.RegExtension.Click += new System.EventHandler(this.RegExtension_Click);
+			// 
+			// FindIcon
+			// 
+			this.FindIcon.BackColor = System.Drawing.Color.Yellow;
+			this.FindIcon.ForeColor = System.Drawing.Color.Black;
+			this.FindIcon.Location = new System.Drawing.Point(350, 336);
+			this.FindIcon.Name = "FindIcon";
+			this.FindIcon.Size = new System.Drawing.Size(194, 25);
+			this.FindIcon.TabIndex = 14;
+			this.FindIcon.Text = "Найти &иконку";
+			this.FindIcon.UseVisualStyleBackColor = false;
+			this.FindIcon.Click += new System.EventHandler(this.FindIcon_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(492, 373);
+			this.ClientSize = new System.Drawing.Size(692, 373);
+			this.Controls.Add(this.FindIcon);
+			this.Controls.Add(this.RegExtension);
 			this.Controls.Add(this.GetHelp);
 			this.Controls.Add(this.AddBase);
 			this.Controls.Add(this.BasesCombo);
@@ -259,7 +299,7 @@
 			this.Controls.Add(this.MainTable);
 			this.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.MinimumSize = new System.Drawing.Size(500, 400);
+			this.MinimumSize = new System.Drawing.Size(700, 400);
 			this.Name = "MainForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Form1";
@@ -289,6 +329,8 @@
 		private System.Windows.Forms.ComboBox BasesCombo;
 		private System.Windows.Forms.Button AddBase;
 		private System.Windows.Forms.Button GetHelp;
+		private System.Windows.Forms.Button RegExtension;
+		private System.Windows.Forms.Button FindIcon;
 
 		}
 	}

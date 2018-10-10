@@ -18,18 +18,20 @@ namespace FileExtensionsManager
 		private string registryFileSplitter = "=";							// Сплиттер параметра и значения в файле реестра
 		private char[] baseFileSplitters = new char[] { '\x1' };			// Сплиттер записей в базе
 
-		private bool changed = true;						// Флаг указывает, что в базу были внесены изменения
-		private List<string> ebp = new List<string> ();		// Список представлений записей в базе
+		private bool changed = true;							// Флаг указывает, что в базу были внесены изменения
+		private List<string> ebp = new List<string> ();			// Список представлений записей в базе
 		private List<RegistryEntryApplicationResults> esp = new List<RegistryEntryApplicationResults> ();
 
-		private FileStream FS = null;						// Файловые дескрипторы
+		private FileStream FS = null;							// Файловые дескрипторы
 		private StreamReader SR = null;
 		private StreamWriter SW = null;
+
+		private const string newBaseFileName = "Новая база";	// Имя файла новой базы реестровых записей
 
 		/// <summary>
 		/// Расширение имени файла базы реестровых записей
 		/// </summary>
-		public const string baseFileExtension = ".reb";
+		public const string BaseFileExtension = ".reb";
 
 		/// <summary>
 		/// Конструктор. Загружает базу реестровых записей
@@ -53,11 +55,6 @@ namespace FileExtensionsManager
 			}
 
 		/// <summary>
-		/// Имя файла новой базы реестровых записей
-		/// </summary>
-		public const string newBaseFileName = "Новая база";
-
-		/// <summary>
 		/// Конструктор. Создаёт пустую базу реестровых записей
 		/// </summary>
 		public RegistryEntriesBaseManager ()
@@ -78,7 +75,7 @@ namespace FileExtensionsManager
 			// Попытка открытия файла
 			try
 				{
-				FS = new FileStream (baseName + baseFileExtension, FileMode.Open);
+				FS = new FileStream (baseName + BaseFileExtension, FileMode.Open);
 				}
 			catch
 				{
@@ -131,7 +128,7 @@ namespace FileExtensionsManager
 			// Попытка открытия базы
 			try
 				{
-				FS = new FileStream (baseName + baseFileExtension, FileMode.Create);	// Перезаписывает недоступный файл при необходимости
+				FS = new FileStream (baseName + BaseFileExtension, FileMode.Create);	// Перезаписывает недоступный файл при необходимости
 				}
 			catch
 				{

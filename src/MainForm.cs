@@ -31,7 +31,7 @@ namespace FileExtensionsManager
 			OFDialog.Filter = "Файлы реестра Windows (*.reg)|*.reg";
 
 			// Инициализация баз реестровых записей
-			string[] files = Directory.GetFiles (Application.StartupPath, "*" + RegistryEntriesBaseManager.baseFileExtension);
+			string[] files = Directory.GetFiles (Application.StartupPath, "*" + RegistryEntriesBaseManager.BaseFileExtension);
 			for (int i = 0; i < files.Length; i++)
 				{
 				RegistryEntriesBaseManager re = new RegistryEntriesBaseManager (Path.GetFileNameWithoutExtension (files[i]));
@@ -70,8 +70,8 @@ namespace FileExtensionsManager
 			Applied.Top = PartiallyApplied.Top = this.Height - 138;
 			NotApplied.Top = NoAccess.Top = this.Height - 118;
 
-			AddRecord.Top = DeleteRecord.Top = LoadRegFile.Top = this.Height - 95;
-			Apply.Top = ApplyAll.Top = Exit.Top = this.Height - 64;
+			AddRecord.Top = DeleteRecord.Top = LoadRegFile.Top = RegExtension.Top = this.Height - 95;
+			Apply.Top = ApplyAll.Top = Exit.Top = FindIcon.Top = this.Height - 64;
 			}
 
 		// Обновление таблицы
@@ -87,9 +87,10 @@ namespace FileExtensionsManager
 				notApplied = 0,
 				noAccess = 0;
 			MainTable.Rows.Clear ();
+
 			for (int i = 0; i < presentation.Count; i++)
 				{
-				MainTable.Rows.Add (/*new DataGridViewRow ()*/);
+				MainTable.Rows.Add ();
 				MainTable.Rows[i].Cells[0].Value = presentation[i];
 				switch (statuses[i])
 					{
@@ -325,8 +326,22 @@ namespace FileExtensionsManager
 
 				"На данный момент программа работает только с записями в ветке реестра HKEY_CLASSES_ROOT и только с типами параметров " +
 				"REG_SZ, REG_DWORD и REG_QWORD",
-				
+
 				ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+
+		// Просмотр иконок
+		private void FindIcon_Click (object sender, System.EventArgs e)
+			{
+			IconsExtractor ie = new IconsExtractor ();
+			}
+
+		// Регистрация расширения
+		private void RegExtension_Click (object sender, System.EventArgs e)
+			{
+			ExtensionRegistrator er = new ExtensionRegistrator (rebm[BasesCombo.SelectedIndex]);
+			if (er.Confirmed)
+				UpdateTable ();
 			}
 		}
 	}

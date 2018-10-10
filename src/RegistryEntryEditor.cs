@@ -48,7 +48,7 @@ namespace FileExtensionsManager
 			KeyType.Items.Add (RegistryValueTypes.REG_SZ.ToString () + " (строковый)");
 			KeyType.Items.Add (RegistryValueTypes.REG_DWORD.ToString () + " (целочисленный, 4 байта)");
 			KeyType.Items.Add (RegistryValueTypes.REG_QWORD.ToString () + " (целочисленный, 8 байт)");
-			if ((int)editedEntry.ValueType <= 2)
+			if ((int)editedEntry.ValueType < KeyType.Items.Count)
 				{
 				KeyType.Text = KeyType.Items[(int)editedEntry.ValueType].ToString ();
 				}
@@ -65,6 +65,7 @@ namespace FileExtensionsManager
 			NameMustBeDeleted.Checked = editedEntry.NameMustBeDeleted;
 
 			// Запуск
+			this.Text = ProgramDescription.AssemblyTitle + " – добавление записи";
 			this.ShowDialog ();
 			}
 

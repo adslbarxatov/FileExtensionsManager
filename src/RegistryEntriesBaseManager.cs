@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace FileExtensionsManager
+namespace RD_AAOW
 	{
 	/// <summary>
 	/// Класс описывает интерфейс базы управляемых реестровых записей
@@ -26,7 +26,7 @@ namespace FileExtensionsManager
 		private StreamReader SR = null;
 		private StreamWriter SW = null;
 
-		private const string newBaseFileName = "Новая база";	// Имя файла новой базы реестровых записей
+		private const string newBaseFileName = "New base";		// Имя файла новой базы реестровых записей
 
 		/// <summary>
 		/// Расширение имени файла базы реестровых записей
@@ -197,8 +197,8 @@ namespace FileExtensionsManager
 						ebp.Add ("[" + entries[i].ValuePath + "]: " + ((entries[i].ValueName == "") ? "@" : entries[i].ValueName) + " = " +
 							entries[i].ValueObject +
 							((entries[i].ValueType != RegistryValueTypes.REG_SZ) ? " (" + entries[i].ValueType.ToString () + ")" : "") +
-							(entries[i].PathMustBeDeleted ? "; удаляемый раздел" : "") +
-							(entries[i].NameMustBeDeleted ? "; удаляемый параметр" : ""));
+							(entries[i].PathMustBeDeleted ? "; -RB-" : "") +
+							(entries[i].NameMustBeDeleted ? "; -RV-" : ""));
 						}
 
 					changed = false;

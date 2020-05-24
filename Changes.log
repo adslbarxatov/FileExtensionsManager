@@ -1,0 +1,13 @@
+﻿File extensions manager changes log
+
+Version 1.4u:
+• Application namespace, icon and development environment have been unified;
+• Localization system has been applied; English localization for user interface has been implemented;
+• Some minor bugs fixed
+
+Version 1.2, 1.3:
+• Added file icons extractor: you can view icons included in EXE, DLL, control panel component or icon file;
+• Added simple interface for file extensions registration
+
+Version 1.1:
+• First application release

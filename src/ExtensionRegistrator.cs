@@ -1,7 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
-namespace FileExtensionsManager
+namespace RD_AAOW
 	{
 	/// <summary>
 	/// Форма обеспечивает добавление расширения файла в реестр
@@ -12,6 +13,7 @@ namespace FileExtensionsManager
 		private RegistryEntriesBaseManager rebm;
 		private string selectedIconFile;
 		private uint selectedIconNumber;
+		private SupportedLanguages al;
 
 		/// <summary>
 		/// Флаг указывает, что изменение записи было подтверждено
@@ -29,35 +31,43 @@ namespace FileExtensionsManager
 		/// Конструктор. Запускает добавление расширения
 		/// </summary>
 		/// <param name="Manager">База записей, в которую необходимо добавить расширение</param>
-		public ExtensionRegistrator (RegistryEntriesBaseManager Manager)
+		/// <param name="InterfaceLanguage">Язык интерфейса</param>
+		public ExtensionRegistrator (RegistryEntriesBaseManager Manager, SupportedLanguages InterfaceLanguage)
 			{
 			// Инициализация
 			InitializeComponent ();
+			al = InterfaceLanguage;
 
-			OFDialog.Title = "Выберите приложение для открытия этого типа файлов";
-			OFDialog.Filter = "Приложения|*.exe";
+			OFDialog.Title = Localization.GetText ("ER_OFDialogText", al);
+			OFDialog.Filter = Localization.GetText ("ER_OFDialogFilter", al);
 
 			// Сохранение параметров
 			rebm = Manager;
 
+			// Настройка контролов
+			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("ER_Title", al);
+
+			Localization.SetControlsText (this, al);
+			Apply.Text = Localization.GetText ("ApplyButton", al);
+			Abort.Text = Localization.GetText ("AbortButton", al);
+
 			// Запуск
-			this.Text = ProgramDescription.AssemblyTitle + " – регистрация расширения";
 			this.ShowDialog ();
 			}
 
 		// Отмена изменений
-		private void Abort_Click (object sender, System.EventArgs e)
+		private void Abort_Click (object sender, EventArgs e)
 			{
 			this.Close ();
 			}
 
 		// Применение изменений
-		private void Apply_Click (object sender, System.EventArgs e)
+		private void Apply_Click (object sender, EventArgs e)
 			{
 			// Контроль остальных параметров
 			if (FileExtension.Text.Length * FileTypeName.Text.Length * FileIcon.Text.Length * FileApplication.Text.Length == 0)
 				{
-				MessageBox.Show ("Одно из полей незаполнено",
+				MessageBox.Show (Localization.GetText ("SomeFieldsAreEmpty", al),
 					ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				return;
 				}
@@ -69,7 +79,7 @@ namespace FileExtensionsManager
 				{
 				if (FileExtension.Text.Contains (c[i].ToString ()))
 					{
-					MessageBox.Show ("Поле расширения файла содержит недопустимый символ «" + c[i].ToString () + "»",
+					MessageBox.Show (string.Format (Localization.GetText ("UnsupportedCharacter", al), c[i].ToString ()),
 						ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 					return;
 					}
@@ -86,15 +96,14 @@ namespace FileExtensionsManager
 					selectedIconFile + "," + selectedIconNumber.ToString ())) ||
 
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell", "", "open")) ||
-				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open", "", "&Открыть")) ||
+				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open", "", Localization.GetText ("OpenButton", al))) ||
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open", "Icon",
 					((IconsExtractor.GetIconsCount (FileApplication.Text) == 0) ? selectedIconFile : FileApplication.Text) + ",0")) ||
 
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open\\command", "",
 					"\"" + FileApplication.Text + "\" \"%1\"")))
 				{
-				MessageBox.Show ("Не удалось создать одну или несколько записей для регистрации расширения. Убедитесь, что у программы " +
-					"есть права для работы с реестром, после чего повторите попытку",
+				MessageBox.Show (Localization.GetText ("ExtensionRegFailed", al),
 					ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				return;
 				}
@@ -104,10 +113,10 @@ namespace FileExtensionsManager
 			}
 
 		// Выбор значка файла
-		private void SelectIcon_Click (object sender, System.EventArgs e)
+		private void SelectIcon_Click (object sender, EventArgs e)
 			{
 			// Запуск выбора
-			IconsExtractor ie = new IconsExtractor ();
+			IconsExtractor ie = new IconsExtractor (al);
 			if (ie.SelectedIconNumber >= 0)
 				{
 				selectedIconNumber = (uint)ie.SelectedIconNumber;
@@ -117,7 +126,7 @@ namespace FileExtensionsManager
 			}
 
 		// Выбор приложения
-		private void SelectApplication_Click (object sender, System.EventArgs e)
+		private void SelectApplication_Click (object sender, EventArgs e)
 			{
 			if (OFDialog.ShowDialog () == DialogResult.OK)
 				FileApplication.Text = OFDialog.FileName;

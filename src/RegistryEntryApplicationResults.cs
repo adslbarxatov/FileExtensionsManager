@@ -1,4 +1,4 @@
-﻿namespace FileExtensionsManager
+﻿namespace RD_AAOW
 	{
 	/// <summary>
 	/// Результаты применения реестровой записи

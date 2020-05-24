@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AbortButton" xml:space="preserve">
+    <value>От&amp;мена</value>
+  </data>
+  <data name="AppliedText" xml:space="preserve">
+    <value>Применены: </value>
+  </data>
+  <data name="ApplyAllEntries" xml:space="preserve">
+    <value>Применить все записи?</value>
+  </data>
+  <data name="ApplyAllEntries2" xml:space="preserve">
+    <value>Ваше решение изменилось?</value>
+  </data>
+  <data name="ApplyButton" xml:space="preserve">
+    <value>&amp;Применить</value>
+  </data>
+  <data name="ApplyEntry" xml:space="preserve">
+    <value>Применить выбранную запись?</value>
+  </data>
+  <data name="BasesNotFound" xml:space="preserve">
+    <value>Не найдена ни одна база реестровых записей</value>
+  </data>
+  <data name="EntriesAdded" xml:space="preserve">
+    <value>Добавлено: </value>
+  </data>
+  <data name="EntriesApplied" xml:space="preserve">
+    <value>Применено {0:D} из {1:D}</value>
+  </data>
+  <data name="EntryIsIncorrect" xml:space="preserve">
+    <value>Запись некорректна. Убедитесь, что путь к разделу реестра корректен, имя параметра не содержит символ \, а значение соответствует указанному типу, после чего повторите попытку</value>
+  </data>
+  <data name="EntryIsUnavailable" xml:space="preserve">
+    <value>Запись не может быть применена: раздел реестра недоступен</value>
+  </data>
+  <data name="EntryNotApplied" xml:space="preserve">
+    <value>Не удалось применить запись</value>
+  </data>
+  <data name="ER_OFDialogFilter" xml:space="preserve">
+    <value>Приложения|*.exe</value>
+  </data>
+  <data name="ER_OFDialogText" xml:space="preserve">
+    <value>Выберите приложение для открытия этого типа файлов</value>
+  </data>
+  <data name="ER_Title" xml:space="preserve">
+    <value> – регистрация расширения</value>
+  </data>
+  <data name="ExtensionRegFailed" xml:space="preserve">
+    <value>Не удалось создать одну или несколько записей для регистрации расширения. Убедитесь, что у программы есть права для работы с реестром, после чего повторите попытку</value>
+  </data>
+  <data name="ExtensionRegistrator_AttentionLabel" xml:space="preserve">
+    <value>Внимание! Некоторые приложения могут не поддерживать команду «Открыть с помощью» или поддерживать её нестандартным образом. В этих случаях данная функция может работать некорректно</value>
+  </data>
+  <data name="ExtensionRegistrator_ExecutableLabel" xml:space="preserve">
+    <value>Открывающее приложение:</value>
+  </data>
+  <data name="ExtensionRegistrator_ExtensionLabel" xml:space="preserve">
+    <value>Расширение файла (без точки):</value>
+  </data>
+  <data name="ExtensionRegistrator_IconLabel" xml:space="preserve">
+    <value>Значок файла:</value>
+  </data>
+  <data name="ExtensionRegistrator_TypeLabel" xml:space="preserve">
+    <value>Название типа файла:</value>
+  </data>
+  <data name="FEMF_OFDialogFilter" xml:space="preserve">
+    <value>Файлы реестра Windows (*.reg)|*.reg</value>
+  </data>
+  <data name="FEMF_OFDialogTitle" xml:space="preserve">
+    <value>Выберите файл реестра для загрузки</value>
+  </data>
+  <data name="FileExtensionsManagerForm_AddRecord" xml:space="preserve">
+    <value>&amp;Добавить запись</value>
+  </data>
+  <data name="FileExtensionsManagerForm_Apply" xml:space="preserve">
+    <value>&amp;Применить запись</value>
+  </data>
+  <data name="FileExtensionsManagerForm_ApplyAll" xml:space="preserve">
+    <value>Применить &amp;все</value>
+  </data>
+  <data name="FileExtensionsManagerForm_BaseLabel" xml:space="preserve">
+    <value>Текущая база:</value>
+  </data>
+  <data name="FileExtensionsManagerForm_DeleteRecord" xml:space="preserve">
+    <value>&amp;Удалить запись</value>
+  </data>
+  <data name="FileExtensionsManagerForm_Exit" xml:space="preserve">
+    <value>В&amp;ыход</value>
+  </data>
+  <data name="FileExtensionsManagerForm_FindIcon" xml:space="preserve">
+    <value>Найти &amp;иконку</value>
+  </data>
+  <data name="FileExtensionsManagerForm_LoadRegFile" xml:space="preserve">
+    <value>Загрузить из файла &amp;реестра</value>
+  </data>
+  <data name="FileExtensionsManagerForm_RegExtension" xml:space="preserve">
+    <value>&amp;Зарегистрировать расширение</value>
+  </data>
+  <data name="HelpText" xml:space="preserve">
+    <value>Программа позволяет хранить и применять пользовательские настройки расширений файлов, зарегистрированных в операционной системе. В списке записей отображаются реестровые сопоставления, хранящиеся в текущей выбранной базе записей. Зелёным цветом обозначены записи, уже имеющиеся в реестре Windows, синим – записи, частично соответствующие пользовательским настройкам, а красным – отсутствующие записи. Если запись помечена как удаляемая, то зелёным помечаются отсутствующие в реестре записи, а красным – присутствующие. Наличие серых записей может говорить об отсутствии доступа к реестру Windows.
+
+Изменить запись можно по двойному щелчку мыши на соответствующей строке, добавить – с помощью соответствующей кнопки. В обоих случаях сведения редактируются в специальном окне, а их корректность контролируется утилитой. Добавить записи можно также и из файла реестра Windows.
+
+Применять записи можно по одной или все сразу (все неприменённые). Кнопка «Выход» сохраняет все изменения во всех базах. Если изменения нужно отменить, программу нужно закрыть крестиком в верхнем правом углу окна.
+
+На данный момент утилита работает только с записями в ветке реестра HKEY_CLASSES_ROOT и только с типами параметров REG_SZ, REG_DWORD и REG_QWORD</value>
+  </data>
+  <data name="IconsNotFound" xml:space="preserve">
+    <value>Файл «{0:S}» не содержит значков</value>
+  </data>
+  <data name="IE_OFDialogFilter" xml:space="preserve">
+    <value>Приложения, библиотеки, сборки, значки|*.ico;*.exe;*.dll;*.sfx;*.cpl|Все файлы|*.*</value>
+  </data>
+  <data name="IE_OFDialogTitle" xml:space="preserve">
+    <value>Выберите файл для просмотра значков</value>
+  </data>
+  <data name="IE_PageLabel" xml:space="preserve">
+    <value>Страница:</value>
+  </data>
+  <data name="IE_SelectButtonText" xml:space="preserve">
+    <value>&amp;Выбрать №</value>
+  </data>
+  <data name="IE_Title" xml:space="preserve">
+    <value> – просмотр иконок</value>
+  </data>
+  <data name="IE_TotalLabelText" xml:space="preserve">
+    <value>Всего: </value>
+  </data>
+  <data name="NewBaseAdded" xml:space="preserve">
+    <value>Программа создаст пустой файл-образец. Дайте ему удобное имя, после чего запустите утилиту снова</value>
+  </data>
+  <data name="NoAccessText" xml:space="preserve">
+    <value>Недоступны: </value>
+  </data>
+  <data name="NotAppliedText" xml:space="preserve">
+    <value>Не применены: </value>
+  </data>
+  <data name="OpenButton" xml:space="preserve">
+    <value>&amp;Открыть</value>
+  </data>
+  <data name="PartiallyAppliedText" xml:space="preserve">
+    <value>Применены частично: </value>
+  </data>
+  <data name="REE_Title" xml:space="preserve">
+    <value> – добавление записи</value>
+  </data>
+  <data name="RegistryEntryEditor_EntryPath" xml:space="preserve">
+    <value>Путь к разделу реестра:</value>
+  </data>
+  <data name="RegistryEntryEditor_NameMustBeDeleted" xml:space="preserve">
+    <value>Удаляемый параметр</value>
+  </data>
+  <data name="RegistryEntryEditor_ParameterName" xml:space="preserve">
+    <value>Имя параметра:</value>
+  </data>
+  <data name="RegistryEntryEditor_ParameterType" xml:space="preserve">
+    <value>Тип параметра:</value>
+  </data>
+  <data name="RegistryEntryEditor_ParameterValue" xml:space="preserve">
+    <value>Значение параметра:</value>
+  </data>
+  <data name="RegistryEntryEditor_PathMustBeDeleted" xml:space="preserve">
+    <value>Удаляемый раздел</value>
+  </data>
+  <data name="RegistryValue_Int32" xml:space="preserve">
+    <value> (целочисленный, 4 байта)</value>
+  </data>
+  <data name="RegistryValue_Int64" xml:space="preserve">
+    <value> (целочисленный, 8 байт)</value>
+  </data>
+  <data name="RegistryValue_String" xml:space="preserve">
+    <value> (строковый)</value>
+  </data>
+  <data name="RemoveEntry" xml:space="preserve">
+    <value>Удалить выбранную запись?</value>
+  </data>
+  <data name="SomeFieldsAreEmpty" xml:space="preserve">
+    <value>Одно из обязательных полей не заполнено</value>
+  </data>
+  <data name="UnsupportedCharacter" xml:space="preserve">
+    <value>Поле расширения файла содержит недопустимый символ [{0:S}]</value>
+  </data>
+</root>

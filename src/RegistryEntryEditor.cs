@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace FileExtensionsManager
+namespace RD_AAOW
 	{
 	/// <summary>
 	/// Форма обеспечивает создание или редактирование записи в базе
@@ -8,6 +8,7 @@ namespace FileExtensionsManager
 	public partial class RegistryEntryEditor:Form
 		{
 		// Параметры
+		private SupportedLanguages al;
 
 		/// <summary>
 		/// Возвращает изменённую запись
@@ -36,26 +37,25 @@ namespace FileExtensionsManager
 		/// <summary>
 		/// Конструктор. Запускает создание или редактирование записи
 		/// </summary>
-		public RegistryEntryEditor (RegistryEntry Entry)
+		/// <param name="Entry">Запись реестра</param>
+		/// <param name="InterfaceLanguage">Язык интерфейса</param>
+		public RegistryEntryEditor (RegistryEntry Entry, SupportedLanguages InterfaceLanguage)
 			{
 			// Инициализация
 			InitializeComponent ();
+			al = InterfaceLanguage;
 
 			// Сохранение параметров
 			editedEntry = Entry;
 
 			// Настройка контролов
-			KeyType.Items.Add (RegistryValueTypes.REG_SZ.ToString () + " (строковый)");
-			KeyType.Items.Add (RegistryValueTypes.REG_DWORD.ToString () + " (целочисленный, 4 байта)");
-			KeyType.Items.Add (RegistryValueTypes.REG_QWORD.ToString () + " (целочисленный, 8 байт)");
+			KeyType.Items.Add (RegistryValueTypes.REG_SZ.ToString () + Localization.GetText ("RegistryValue_String", al));
+			KeyType.Items.Add (RegistryValueTypes.REG_DWORD.ToString () + Localization.GetText ("RegistryValue_Int32", al));
+			KeyType.Items.Add (RegistryValueTypes.REG_QWORD.ToString () + Localization.GetText ("RegistryValue_Int64", al));
 			if ((int)editedEntry.ValueType < KeyType.Items.Count)
-				{
 				KeyType.Text = KeyType.Items[(int)editedEntry.ValueType].ToString ();
-				}
 			else
-				{
 				KeyType.Text = KeyType.Items[0].ToString ();
-				}
 
 			// Загрузка записи
 			KeyPath.Text = editedEntry.ValuePath;
@@ -64,8 +64,14 @@ namespace FileExtensionsManager
 			PathMustBeDeleted.Checked = editedEntry.PathMustBeDeleted;
 			NameMustBeDeleted.Checked = editedEntry.NameMustBeDeleted;
 
+			// Локализация
+			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("REE_Title", al);
+
+			Localization.SetControlsText (this, al);
+			Apply.Text = Localization.GetText ("ApplyButton", al);
+			Abort.Text = Localization.GetText ("AbortButton", al);
+
 			// Запуск
-			this.Text = ProgramDescription.AssemblyTitle + " – добавление записи";
 			this.ShowDialog ();
 			}
 
@@ -89,8 +95,7 @@ namespace FileExtensionsManager
 				(RegistryValueTypes)KeyType.SelectedIndex, PathMustBeDeleted.Checked, NameMustBeDeleted.Checked);
 			if (!re.IsValid)
 				{
-				MessageBox.Show ("Запись некорректна. Убедитесь, что путь к разделу реестра корректен, имя параметра не содержит " +
-					"символ '\\', а значение соответствует указанному типу, после чего повторите попытку", ProgramDescription.AssemblyTitle,
+				MessageBox.Show (Localization.GetText ("EntryIsIncorrect", al), ProgramDescription.AssemblyTitle,
 					 MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				return;
 				}

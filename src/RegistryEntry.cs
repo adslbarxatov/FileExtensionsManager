@@ -2,7 +2,7 @@
 using System;
 using System.Globalization;
 
-namespace FileExtensionsManager
+namespace RD_AAOW
 	{
 	/// <summary>
 	/// Класс описывает отдельную запись в реестре Windows
@@ -99,7 +99,7 @@ namespace FileExtensionsManager
 			char[] valuesSplitters = new char[] { '\"', '[', ']' };
 
 			// Контроль пути
-			string[] values = Path.Split (valuesSplitters, System.StringSplitOptions.RemoveEmptyEntries);
+			string[] values = Path.Split (valuesSplitters, StringSplitOptions.RemoveEmptyEntries);
 			if (values.Length != 1)		// Означает наличие недопустимых символов или пустую строку
 				return;
 
@@ -111,7 +111,7 @@ namespace FileExtensionsManager
 
 			pathMustBeDeleted |= DeletePath;
 
-			values = s.Split (pathSplitters, System.StringSplitOptions.RemoveEmptyEntries);	// Убираем лишние слэшы
+			values = s.Split (pathSplitters, StringSplitOptions.RemoveEmptyEntries);	// Убираем лишние слэшы
 			if (values.Length < 1)	// Такого не должно случиться, но вдруг там только слэшы и были
 				return;
 
@@ -141,7 +141,7 @@ namespace FileExtensionsManager
 				}
 
 			// Контроль имени
-			values = Name.Split (valuesSplitters, System.StringSplitOptions.RemoveEmptyEntries);
+			values = Name.Split (valuesSplitters, StringSplitOptions.RemoveEmptyEntries);
 			if (values.Length == 0)		// Пустая строка здесь допустима - для значения по умолчанию
 				{
 				valueName = "";

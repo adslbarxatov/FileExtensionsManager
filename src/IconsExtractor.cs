@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace FileExtensionsManager
+namespace RD_AAOW
 	{
 	/// <summary>
 	/// Форма позволяет выполнять обзор иконок, содержащихся в исполняемом файле или библиотеке
@@ -25,6 +25,8 @@ namespace FileExtensionsManager
 		private bool allowExit = true;		// Флаг разрешения закрытия окна
 
 		private Brush selectionBrush = new SolidBrush (Color.FromArgb (128, 255, 255, 0));	// Кисть для выбранной иконки
+
+		private SupportedLanguages al;
 
 		/// <summary>
 		/// Возвращает номер выбранной иконки, начиная с 0, или -1, если иконка не была выбрана
@@ -66,13 +68,16 @@ namespace FileExtensionsManager
 		/// <summary>
 		/// Конструктор. Запускает форму
 		/// </summary>
-		public IconsExtractor ()
+		/// <param name="InterfaceLanguage">Язык интерфейса</param>
+		public IconsExtractor (SupportedLanguages InterfaceLanguage)
 			{
+			// Инициализация
 			InitializeComponent ();
+			al = InterfaceLanguage;
 
 			// Настройка контролов
-			OFDialog.Title = "Выберите файл для просмотра";
-			OFDialog.Filter = "Приложения, библиотеки, сборки, значки|*.ico;*.exe;*.dll;*.sfx;*.cpl|Все файлы|*.*";
+			OFDialog.Title = Localization.GetText ("IE_OFDialogTitle", al);
+			OFDialog.Filter = Localization.GetText ("IE_OFDialogFilter", al);
 
 			MainPicture.Width = (int)(iconPositionWidth * iconsHorizontalCount + 4);
 			MainPicture.Height = (int)(iconPositionHeight * iconsVerticalCount + 4);
@@ -86,8 +91,11 @@ namespace FileExtensionsManager
 			SelectButton.Left = this.Width / 2 - SelectButton.Width - 6;
 			AbortButton.Left = this.Width / 2 + 6;
 
+			AbortButton.Text = Localization.GetText ("AbortButton", al);
+			PageLabel.Text = Localization.GetText ("IE_PageLabel", al);
+
 			// Запуск
-			this.Text = ProgramDescription.AssemblyTitle + " – просмотр иконок";
+			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("IE_Title", al);
 			this.ShowDialog ();
 			}
 
@@ -106,8 +114,8 @@ namespace FileExtensionsManager
 			iconsCount = ExtractIconExA (OFDialog.FileName, -1, ref bigIcon, ref smallIcon, 1);
 			if (iconsCount == 0)
 				{
-				MessageBox.Show ("Файл «" + OFDialog.FileName + "» не содержит значков", ProgramDescription.AssemblyTitle,
-					MessageBoxButtons.OK, MessageBoxIcon.Information);
+				MessageBox.Show (string.Format (Localization.GetText ("IconsNotFound", al), OFDialog.FileName),
+					ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
 				this.Close ();
 				return;
 				}
@@ -148,7 +156,7 @@ namespace FileExtensionsManager
 			// Отображение
 			MainPicture.BackgroundImage = (Bitmap)iconsView.Clone ();
 			PageNumber.Maximum = Math.Ceiling ((decimal)iconsCount / ((decimal)iconsVerticalCount * (decimal)iconsHorizontalCount));
-			TotalLabel.Text = "Всего: " + iconsCount.ToString ();
+			TotalLabel.Text = Localization.GetText ("IE_TotalLabelText", al) + iconsCount.ToString ();
 			allowExit = false;
 			this.Activate ();
 			}
@@ -185,7 +193,7 @@ namespace FileExtensionsManager
 			if (selectedNumber < iconsCount)
 				{
 				SelectButton.Enabled = true;
-				SelectButton.Text = "Выбрать №" + selectedNumber.ToString ();
+				SelectButton.Text = Localization.GetText ("IE_SelectButtonText", al) + selectedNumber.ToString ();
 
 				selectedIconNumber = (int)selectedNumber;
 				currentPage = PageNumber.Value;

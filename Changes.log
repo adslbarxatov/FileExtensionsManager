@@ -1,5 +1,10 @@
 ﻿File extensions manager changes log
 
+Version 1.4.1p:
+• Updated application info interface (more convenient font is used for now);
+• Added a button to access the Application development policy and EULA in the application info interface (due to ADP update);
+• Added automatic check for updates to the application info interface
+
 Version 1.4u:
 • Application namespace, icon and development environment have been unified;
 • Localization system has been applied; English localization for user interface has been implemented;

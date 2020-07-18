@@ -42,12 +42,16 @@ namespace RD_AAOW
 			MainTable.Columns.Add ("Entries", "Entries");
 
 			// Инициализация баз реестровых записей
-			string[] files = Directory.GetFiles (Application.StartupPath, "*" + RegistryEntriesBaseManager.BaseFileExtension);
-			for (int i = 0; i < files.Length; i++)
+			if (Directory.Exists (Application.StartupPath + "\\" + RegistryEntriesBaseManager.BasesSubdirectory))
 				{
-				RegistryEntriesBaseManager re = new RegistryEntriesBaseManager (Path.GetFileNameWithoutExtension (files[i]));
-				if (re.IsInited)
-					rebm.Add (re);
+				string[] files = Directory.GetFiles (Application.StartupPath + "\\" + RegistryEntriesBaseManager.BasesSubdirectory,
+					"*" + RegistryEntriesBaseManager.BaseFileExtension2);
+				for (int i = 0; i < files.Length; i++)
+					{
+					RegistryEntriesBaseManager re = new RegistryEntriesBaseManager (Path.GetFileNameWithoutExtension (files[i]));
+					if (re.IsInited)
+						rebm.Add (re);
+					}
 				}
 
 			if (rebm.Count == 0)

@@ -1,8 +1,10 @@
-# FileExtensionsManager v 1.4u
+# FileExtensionsManager v 1.4.1p
 
 A tool for managing Windows registry settings for file extensions
 
 Инструмент управления пользовательскими настройками расширений файлов в Windows
+
+
 
 ## Описание
 

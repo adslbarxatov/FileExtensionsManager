@@ -64,9 +64,15 @@ namespace RD_AAOW
 			{
 			// Настройка контролов
 			InitializeComponent ();
+#if SIMPLE_HWE
+			this.BackColor = Color.FromKnownColor (KnownColor.Control);
+			StateLabel.ForeColor = AbortButton.ForeColor = Color.FromArgb (0, 0, 0);
+			AbortButton.BackColor = Color.FromKnownColor (KnownColor.Control);
+#else
 			this.BackColor = ProgramDescription.MasterBackColor;
 			StateLabel.ForeColor = AbortButton.ForeColor = ProgramDescription.MasterTextColor;
 			AbortButton.BackColor = ProgramDescription.MasterButtonColor;
+#endif
 
 			// Инициализация
 			progress = new Bitmap (this.Width - 20, 30);

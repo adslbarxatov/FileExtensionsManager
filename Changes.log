@@ -1,5 +1,8 @@
 ﻿File extensions manager changes log
 
+Version 1.4.2p:
+• Added ability to accept/decline ADP at first start to the application info interface
+
 Version 1.4.1p:
 • Updated application info interface (more convenient font is used for now);
 • Added a button to access the Application development policy and EULA in the application info interface (due to ADP update);

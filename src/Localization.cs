@@ -1,6 +1,10 @@
-﻿using Microsoft.Win32;
-using System.Globalization;
+﻿using System.Globalization;
+#if ANDROID
+using Xamarin.Essentials;
+#else
+using Microsoft.Win32;
 using System.Windows.Forms;
+#endif
 
 namespace RD_AAOW
 	{
@@ -81,8 +85,12 @@ namespace RD_AAOW
 				{
 				try
 					{
+#if ANDROID
+					Preferences.Set (LanguageValueName, value.ToString ());
+#else
 					Registry.SetValue (ProgramDescription.AssemblySettingsKey,
 						LanguageValueName, value.ToString ());
+#endif
 					}
 				catch
 					{
@@ -108,8 +116,12 @@ namespace RD_AAOW
 			string lang = "";
 			try
 				{
+#if ANDROID
+				lang = Preferences.Get (LanguageValueName, "");
+#else
 				lang = Registry.GetValue (ProgramDescription.AssemblySettingsKey,
 					LanguageValueName, "").ToString ();
+#endif
 				}
 			catch
 				{
@@ -137,6 +149,9 @@ namespace RD_AAOW
 			}
 
 		#region Extended
+
+#if !ANDROID
+
 		/// <summary>
 		/// Метод устанавливает локализованные подписи для всех контролов, входящих в состав указанного контейнера (только Text)
 		/// </summary>
@@ -299,6 +314,8 @@ namespace RD_AAOW
 				}
 			}
 
+#endif
+
 		/// <summary>
 		/// Метод возвращает локализованную подпись указанного контрола
 		/// </summary>
@@ -311,6 +328,6 @@ namespace RD_AAOW
 			return GetText (FormName + "_" + ControlName, Language);
 			}
 
-		#endregion
+#endregion
 		}
 	}

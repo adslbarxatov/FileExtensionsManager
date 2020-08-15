@@ -13,7 +13,7 @@ namespace RD_AAOW
 		// Переменные
 		private List<RegistryEntriesBaseManager> rebm = new List<RegistryEntriesBaseManager> ();
 		private SupportedLanguages al = Localization.CurrentLanguage;
-		uint applied = 0, partiallyApplied = 0, notApplied = 0, noAccess = 0;
+		private uint applied = 0, partiallyApplied = 0, notApplied = 0, noAccess = 0;
 
 		/// <summary>
 		/// Конструктор. Инициализирует главную форму приложения
@@ -337,10 +337,7 @@ namespace RD_AAOW
 		// Запрос справки
 		private void GetHelp_Click (object sender, EventArgs e)
 			{
-			AboutForm af = new AboutForm (al, "https://github.com/adslbarxatov/FileExtensionsManager",
-				"https://github.com/adslbarxatov/FileExtensionsManager/releases",
-				"",
-				Localization.GetText ("HelpText", al));
+			ProgramDescription.ShowAbout (false);
 			}
 
 		// Просмотр иконок

@@ -1,4 +1,4 @@
-# FileExtensionsManager v 1.4.2p
+# FileExtensionsManager v 1.4.3i
 
 A tool for managing Windows registry settings for file extensions
 

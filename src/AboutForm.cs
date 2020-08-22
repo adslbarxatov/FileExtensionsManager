@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace RD_AAOW
@@ -23,6 +22,7 @@ namespace RD_AAOW
 		private const string adpLink = "https://vk.com/@rdaaow_fupl-adp";			// Ссылка на Политику
 		private const string defaultGitLink = "https://github.com/adslbarxatov/";	// Мастер-ссылка проекта
 		private const string gitUpdatesSublink = "/releases";						// Часть пути для перехода к релизам
+		private string versionDescription = "";
 
 		private const string lastShownVersionKey = "HelpShownAt";		// Ключ реестра, хранящий версию, на которой отображалась справка
 
@@ -31,13 +31,10 @@ namespace RD_AAOW
 		/// <summary>
 		/// Конструктор. Инициализирует форму
 		/// </summary>
-		/// <param name="ProjectLink">Ссылка на страницу проекта;
-		/// кнопка отключается, если это значение не задано</param>
-		/// <param name="UpdatesLink">Ссылка на страницу обновлений;
-		/// кнопка отключается, если это значение не задано</param>
 		/// <param name="UserManualLink">Ссылка на страницу руководства пользователя;
 		/// кнопка отключается, если это значение не задано</param>
-		public AboutForm (string ProjectLink, string UpdatesLink, string UserManualLink)
+		/// <param name="AppIcon">Значок приложения</param>
+		public AboutForm (string UserManualLink, Icon AppIcon)
 			{
 			// Инициализация
 			InitializeComponent ();
@@ -45,27 +42,35 @@ namespace RD_AAOW
 			// Получение параметров
 			userManualLink = ((UserManualLink == null) ? "" : UserManualLink);
 
-			if (ProjectLink == null)
+			/*if (ProjectLink == null)
 				projectLink = "";
-			else if (ProjectLink == "*")
-				projectLink = defaultGitLink + ProgramDescription.AssemblyMainName;
-			else
-				projectLink = ProjectLink;
+			else if (ProjectLink == "*")*/
+			projectLink = defaultGitLink + ProgramDescription.AssemblyMainName;
+			/*else
+				projectLink = ProjectLink;*/
 
-			if (UpdatesLink == null)
+			/*if (UpdatesLink == null)
 				updatesLink = "";
-			else if (UpdatesLink == "*")
-				updatesLink = defaultGitLink + ProgramDescription.AssemblyMainName + gitUpdatesSublink;
-			else
-				updatesLink = UpdatesLink;
+			else if (UpdatesLink == "*")*/
+			updatesLink = defaultGitLink + ProgramDescription.AssemblyMainName + gitUpdatesSublink;
+			/*else
+				updatesLink = UpdatesLink;*/
 
 			// Загрузка окружения
 			AboutLabel.Text = ProgramDescription.AssemblyTitle + "\n" + ProgramDescription.AssemblyDescription + "\n\n" +
 				ProgramDescription.AssemblyCopyright + "\nv " + ProgramDescription.AssemblyVersion +
 				"; " + ProgramDescription.AssemblyLastUpdate;
 
-			IconBox.BackgroundImage = Icon.ExtractAssociatedIcon (Assembly.GetExecutingAssembly ().Location).ToBitmap ();
-			OtherIconBox.BackgroundImage = this.Icon.ToBitmap ();
+			if (AppIcon != null)
+				{
+				IconBox.BackgroundImage = AppIcon.ToBitmap ();
+				OtherIconBox.BackgroundImage = this.Icon.ToBitmap ();
+				}
+			else
+				{
+				IconBox.BackgroundImage = this.Icon.ToBitmap ();
+				}
+			//IconBox.BackgroundImage = Icon.ExtractAssociatedIcon (Assembly.GetExecutingAssembly ().Location).ToBitmap ();
 
 			// Завершение
 			UserManualButton.Enabled = (userManualLink != "");
@@ -311,9 +316,10 @@ namespace RD_AAOW
 			// Запрос обновлений пакета
 			string html = GetHTML (projectLink);
 
-			// Разбор ответа (извлечение версий и PCC)
+			// Разбор ответа (извлечение версии)
 			string version = "";
-			string[] htmlMarkers = { "</a>" + ProgramDescription.AssemblyMainName, "</h1>" };
+			string[] htmlMarkers = { "</a>" + ProgramDescription.AssemblyMainName, "</h1>",
+								   "markdown-body\">", "</div>" };
 
 			int i = html.IndexOf (htmlMarkers[0]);
 			if (i < 0)
@@ -326,6 +332,25 @@ namespace RD_AAOW
 				goto htmlError;
 
 			version = html.Substring (i, j - i).Trim ();
+
+			// Запрос описания пакета
+			html = GetHTML (updatesLink);
+
+			// Разбор ответа (извлечение версии)
+			i = html.IndexOf (htmlMarkers[2]);
+			if (i < 0)
+				goto htmlError;
+
+			i += htmlMarkers[2].Length;
+
+			j = html.IndexOf (htmlMarkers[3], i);
+			if ((j < 0) || (j <= i))
+				goto htmlError;
+
+			versionDescription = html.Substring (i, j - i);
+			versionDescription = versionDescription.Replace ("<p>", "\r\n\r\n").Replace ("<li>", "\r\n• ").Replace ("</p>", "\r\n");
+			versionDescription = versionDescription.Replace ("</li>", "").Replace ("<ul>", "").Replace ("</ul>", "").
+				Replace ("<em>", "").Replace ("</em>", "");
 
 			// Отображение результата
 			switch (al)
@@ -386,6 +411,12 @@ htmlError:
 				else
 					{
 					AvailableUpdatesLabel.Text = "";
+
+					if (versionDescription != "")
+						{
+						DescriptionBox.Text += versionDescription;
+						versionDescription = "";
+						}
 					}
 				}
 			}
@@ -430,7 +461,14 @@ htmlError:
 
 			// Чтение ответа
 			StreamReader SR = new StreamReader (resp.GetResponseStream (), true);
-			html = SR.ReadToEnd ();
+			try
+				{
+				html = SR.ReadToEnd ();
+				}
+			catch
+				{
+				html = "";	// Почему-то иногда исполнение обрывается на этом месте
+				}
 			SR.Close ();
 			resp.Close ();
 

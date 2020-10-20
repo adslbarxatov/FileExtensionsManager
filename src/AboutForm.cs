@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace RD_AAOW
@@ -19,14 +20,14 @@ namespace RD_AAOW
 		private SupportedLanguages al;
 		private string updatesMessage = "", description = "", policyLoaderCaption = "";
 
-		private const string adpLink = "https://vk.com/@rdaaow_fupl-adp";			// Ссылка на Политику
-		private const string defaultGitLink = "https://github.com/adslbarxatov/";	// Мастер-ссылка проекта
-		private const string gitUpdatesSublink = "/releases";						// Часть пути для перехода к релизам
+		private const string adpLink = "https://vk.com/@rdaaow_fupl-adp";           // Ссылка на Политику
+		private const string defaultGitLink = "https://github.com/adslbarxatov/";   // Мастер-ссылка проекта
+		private const string gitUpdatesSublink = "/releases";                       // Часть пути для перехода к релизам
 		private string versionDescription = "";
 
-		private const string lastShownVersionKey = "HelpShownAt";		// Ключ реестра, хранящий версию, на которой отображалась справка
+		private const string lastShownVersionKey = "HelpShownAt";       // Ключ реестра, хранящий версию, на которой отображалась справка
 
-		private bool accepted = false;									// Флаг принятия Политики
+		private bool accepted = false;                                  // Флаг принятия Политики
 
 		/// <summary>
 		/// Конструктор. Инициализирует форму
@@ -40,21 +41,10 @@ namespace RD_AAOW
 			InitializeComponent ();
 
 			// Получение параметров
-			userManualLink = ((UserManualLink == null) ? "" : UserManualLink);
+			userManualLink = (UserManualLink == null) ? "" : UserManualLink;
 
-			/*if (ProjectLink == null)
-				projectLink = "";
-			else if (ProjectLink == "*")*/
 			projectLink = defaultGitLink + ProgramDescription.AssemblyMainName;
-			/*else
-				projectLink = ProjectLink;*/
-
-			/*if (UpdatesLink == null)
-				updatesLink = "";
-			else if (UpdatesLink == "*")*/
 			updatesLink = defaultGitLink + ProgramDescription.AssemblyMainName + gitUpdatesSublink;
-			/*else
-				updatesLink = UpdatesLink;*/
 
 			// Загрузка окружения
 			AboutLabel.Text = ProgramDescription.AssemblyTitle + "\n" + ProgramDescription.AssemblyDescription + "\n\n" +
@@ -123,8 +113,8 @@ namespace RD_AAOW
 				}
 
 			// Контроль
-			if (StartupMode && (helpShownAt == ProgramDescription.AssemblyVersion) ||	// Справка уже отображалась
-				AcceptMode && (helpShownAt != ""))			// Политика уже принята
+			if (StartupMode && (helpShownAt == ProgramDescription.AssemblyVersion) ||   // Справка уже отображалась
+				AcceptMode && (helpShownAt != ""))          // Политика уже принята
 				return 1;
 
 			// Настройка контролов
@@ -145,7 +135,7 @@ namespace RD_AAOW
 					this.Text = AcceptMode ? "Политика разработки и соглашение пользователя" : "О программе";
 					break;
 
-				default:	// en_us
+				default:    // en_us
 					UserManualButton.Text = "User manual";
 					ProjectPageButton.Text = "Project webpage";
 					UpdatesPageButton.Text = "Updates webpage";
@@ -311,6 +301,20 @@ namespace RD_AAOW
 			}
 
 		// Метод-исполнитель проверки обновлений
+		private string[][] ucReplacements = new string[][] {
+			new string[] { "<p>", "\r\n\r\n" },
+			new string[] { "<li>", "\r\n• " },
+			new string[] { "</p>", "\r\n" },
+
+			new string[] { "</li>", "" },
+			new string[] { "<ul>", "" },
+			new string[] { "</ul>", "" },
+			new string[] { "<em>", "" },
+			new string[] { "</em>", "" },
+			new string[] { "<code>", "" },
+			new string[] { "</code>", "" }
+			};
+
 		private void UpdatesChecker (object sender, DoWorkEventArgs e)
 			{
 			// Запрос обновлений пакета
@@ -348,9 +352,8 @@ namespace RD_AAOW
 				goto htmlError;
 
 			versionDescription = html.Substring (i, j - i);
-			versionDescription = versionDescription.Replace ("<p>", "\r\n\r\n").Replace ("<li>", "\r\n• ").Replace ("</p>", "\r\n");
-			versionDescription = versionDescription.Replace ("</li>", "").Replace ("<ul>", "").Replace ("</ul>", "").
-				Replace ("<em>", "").Replace ("</em>", "");
+			for (int r = 0; r < ucReplacements.Length; r++)
+				versionDescription = versionDescription.Replace (ucReplacements[r][0], ucReplacements[r][1]);
 
 			// Отображение результата
 			switch (al)
@@ -362,7 +365,7 @@ namespace RD_AAOW
 						updatesMessage = "доступна " + version;
 					break;
 
-				default:	// en_us
+				default:    // en_us
 					if (ProgramDescription.AssemblyTitle.EndsWith (version))
 						updatesMessage = "no updates";
 					else
@@ -374,7 +377,7 @@ namespace RD_AAOW
 			e.Result = 0;
 			return;
 
-			// Есть проблема при загрузке страницы. Отмена
+// Есть проблема при загрузке страницы. Отмена
 htmlError:
 			switch (al)
 				{
@@ -382,7 +385,7 @@ htmlError:
 					updatesMessage = "недоступны";
 					break;
 
-				default:	// en_us
+				default:    // en_us
 					updatesMessage = "unavailable";
 					break;
 				}
@@ -390,6 +393,112 @@ htmlError:
 			e.Result = -2;
 			return;
 			}
+
+#if !SIMPLE_HWE
+		/// <summary>
+		/// Метод-исполнитель загрузки пакета обновлений
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		public static void PackageLoader (object sender, DoWorkEventArgs e)
+			{
+			// Разбор аргументов
+			string[] paths = (string[])e.Argument;
+
+			// Настройка безопасности соединения
+			ServicePointManager.SecurityProtocol = (SecurityProtocolType)0xFC0;
+			// Принудительно открывает TLS1.0, TLS1.1 и TLS1.2; блокирует SSL3
+
+			// Запрос обновлений
+			HttpWebRequest rq;
+			try
+				{
+				rq = (HttpWebRequest)WebRequest.Create (paths[0]);
+				}
+			catch
+				{
+				e.Result = -1;
+				return;
+				}
+			rq.Method = "GET";
+			rq.KeepAlive = false;
+			rq.Timeout = 10000;
+
+			// Инициализация полосы загрузки
+			SupportedLanguages al = Localization.CurrentLanguage;
+			string report = Localization.GetText ("PackageDownload", al) + Path.GetFileName (paths[1]);
+			((BackgroundWorker)sender).ReportProgress ((int)HardWorkExecutor.ProgressBarSize, report);
+
+			// Отправка запроса
+			HttpWebResponse resp = null;
+			try
+				{
+				resp = (HttpWebResponse)rq.GetResponse ();
+				}
+			catch
+				{
+				// Любая ошибка здесь будет означать необходимость прекращения проверки
+				e.Result = -2;
+				return;
+				}
+
+			// Создание файла
+			FileStream FS = null;
+			try
+				{
+				FS = new FileStream (paths[1], FileMode.Create);
+				}
+			catch
+				{
+				e.Result = -3;
+				return;
+				}
+
+			// Чтение ответа
+			Stream SR = resp.GetResponseStream ();
+
+			int b;
+
+			long length = 0, current = 0;
+			try
+				{
+				length = long.Parse (paths[2]);
+				}
+			catch { }
+
+			while ((b = SR.ReadByte ()) >= 0)
+				{
+				FS.WriteByte ((byte)b);
+
+				if ((length != 0) && (current++ % 0x1000 == 0))
+					((BackgroundWorker)sender).ReportProgress ((int)(HardWorkExecutor.ProgressBarSize * current / length),
+						report);  // Возврат прогресса
+
+				// Завершение работы, если получено требование от диалога
+				if (((BackgroundWorker)sender).CancellationPending)
+					{
+					SR.Close ();
+					FS.Close ();
+					resp.Close ();
+
+					e.Result = 1;
+					e.Cancel = true;
+					return;
+					}
+				}
+
+			SR.Close ();
+			FS.Close ();
+			resp.Close ();
+
+			// Завершено. Отображение сообщения
+			((BackgroundWorker)sender).ReportProgress (0, Localization.GetText ("PackageSuccess", al));
+			Thread.Sleep (1000);
+
+			e.Result = 0;
+			return;
+			}
+#endif
 
 		// Контроль сообщения об обновлении
 		private void UpdatesTimer_Tick (object sender, EventArgs e)
@@ -467,7 +576,7 @@ htmlError:
 				}
 			catch
 				{
-				html = "";	// Почему-то иногда исполнение обрывается на этом месте
+				html = "";  // Почему-то иногда исполнение обрывается на этом месте
 				}
 			SR.Close ();
 			resp.Close ();

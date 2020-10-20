@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 #if ANDROID
-using Xamarin.Essentials;
+	using Xamarin.Essentials;
 #else
-using Microsoft.Win32;
-using System.Windows.Forms;
+	using Microsoft.Win32;
+	using System.Windows.Forms;
 #endif
 
 namespace RD_AAOW
@@ -60,7 +60,7 @@ namespace RD_AAOW
 				// При пустом значении пробуем получить язык от системы
 				if (lang == "")
 					{
-					CultureInfo ci = CultureInfo.CurrentCulture;
+					CultureInfo ci = CultureInfo.InstalledUICulture;
 
 					switch (ci.ToString ().ToLower ())
 						{
@@ -328,6 +328,6 @@ namespace RD_AAOW
 			return GetText (FormName + "_" + ControlName, Language);
 			}
 
-#endregion
+		#endregion
 		}
 	}

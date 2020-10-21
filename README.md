@@ -2,11 +2,9 @@
 > PCC: 00034B5B5AABBBCF
 
 
-
 A tool for managing Windows registry settings for file extensions
 
 Инструмент управления пользовательскими настройками расширений файлов в Windows
-
 
 
 ## Описание
@@ -34,7 +32,7 @@ A tool for managing Windows registry settings for file extensions
 На данный момент программа работает только с записями в ветке реестра HKEY_CLASSES_ROOT и только с типами параметров
 REG_SZ, REG_DWORD и REG_QWORD
 
-
+#
 
 ## About
 
@@ -59,6 +57,8 @@ libraries, control panel components or icons is available from the main interfac
 For now, utility only works with entries in registry branch HKEY_CLASSES_ROOT and only with parameter types REG_SZ,
 REG_DWORD, and REG_QWORD
 
+&nbsp;
+
 
 
 ## Requirements / Требования
@@ -66,6 +66,8 @@ REG_DWORD, and REG_QWORD
 Needs Windows XP and newer, Framework 4.0 and newer. Interface language: ru_ru, en_us
 
 Требуется ОС Windows XP и новее, Framework 4.0 и новее. Язык интерфейса: ru_ru, en_us
+
+&nbsp;
 
 
 
@@ -76,6 +78,8 @@ describes general rules that we follow in all of our development processes, rele
 ideas.
 **It must be acquainted by participants and users before using any of laboratory's products.
 By downloading them, you agree to this Policy**
+
+#
 
 Данная [Политика (ADP)](https://vk.com/@rdaaow_fupl-adp), её положения, заключение, EULA и способы применения
 описывают общие правила, которым мы следуем во всех наших процессах разработки, вышедших в релиз приложениях

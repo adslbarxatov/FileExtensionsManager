@@ -1,0 +1,57 @@
+# Действие, формирующее релиз
+name: Release
+
+# Активация по ручному вызову
+on:
+  push:
+    branches: [ master ]
+    paths: .release/*.exe
+
+# Содержит одно задание build с названием Project release с несколькими шагами
+jobs:
+  build:
+    name: Project release
+    runs-on: ubuntu-latest
+    
+# Константы, используемые далее по тексту
+    env:
+      PROJ: FileExtensionsManager
+      TAG: 1.5
+
+    steps:
+# Проверка состава репозитория (без анализа, как может показаться)
+      - name: Checkout code
+        uses: actions/checkout@v2
+  
+# Формирование релиза
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.TAG }}
+          release_name: ${{ env.PROJ }} v ${{ env.TAG }}
+          body_path: .release/Release.md
+          draft: false
+          prerelease: false
+
+# Загрузка бинарных файлов в релиз
+      - name: Upload release asset
+        id: upload-release-asset
+        uses: actions/github-script@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs').promises;
+            const { repo: { owner, repo }, sha } = context;
+
+            await fs.unlink (`./.release/Release.md`);
+            for (let file of await fs.readdir('./.release')){
+              await github.repos.uploadReleaseAsset({
+                owner, repo,
+                release_id: ${{ steps.create_release.outputs.id }},
+                name: file,
+                data: await fs.readFile(`./.release/${file}`)
+                });
+              }

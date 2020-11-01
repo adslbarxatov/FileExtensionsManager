@@ -37,6 +37,8 @@ namespace RD_AAOW
 			// Инициализация
 			InitializeComponent ();
 			al = InterfaceLanguage;
+			this.AcceptButton = Apply;
+			this.CancelButton = Abort;
 
 			OFDialog.Title = Localization.GetText ("ER_OFDialogText", al);
 			OFDialog.Filter = Localization.GetText ("ER_OFDialogFilter", al);

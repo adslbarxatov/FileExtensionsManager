@@ -133,7 +133,7 @@
     <value>&amp;Apply</value>
   </data>
   <data name="ApplyEntry" xml:space="preserve">
-    <value>Apply current entry?</value>
+    <value>Apply selected entries?</value>
   </data>
   <data name="BasesNotFound" xml:space="preserve">
     <value>No bases of registry entries found</value>
@@ -190,7 +190,7 @@
     <value>&amp;Add entry</value>
   </data>
   <data name="FileExtensionsManagerForm_Apply" xml:space="preserve">
-    <value>A&amp;pply record</value>
+    <value>A&amp;pply selected</value>
   </data>
   <data name="FileExtensionsManagerForm_ApplyAll" xml:space="preserve">
     <value>Appl&amp;y all</value>
@@ -199,7 +199,7 @@
     <value>Current base:</value>
   </data>
   <data name="FileExtensionsManagerForm_DeleteRecord" xml:space="preserve">
-    <value>&amp;Delete record</value>
+    <value>&amp;Delete selected</value>
   </data>
   <data name="FileExtensionsManagerForm_Exit" xml:space="preserve">
     <value>E&amp;xit</value>
@@ -289,7 +289,7 @@ For now, utility only works with entries in registry branch HKEY_CLASSES_ROOT an
     <value> (string)</value>
   </data>
   <data name="RemoveEntry" xml:space="preserve">
-    <value>Remove current entry?</value>
+    <value>Remove selected entries?</value>
   </data>
   <data name="SomeFieldsAreEmpty" xml:space="preserve">
     <value>One of required fields is empty</value>

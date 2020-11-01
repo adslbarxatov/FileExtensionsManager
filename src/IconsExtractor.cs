@@ -13,18 +13,18 @@ namespace RD_AAOW
 	public partial class IconsExtractor:Form
 		{
 		// Константы
-		private const uint iconPositionWidth = 35;		// Ширина поля иконки
-		private const uint iconHeight = 32;				// Высота иконки
-		private const uint iconPositionHeight = 48;		// Высота поля иконки
-		private const uint iconsHorizontalCount = 20;	// Количество иконок в строке
-		private const uint iconsVerticalCount = 10;		// Количество иконок в столбце
+		private const uint iconPositionWidth = 35;      // Ширина поля иконки
+		private const uint iconHeight = 32;             // Высота иконки
+		private const uint iconPositionHeight = 48;     // Высота поля иконки
+		private const uint iconsHorizontalCount = 20;   // Количество иконок в строке
+		private const uint iconsVerticalCount = 10;     // Количество иконок в столбце
 
 		// Переменные
-		private Bitmap iconsView;			// Конечная страница с иконками
-		private UInt32 iconsCount;			// Количество найденных иконок
-		private bool allowExit = true;		// Флаг разрешения закрытия окна
+		private Bitmap iconsView;           // Конечная страница с иконками
+		private UInt32 iconsCount;          // Количество найденных иконок
+		private bool allowExit = true;      // Флаг разрешения закрытия окна
 
-		private Brush selectionBrush = new SolidBrush (Color.FromArgb (128, 255, 255, 0));	// Кисть для выбранной иконки
+		private Brush selectionBrush = new SolidBrush (Color.FromArgb (128, 255, 255, 0));  // Кисть для выбранной иконки
 
 		private SupportedLanguages al;
 
@@ -38,8 +38,8 @@ namespace RD_AAOW
 				return selectedIconNumber;
 				}
 			}
-		private int selectedIconNumber = -1;	// Выбранная иконка
-		private decimal currentPage = 0;		// Страница, на которой она расположена
+		private int selectedIconNumber = -1;    // Выбранная иконка
+		private decimal currentPage = 0;        // Страница, на которой она расположена
 
 		/// <summary>
 		/// Возвращает путь к файлу, в котором содержится выбранная иконка
@@ -74,6 +74,8 @@ namespace RD_AAOW
 			// Инициализация
 			InitializeComponent ();
 			al = InterfaceLanguage;
+			this.AcceptButton = SelectButton;
+			this.CancelButton = AbortButton;
 
 			// Настройка контролов
 			OFDialog.Title = Localization.GetText ("IE_OFDialogTitle", al);
@@ -125,7 +127,7 @@ namespace RD_AAOW
 			for (UInt32 i = 0; i < iconsCount; i++)
 				{
 				ExtractIconExA (OFDialog.FileName, (Int32)i, ref bigIcon, ref smallIcon, 1);
-				icons.Add (Icon.FromHandle (bigIcon).ToBitmap ());		// Если делать проще, теряется альфа-канал
+				icons.Add (Icon.FromHandle (bigIcon).ToBitmap ());      // Если делать проще, теряется альфа-канал
 				}
 
 			// Сборка изображения
@@ -197,7 +199,7 @@ namespace RD_AAOW
 
 				selectedIconNumber = (int)selectedNumber;
 				currentPage = PageNumber.Value;
-				PageNumber_ValueChanged (null, null);	// Перерисовка
+				PageNumber_ValueChanged (null, null);   // Перерисовка
 				}
 			}
 

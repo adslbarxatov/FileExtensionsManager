@@ -168,17 +168,22 @@ namespace RD_AAOW
 				return;
 
 			// Удаление
-			int row = MainTable.SelectedRows[0].Index;
+			List<int> idx = new List<int> ();
+			foreach (DataGridViewRow r in MainTable.SelectedRows)
+				idx.Add (r.Index);
+			idx.Sort ();
 
-			rebm[BasesCombo.SelectedIndex].DeleteEntry ((uint)row);
+			for (int i = 0; i < idx.Count; i++)
+				rebm[BasesCombo.SelectedIndex].DeleteEntry ((uint)(idx[i] - i));
+
+			// Обновление таблицы
 			UpdateTable ();
-
 			if (rebm[BasesCombo.SelectedIndex].EntriesCount > 0)
 				{
-				if (rebm[BasesCombo.SelectedIndex].EntriesCount == row)
-					row--;
+				if (rebm[BasesCombo.SelectedIndex].EntriesCount <= idx[idx.Count - 1])
+					idx[idx.Count - 1] = (int)rebm[BasesCombo.SelectedIndex].EntriesCount - 1;
 
-				MainTable.CurrentCell = MainTable.Rows[row].Cells[0];
+				MainTable.CurrentCell = MainTable.Rows[idx[idx.Count - 1]].Cells[0];
 				}
 			}
 
@@ -193,26 +198,28 @@ namespace RD_AAOW
 				MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
 				return;
 
-			// Применение записи
-			string msg = "";
-
-			switch (rebm[BasesCombo.SelectedIndex].GetRegistryEntry ((uint)MainTable.SelectedRows[0].Index).ApplyEntry ())
+			// Применение записей
+			for (int i = 0; i < MainTable.SelectedRows.Count; i++)
 				{
-				case RegistryEntryApplicationResults.CannotGetAccess:
-					msg = Localization.GetText ("EntryIsUnavailable", al);
-					break;
+				string msg = "";
+				switch (rebm[BasesCombo.SelectedIndex].GetRegistryEntry ((uint)MainTable.SelectedRows[i].Index).ApplyEntry ())
+					{
+					case RegistryEntryApplicationResults.CannotGetAccess:
+						msg = Localization.GetText ("EntryIsUnavailable", al);
+						break;
 
-				case RegistryEntryApplicationResults.PartiallyApplied:
-				case RegistryEntryApplicationResults.NotApplied:
-					msg = Localization.GetText ("EntryNotApplied", al);
-					break;
+					case RegistryEntryApplicationResults.PartiallyApplied:
+					case RegistryEntryApplicationResults.NotApplied:
+						msg = Localization.GetText ("EntryNotApplied", al);
+						break;
+					}
+
+				if (msg != "")
+					MessageBox.Show (msg, ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
 
-			if (msg != "")
-				MessageBox.Show (msg, ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
-
 			// Обновление таблицы
-			int row = MainTable.SelectedRows[0].Index;
+			int row = MainTable.SelectedRows[MainTable.SelectedRows.Count - 1].Index;
 			UpdateTable ();
 			MainTable.CurrentCell = MainTable.Rows[row].Cells[0];
 			}
@@ -295,8 +302,8 @@ namespace RD_AAOW
 				}
 			}
 
-		// Редактирование записи
-		private void MainTable_CellDoubleClick (object sender, DataGridViewCellEventArgs e)
+		// Редактирование записей
+		private void EditRecord_Click (object sender, DataGridViewCellEventArgs e)
 			{
 			// Контроль
 			if (MainTable.SelectedRows.Count <= 0)
@@ -316,6 +323,24 @@ namespace RD_AAOW
 
 				// Запрос на применение
 				Apply_Click (null, null);
+				}
+			}
+
+		private void MainTable_KeyDown (object sender, KeyEventArgs e)
+			{
+			switch (e.KeyCode)
+				{
+				case Keys.Return:
+					EditRecord_Click (null, null);
+					break;
+
+				case Keys.Insert:
+					AddRecord_Click (null, null);
+					break;
+
+				case Keys.Delete:
+					DeleteRecord_Click (null, null);
+					break;
 				}
 			}
 

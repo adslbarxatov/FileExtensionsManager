@@ -1,5 +1,12 @@
 ﻿File extensions manager changes log
 
+Version 1.5.2:
+• Added multi-selection for Apply and Delete functions;
+• Added keyboard control for main table:
+  - Delete key for Delete function;
+  - Insert key for Add function;
+  - Enter key for Edit function
+
 Version 1.5:
 • Cumulative changes applied
 

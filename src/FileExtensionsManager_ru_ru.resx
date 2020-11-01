@@ -133,7 +133,7 @@
     <value>&amp;Применить</value>
   </data>
   <data name="ApplyEntry" xml:space="preserve">
-    <value>Применить выбранную запись?</value>
+    <value>Применить выбранные записи?</value>
   </data>
   <data name="BasesNotFound" xml:space="preserve">
     <value>Не найдена ни одна база реестровых записей</value>
@@ -190,7 +190,7 @@
     <value>&amp;Добавить запись</value>
   </data>
   <data name="FileExtensionsManagerForm_Apply" xml:space="preserve">
-    <value>&amp;Применить запись</value>
+    <value>&amp;Применить выбранные</value>
   </data>
   <data name="FileExtensionsManagerForm_ApplyAll" xml:space="preserve">
     <value>Применить &amp;все</value>
@@ -199,7 +199,7 @@
     <value>Текущая база:</value>
   </data>
   <data name="FileExtensionsManagerForm_DeleteRecord" xml:space="preserve">
-    <value>&amp;Удалить запись</value>
+    <value>&amp;Удалить выбранные</value>
   </data>
   <data name="FileExtensionsManagerForm_Exit" xml:space="preserve">
     <value>В&amp;ыход</value>
@@ -289,7 +289,7 @@
     <value> (строковый)</value>
   </data>
   <data name="RemoveEntry" xml:space="preserve">
-    <value>Удалить выбранную запись?</value>
+    <value>Удалить выбранные записи?</value>
   </data>
   <data name="SomeFieldsAreEmpty" xml:space="preserve">
     <value>Одно из обязательных полей не заполнено</value>

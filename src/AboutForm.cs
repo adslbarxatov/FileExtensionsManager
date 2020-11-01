@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Threading;
@@ -462,7 +463,10 @@ htmlError:
 			long length = 0, current = 0;
 			try
 				{
-				length = long.Parse (paths[2]);
+				if (paths[2].StartsWith ("0x"))
+					length = long.Parse (paths[2].Substring (2), NumberStyles.AllowHexSpecifier);
+				else
+					length = long.Parse (paths[2]);
 				}
 			catch { }
 

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace RD_AAOW
 	{
@@ -44,6 +45,8 @@ namespace RD_AAOW
 			// Инициализация
 			InitializeComponent ();
 			al = InterfaceLanguage;
+			this.AcceptButton = Apply;
+			this.CancelButton = Abort;
 
 			// Сохранение параметров
 			editedEntry = Entry;
@@ -76,19 +79,19 @@ namespace RD_AAOW
 			}
 
 		// Изменение состояния флага удаления раздела
-		private void PathMustBeDeleted_CheckedChanged (object sender, System.EventArgs e)
+		private void PathMustBeDeleted_CheckedChanged (object sender, EventArgs e)
 			{
 			KeyName.Enabled = KeyObject.Enabled = KeyType.Enabled = NameMustBeDeleted.Enabled = !PathMustBeDeleted.Checked;
 			}
 
 		// Отмена изменений
-		private void Abort_Click (object sender, System.EventArgs e)
+		private void Abort_Click (object sender, EventArgs e)
 			{
 			this.Close ();
 			}
 
 		// Применение изменений
-		private void Apply_Click (object sender, System.EventArgs e)
+		private void Apply_Click (object sender, EventArgs e)
 			{
 			// Проверка записи на корректность
 			RegistryEntry re = new RegistryEntry (KeyPath.Text, KeyName.Text, KeyObject.Text,

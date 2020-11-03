@@ -5,7 +5,7 @@ name: Release
 on:
   push:
     branches: [ master ]
-    paths: .release/*.exe
+    paths: .release/Release.md
 
 # Содержит одно задание build с названием Project release с несколькими шагами
 jobs:

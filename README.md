@@ -1,5 +1,5 @@
-# FileExtensionsManager v 1.5.2
-> PCC: 00034D5DE89845F5
+# FileExtensionsManager v 1.5.3
+> PCC: 0003855D4F9F9ED6
 
 
 A tool for managing Windows registry settings for file extensions
@@ -10,8 +10,9 @@ A tool for managing Windows registry settings for file extensions
 ## Описание
 
 Программа позволяет хранить и применять пользовательские настройки расширений файлов, зарегистрированных в операционной системе.
-В списке записей отображаются реестровые сопоставления, хранящиеся в текущей выбранной базе записей. Зелёным цветом
-обозначены записи, уже имеющиеся в реестре Windows, синим – записи, неполностью соответствующие пользовательским
+В списке записей отображаются реестровые сопоставления, хранящиеся в текущей выбранной базе записей.
+
+Зелёным цветом обозначены записи, уже имеющиеся в реестре Windows, синим – записи, неполностью соответствующие пользовательским
 настройкам, а красным – отсутствующие записи. Если запись помечена как удаляемая, то зелёным помечаются отсутствующие в
 реестре записи, а красным – присутствующие. Наличие серых записей может говорить об отсутствии доступа к реестру Windows.
 
@@ -37,7 +38,9 @@ REG_SZ, REG_DWORD и REG_QWORD
 ## About
 
 Utility allows you to store and apply custom settings for file extensions registered in operating system. List of records
-displays registry mappings stored in currently selected base of records. Green indicates entries that already exist in
+displays registry mappings stored in currently selected base of records.
+
+Green indicates entries that already exist in
 Windows registry, blue indicates entries that partially correspond to user settings, and red indicates missing entries.
 If record is marked as deleted, then entries that are absent in registry are marked in green, otherwise they are marked
 in red. Presence of gray entries may indicate a lack of access to Windows registry.

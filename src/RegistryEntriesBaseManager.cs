@@ -11,22 +11,22 @@ namespace RD_AAOW
 	public class RegistryEntriesBaseManager
 		{
 		// Переменные и константы
-		private List<RegistryEntry> entries = new List<RegistryEntry> ();	// База реестровых записей
+		private List<RegistryEntry> entries = new List<RegistryEntry> ();   // База реестровых записей
 
-		private Encoding registryFileEncoding = Encoding.Unicode;			// Кодировки файлов
+		private Encoding registryFileEncoding = Encoding.Unicode;           // Кодировки файлов
 		private Encoding baseFileEncoding = Encoding.GetEncoding (1251);
-		private string registryFileSplitter = "=";							// Сплиттер параметра и значения в файле реестра
-		private char[] baseFileSplitters = new char[] { '\x1' };			// Сплиттер записей в базе
+		private string registryFileSplitter = "=";                          // Сплиттер параметра и значения в файле реестра
+		private char[] baseFileSplitters = new char[] { '\x1' };            // Сплиттер записей в базе
 
-		private bool changed = true;							// Флаг указывает, что в базу были внесены изменения
-		private List<string> ebp = new List<string> ();			// Список представлений записей в базе
+		private bool changed = true;                            // Флаг указывает, что в базу были внесены изменения
+		private List<string> ebp = new List<string> ();         // Список представлений записей в базе
 		private List<RegistryEntryApplicationResults> esp = new List<RegistryEntryApplicationResults> ();
 
-		private FileStream FS = null;							// Файловые дескрипторы
+		private FileStream FS = null;                           // Файловые дескрипторы
 		private StreamReader SR = null;
 		private StreamWriter SW = null;
 
-		private const string newBaseFileName = "New base";		// Имя файла новой базы реестровых записей
+		private const string newBaseFileName = "New base";      // Имя файла новой базы реестровых записей
 
 		/// <summary>
 		/// Расширение имени файла базы реестровых записей
@@ -48,11 +48,11 @@ namespace RD_AAOW
 			baseName = BaseName;
 
 			// Загрузка базы
-			if (!LoadBase ())		// Если загрузка завершается с ошибкой
+			if (!LoadBase ())       // Если загрузка завершается с ошибкой
 				{
-				if (!SaveBase ())	// Пробуем создать базу
+				if (!SaveBase ())   // Пробуем создать базу
 					{
-					return;			// Если не получается, прерываем загрузку
+					return;         // Если не получается, прерываем загрузку
 					}
 				}
 
@@ -68,8 +68,8 @@ namespace RD_AAOW
 			baseName = newBaseFileName;
 
 			// Загрузка базы
-			if (!SaveBase ())	// Пробуем создать базу
-				return;			// Если не получается, прерываем загрузку
+			if (!SaveBase ())   // Пробуем создать базу
+				return;         // Если не получается, прерываем загрузку
 
 			isInited = true;
 			}
@@ -89,14 +89,14 @@ namespace RD_AAOW
 			SR = new StreamReader (FS, baseFileEncoding);
 
 			// Чтение файла
-			SR.ReadLine ();		// Версия
+			SR.ReadLine ();     // Версия
 
 			while (!SR.EndOfStream)
 				{
 				string s = SR.ReadLine ();
-				string[] values = s.Split (baseFileSplitters);	// Пустые поля не удалять, т.к. они отвечают за значения по умолчанию
+				string[] values = s.Split (baseFileSplitters);  // Пустые поля не удалять, т.к. они отвечают за значения по умолчанию
 				if (values.Length != 6)
-					continue;	// Если вдруг попадётся битая запись, пропустить её
+					continue;   // Если вдруг попадётся битая запись, пропустить её
 
 				RegistryValueTypes valueType = RegistryValueTypes.REG_SZ;
 				try
@@ -108,7 +108,7 @@ namespace RD_AAOW
 					}
 				RegistryEntry re = new RegistryEntry (values[0], values[1], values[2], valueType, values[4] != "0", values[5] != "0");
 				if (!re.IsValid)
-					continue;	// Аналогично
+					continue;   // Аналогично
 
 				// В противном случае добавляем запись
 				entries.Add (re);
@@ -146,7 +146,7 @@ namespace RD_AAOW
 			// Попытка открытия базы
 			try
 				{
-				FS = new FileStream (BasesSubdirectory + "\\" + baseName + BaseFileExtension2, FileMode.Create);	// Перезаписывает недоступный файл при необходимости
+				FS = new FileStream (BasesSubdirectory + "\\" + baseName + BaseFileExtension2, FileMode.Create);    // Перезаписывает недоступный файл при необходимости
 				}
 			catch
 				{
@@ -203,7 +203,7 @@ namespace RD_AAOW
 			{
 			get
 				{
-				if (isInited && changed)	// Выполнять обновление, только если в базу вносились изменения
+				if (isInited && changed)    // Выполнять обновление, только если в базу вносились изменения
 					{
 					// Сортировка
 					entries.Sort ();
@@ -233,7 +233,7 @@ namespace RD_AAOW
 			{
 			get
 				{
-				if (isInited)	// Выполнять обновление всегда, когда возможно, и без сортировки
+				if (isInited)   // Выполнять обновление всегда, когда возможно, и без сортировки
 					{
 					// Сборка списка
 					esp.Clear ();
@@ -258,7 +258,7 @@ namespace RD_AAOW
 			if (!isInited || (EntryNumber > entries.Count))
 				return new RegistryEntry ("", "", "");
 
-			return (RegistryEntry)entries[(int)EntryNumber].Clone ();	// Защита от неотслеживаемого доступа
+			return (RegistryEntry)entries[(int)EntryNumber].Clone ();   // Защита от неотслеживаемого доступа
 			}
 
 		/// <summary>
@@ -296,7 +296,7 @@ namespace RD_AAOW
 
 			// Контроль состава файла
 			string s = SR.ReadLine ().ToLower (), s2;
-			if (!s.Contains ("regedit") && !s.Contains ("windows registry"))	// Заодно исключает возможные проблемы с кодировкой
+			if (!s.Contains ("regedit") && !s.Contains ("windows registry"))    // Заодно исключает возможные проблемы с кодировкой
 				return 0;
 
 			// Начало чтения
@@ -315,7 +315,7 @@ namespace RD_AAOW
 
 					// Проверяем, не содержит ли путь пометку на удаление
 					RegistryEntry re = new RegistryEntry (s, "\\", "");
-					if (re.IsValid)		// В таком варианте запись будет валидна только и исключительно в случае наличия пометки
+					if (re.IsValid)     // В таком варианте запись будет валидна только и исключительно в случае наличия пометки
 						{
 						entries.Add (re);
 						entriesCounter++;
@@ -330,11 +330,11 @@ namespace RD_AAOW
 					{
 					// Проверяем наличие сплиттера
 					int indexOfSplitter = s.IndexOf (registryFileSplitter);
-					if ((indexOfSplitter <= 0) || (indexOfSplitter >= s.Length - 1))	// Сплиттер отсутствует или стоит на краю строки
-						continue;														// (или в обработку попала некорректная строка)
+					if ((indexOfSplitter <= 0) || (indexOfSplitter >= s.Length - 1))    // Сплиттер отсутствует или стоит на краю строки
+						continue;                                                       // (или в обработку попала некорректная строка)
 
 					// Пробуем собрать запись
-					s2 = s.Substring (indexOfSplitter + 1);	// Сначала нужно обрубить лишние кавычки
+					s2 = s.Substring (indexOfSplitter + 1); // Сначала нужно обрубить лишние кавычки
 					if (s2.Length >= 2)
 						{
 						if (s2.Substring (0, 1) == "\"")

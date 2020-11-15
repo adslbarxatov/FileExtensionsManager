@@ -45,7 +45,7 @@ namespace RD_AAOW
 			if (Directory.Exists (Application.StartupPath + "\\" + RegistryEntriesBaseManager.BasesSubdirectory))
 				{
 				string[] files = Directory.GetFiles (Application.StartupPath + "\\" + RegistryEntriesBaseManager.BasesSubdirectory,
-					"*" + RegistryEntriesBaseManager.BaseFileExtension2);
+					"*" + RegistryEntriesBaseManager.BaseFileExtension);
 				for (int i = 0; i < files.Length; i++)
 					{
 					RegistryEntriesBaseManager re = new RegistryEntriesBaseManager (Path.GetFileNameWithoutExtension (files[i]));

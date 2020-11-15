@@ -31,7 +31,7 @@ namespace RD_AAOW
 		/// <summary>
 		/// Расширение имени файла базы реестровых записей
 		/// </summary>
-		public const string BaseFileExtension2 = ".reb";
+		public const string BaseFileExtension = ".reb";
 
 		/// <summary>
 		/// Субдиректория для хранения сохранённых баз реестровых записей
@@ -80,7 +80,7 @@ namespace RD_AAOW
 			// Попытка открытия файла
 			try
 				{
-				FS = new FileStream (BasesSubdirectory + "\\" + baseName + BaseFileExtension2, FileMode.Open);
+				FS = new FileStream (BasesSubdirectory + "\\" + baseName + BaseFileExtension, FileMode.Open);
 				}
 			catch
 				{
@@ -146,7 +146,7 @@ namespace RD_AAOW
 			// Попытка открытия базы
 			try
 				{
-				FS = new FileStream (BasesSubdirectory + "\\" + baseName + BaseFileExtension2, FileMode.Create);    // Перезаписывает недоступный файл при необходимости
+				FS = new FileStream (BasesSubdirectory + "\\" + baseName + BaseFileExtension, FileMode.Create);    // Перезаписывает недоступный файл при необходимости
 				}
 			catch
 				{

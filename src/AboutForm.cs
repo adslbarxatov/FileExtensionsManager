@@ -26,9 +26,17 @@ namespace RD_AAOW
 		private const string gitUpdatesSublink = "/releases";                       // Часть пути для перехода к релизам
 		private string versionDescription = "";
 
-		private const string lastShownVersionKey = "HelpShownAt";       // Ключ реестра, хранящий версию, на которой отображалась справка
+		private bool accepted = false;                                              // Флаг принятия Политики
+		private string adpRevision = "";                                            // Последняя версия ADP
 
-		private bool accepted = false;                                  // Флаг принятия Политики
+		/// <summary>
+		/// Ключ реестра, хранящий версию, на которой отображалась справка
+		/// </summary>
+		public const string LastShownVersionKey = "HelpShownAt";
+
+		// Ключ реестра, хранящий последнюю принятую версию ADP
+		private const string ADPRevisionKey = "ADPRevision";
+		private const string ADPRevisionPath = "HKEY_LOCAL_MACHINE\\SOFTWARE\\DPModule";
 
 		/// <summary>
 		/// Конструктор. Инициализирует форму
@@ -105,16 +113,28 @@ namespace RD_AAOW
 				try
 					{
 					helpShownAt = Registry.GetValue (ProgramDescription.AssemblySettingsKey,
-						lastShownVersionKey, "").ToString ();
+						LastShownVersionKey, "").ToString ();
+					adpRevision = Registry.GetValue (ADPRevisionPath, ADPRevisionKey, "").ToString ();
 					}
 				catch
 					{
+					}
+
+				// Если поле пустое, устанавливается минимальное значение
+				if (adpRevision == "")
+					{
+					adpRevision = "rev. 8!";
+					try
+						{
+						Registry.SetValue (ADPRevisionPath, ADPRevisionKey, adpRevision);
+						}
+					catch { }
 					}
 				}
 
 			// Контроль
 			if (StartupMode && (helpShownAt == ProgramDescription.AssemblyVersion) ||   // Справка уже отображалась
-				AcceptMode && (helpShownAt != ""))          // Политика уже принята
+				AcceptMode && (!adpRevision.EndsWith ("!")))                            // Политика уже принята
 				return 1;
 
 			// Настройка контролов
@@ -130,7 +150,7 @@ namespace RD_AAOW
 					MisacceptButton.Text = "О&тклонить";
 					DescriptionBox.Text = AcceptMode ? "Не удалось получить текст Политики. " +
 						"Попробуйте использовать кнопку перехода в браузер" : description;
-					policyLoaderCaption = "Подготовка к первому запуску...";
+					policyLoaderCaption = "Подготовка к запуску...";
 
 					this.Text = AcceptMode ? "Политика разработки и соглашение пользователя" : "О программе";
 					break;
@@ -144,7 +164,7 @@ namespace RD_AAOW
 					ExitButton.Text = AcceptMode ? "&Accept" : "&OK";
 					MisacceptButton.Text = "&Decline";
 					DescriptionBox.Text = AcceptMode ? "Failed to get Policy text. Try button to open it in browser" : description;
-					policyLoaderCaption = "Preparing for first launch...";
+					policyLoaderCaption = "Preparing for launch...";
 
 					this.Text = AcceptMode ? "Development policy and user agreement" : "About application";
 					break;
@@ -165,7 +185,14 @@ namespace RD_AAOW
 
 				string html = hwe.Result.ToString ();
 				if (html != "")
+					{
 					DescriptionBox.Text = html;
+
+					int left = html.IndexOf ("rev");
+					int right = html.IndexOf ("\r", left);
+					if ((left >= 0) && (right >= 0))
+						adpRevision = html.Substring (left, right - left);
+					}
 				}
 
 			// Настройка контролов
@@ -176,18 +203,16 @@ namespace RD_AAOW
 			// Запуск
 			this.ShowDialog ();
 
-			// Запись версии по завершению
-			if (StartupMode)
+			// Запись версий по завершению
+			try
 				{
-				try
-					{
-					Registry.SetValue (ProgramDescription.AssemblySettingsKey, lastShownVersionKey,
+				if (StartupMode)
+					Registry.SetValue (ProgramDescription.AssemblySettingsKey, LastShownVersionKey,
 						ProgramDescription.AssemblyVersion);
-					}
-				catch
-					{
-					}
+				if (AcceptMode && accepted)
+					Registry.SetValue (ADPRevisionPath, ADPRevisionKey, adpRevision);
 				}
+			catch { }
 
 			// Завершение
 			return accepted ? 0 : -1;
@@ -198,14 +223,21 @@ namespace RD_AAOW
 			{
 			string html = GetHTML (adpLink);
 			int textLeft = 0, textRight = 0;
+			string header = "";
+			if (((textLeft = html.IndexOf ("<h1")) >= 0) && ((textRight = html.IndexOf ("</h1", textLeft)) >= 0))
+				{
+				// Обрезка
+				header = html.Substring (textLeft, textRight - textLeft);
+				}
+
 			if (((textLeft = html.IndexOf ("<h3")) >= 0) && ((textRight = html.IndexOf ("<script", textLeft)) >= 0))
 				{
 				// Обрезка
-				html = html.Substring (textLeft, textRight - textLeft);
+				html = header + "\r\n\r\n" + html.Substring (textLeft, textRight - textLeft);
 
 				// Формирование абзацных отступов
-				html = html.Replace ("<br/>", "\r\n\r\n").Replace ("</p>", "\r\n\r\n").
-					Replace ("</li>", "\r\n\r\n").Replace ("</h1>", "\r\n\r\n").Replace ("</h3>", "\r\n\r\n");
+				html = html.Replace ("<br/>", "\r\n\r\n").Replace ("</p>", "\r\n\r\n").Replace ("</li>", "\r\n\r\n").
+					Replace ("</h1>", "\r\n\r\n").Replace ("<h3", "\r\n<h3").Replace ("</h3>", "\r\n\r\n");
 
 				// Удаление вложенных тегов
 				while (((textLeft = html.IndexOf ("<")) >= 0) && ((textRight = html.IndexOf (">", textLeft)) >= 0))
@@ -214,6 +246,7 @@ namespace RD_AAOW
 				// Удаление двойных пробелов
 				while (html.IndexOf ("  ") >= 0)
 					html = html.Replace ("  ", " ");
+				html = html.Replace ("\n ", "");
 				}
 
 			e.Result = html;
@@ -249,7 +282,8 @@ namespace RD_AAOW
 		// Изменение размера окна
 		private void AboutForm_Resize (object sender, EventArgs e)
 			{
-			this.Width = this.MinimumSize.Width;
+			DescriptionBox.Width = this.Width - 31;
+			ExitButton.Left = this.Width - 120;
 
 			DescriptionBox.Height = this.Height - 225;
 			ExitButton.Top = MisacceptButton.Top = this.Height - 63;
@@ -373,6 +407,28 @@ namespace RD_AAOW
 					break;
 				}
 
+			// Получение обновлений Политики (ошибки игнорируются)
+			html = GetHTML (adpLink);
+			if (((i = html.IndexOf ("<title")) >= 0) && ((j = html.IndexOf ("</title", i)) >= 0))
+				{
+				// Обрезка
+				html = html.Substring (i, j - i);
+
+				if ((i = html.IndexOf ("rev")) >= 0)
+					{
+					html = html.Substring (i);
+
+					if (!html.StartsWith (adpRevision))
+						{
+						// Сброс версии для вызова Политики при следующем старте
+						try
+							{
+							Registry.SetValue (ADPRevisionPath, ADPRevisionKey, html + "!");
+							}
+						catch { }
+						}
+					}
+				}
 
 			e.Result = 0;
 			return;
@@ -645,8 +701,8 @@ htmlError:
 					{
 					Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\shell", "", "open");
 					//Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\shell\\open", "", "&Open");
-					Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\shell\\open\\command", "Icon",
-						Application.StartupPath + "\\" + fileExt + ".ico,0");
+					Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\shell\\open", "Icon",
+						Application.StartupPath + "\\" + fileExt + ".ico");
 					Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\shell\\open\\command", "",
 						"\"" + Application.ExecutablePath + "\" \"%1\"");
 					}

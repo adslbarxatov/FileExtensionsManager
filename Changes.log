@@ -1,5 +1,10 @@
 ﻿File extensions manager changes log
 
+Version 1.5.4:
+• ADP loader has been rebuilt; policy text now formatted properly;
+• App about and Policy windows are now fully expandaple;
+• New app icon added
+
 Version 1.5.3:
 • Added ability to register file associations (on first start);
 • Added protection against multiple launch

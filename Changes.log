@@ -1,5 +1,8 @@
 ﻿File extensions manager changes log
 
+Version 1.5.5:
+• Fixed bug in Policy acception interface that disallowed to accept it in offline mode at first start
+
 Version 1.5.4:
 • ADP loader has been rebuilt; policy text now formatted properly;
 • App about and Policy windows are now fully expandaple;

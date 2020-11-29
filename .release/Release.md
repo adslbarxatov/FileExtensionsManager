@@ -1,6 +1,12 @@
-_Changes for v 1.5.4_:
+_Changes for v 1.5.5_:
+- Fixed bug in Policy acception interface that disallowed to accept it in offline mode at first start;
 - ADP loader has been rebuilt; policy text now formatted properly;
 - App about and Policy windows are now fully expandaple;
 - New app icon added;
 - Added ability to register file associations (on first start);
-- Added protection against multiple launch
+- Added protection against multiple launch;
+- Added multi-selection for Apply and Delete functions;
+- Added keyboard control for main table:
+    - Delete key for Delete function;
+    - Insert key for Add function;
+    - Enter key for Edit function

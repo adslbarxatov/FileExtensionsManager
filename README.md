@@ -1,5 +1,5 @@
-# FileExtensionsManager v 1.5.5
-> PCC: 0003875DF9B477D7
+# FileExtensionsManager v 1.5.6
+> PCC: 00038B293F5FA478
 
 
 A tool for managing Windows registry settings for file extensions

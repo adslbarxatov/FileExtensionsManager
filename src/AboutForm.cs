@@ -24,6 +24,7 @@ namespace RD_AAOW
 		private const string adpLink = "https://vk.com/@rdaaow_fupl-adp";           // Ссылка на Политику
 		private const string defaultGitLink = "https://github.com/adslbarxatov/";   // Мастер-ссылка проекта
 		private const string gitUpdatesSublink = "/releases";                       // Часть пути для перехода к релизам
+		private const string devLink = "mailto://adslbarxatov@gmail.com";           // Разработчик
 		private string versionDescription = "";
 
 		private bool accepted = false;                                              // Флаг принятия Политики
@@ -73,7 +74,7 @@ namespace RD_AAOW
 			// Завершение
 			UserManualButton.Enabled = (userManualLink != "");
 			ProjectPageButton.Enabled = (projectLink != "");
-			UpdatesPageButton.Enabled = (updatesLink != "");
+			//UpdatesPageButton.Enabled = (updatesLink != "");
 			}
 
 		/// <summary>
@@ -147,10 +148,10 @@ namespace RD_AAOW
 				case SupportedLanguages.ru_ru:
 					UserManualButton.Text = "Руководство";
 					ProjectPageButton.Text = "О проекте";
-					UpdatesPageButton.Text = "Обновления";
+					UpdatesPageButton.Text = "Поиск обновлений...";
 					ADPButton.Text = AcceptMode ? "Открыть в браузере" : "Политика и EULA";
-					AvailableUpdatesLabel.Text = "проверяются...";
 					ExitButton.Text = AcceptMode ? "&Принять" : "&ОК";
+					AskDeveloper.Text = "Разработчик";
 					MisacceptButton.Text = "О&тклонить";
 					DescriptionBox.Text = AcceptMode ? "Не удалось получить текст Политики. " +
 						"Попробуйте использовать кнопку перехода в браузер" : description;
@@ -162,10 +163,10 @@ namespace RD_AAOW
 				default:    // en_us
 					UserManualButton.Text = "User manual";
 					ProjectPageButton.Text = "Project webpage";
-					UpdatesPageButton.Text = "Updates webpage";
+					UpdatesPageButton.Text = "Checking updates...";
 					ADPButton.Text = AcceptMode ? "Open in browser" : "Policy and EULA";
-					AvailableUpdatesLabel.Text = "checking...";
 					ExitButton.Text = AcceptMode ? "&Accept" : "&OK";
+					AskDeveloper.Text = "Ask developer";
 					MisacceptButton.Text = "&Decline";
 					DescriptionBox.Text = AcceptMode ? "Failed to get Policy text. Try button to open it in browser" :
 						description;
@@ -202,7 +203,7 @@ namespace RD_AAOW
 
 			// Настройка контролов
 			UserManualButton.Visible = ProjectPageButton.Visible = UpdatesPageButton.Visible =
-				AvailableUpdatesLabel.Visible = !AcceptMode;
+				AskDeveloper.Visible = !AcceptMode;
 			MisacceptButton.Visible = AcceptMode;
 
 			// Запуск
@@ -341,6 +342,18 @@ namespace RD_AAOW
 				}
 			}
 
+		private void AskDeveloper_Click (object sender, EventArgs e)
+			{
+			try
+				{
+				Process.Start (devLink + ("?subject=Wish, advice or bug in " +
+					ProgramDescription.AssemblyTitle).Replace (" ", "%20"));
+				}
+			catch
+				{
+				}
+			}
+
 		// Метод-исполнитель проверки обновлений
 		private string[][] ucReplacements = new string[][] {
 			new string[] { "<p>", "\r\n\r\n" },
@@ -402,14 +415,14 @@ namespace RD_AAOW
 				{
 				case SupportedLanguages.ru_ru:
 					if (ProgramDescription.AssemblyTitle.EndsWith (version))
-						updatesMessage = "обновлений нет";
+						updatesMessage = "Обновлений нет";
 					else
-						updatesMessage = "доступна " + version;
+						updatesMessage = "Доступна " + version;
 					break;
 
 				default:    // en_us
 					if (ProgramDescription.AssemblyTitle.EndsWith (version))
-						updatesMessage = "no updates";
+						updatesMessage = "No updates";
 					else
 						updatesMessage = version + " available";
 					break;
@@ -446,11 +459,11 @@ htmlError:
 			switch (al)
 				{
 				case SupportedLanguages.ru_ru:
-					updatesMessage = "недоступны";
+					updatesMessage = "Недоступны";
 					break;
 
 				default:    // en_us
-					updatesMessage = "unavailable";
+					updatesMessage = "Unavailable";
 					break;
 				}
 
@@ -572,22 +585,35 @@ htmlError:
 			{
 			if (updatesMessage != "")
 				{
-				if (AvailableUpdatesLabel.Text == "")
+				// Включение
+				if (UpdatesPageButton.Text == "")
 					{
-					AvailableUpdatesLabel.Text = updatesMessage;
-					if (!updatesMessage.Contains ("."))
+					UpdatesPageButton.Text = updatesMessage;
+
+					// Включение кнопки и установка интервала
+					if (!UpdatesPageButton.Enabled)
 						{
-						UpdatesTimer.Enabled = false;
-						}
-					else
-						{
-						UpdatesTimer.Interval = 1000;
+						if (updatesMessage.Contains ("."))
+							{
+							UpdatesTimer.Interval = 1000;
+							UpdatesPageButton.Enabled = true;
+							UpdatesPageButton.Font = new Font (UpdatesPageButton.Font, FontStyle.Bold);
+							}
+
+						// Отключение таймера, если обновлений нет
+						else
+							{
+							UpdatesTimer.Enabled = false;
+							}
 						}
 					}
+
+				// Выключение
 				else
 					{
-					AvailableUpdatesLabel.Text = "";
+					UpdatesPageButton.Text = "";
 
+					// Получение описания версии
 					if (versionDescription != "")
 						{
 						DescriptionBox.Text += versionDescription;
@@ -702,15 +728,14 @@ htmlError:
 				// Запись значений реестра
 				Registry.SetValue ("HKEY_CLASSES_ROOT\\." + fileExt, "", fileExt + "file");
 				Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file", "", FileTypeName);
-				Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\DefaultIcon", "", Application.StartupPath +
-					"\\" + fileExt + ".ico");
+				Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\DefaultIcon", "", AppStartupPath +
+					fileExt + ".ico");
 
 				if (Openable)
 					{
 					Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\shell", "", "open");
-					//Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\shell\\open", "", "&Open");
 					Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\shell\\open", "Icon",
-						Application.StartupPath + "\\" + fileExt + ".ico");
+						AppStartupPath + fileExt + ".ico");
 					Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\shell\\open\\command", "",
 						"\"" + Application.ExecutablePath + "\" \"%1\"");
 					}
@@ -725,6 +750,22 @@ htmlError:
 				}
 
 			return true;
+			}
+
+		/// <summary>
+		/// Возвращает путь, из которого запущен данный экземпляр приложения,
+		/// с завершающим backslash
+		/// </summary>
+		public static string AppStartupPath
+			{
+			get
+				{
+				string s = Application.StartupPath; // В случае запуска из корня диска таки дорисовывает слэш
+				if (s.EndsWith ("\\"))
+					return s;
+
+				return (s + "\\");
+				}
 			}
 		}
 	}

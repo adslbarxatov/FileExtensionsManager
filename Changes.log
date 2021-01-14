@@ -1,7 +1,8 @@
 ﻿File extensions manager changes log
 
-ToDo:
-- Apply new paths processor
+Version 1.5.6:
+• Added ability to 'ask developer' via E-mail for help, or send wish, advice or bug report;
+• Applied new paths processor
 
 Version 1.5.5:
 • Fixed bug in Policy acception interface that disallowed to accept it in offline mode at first start

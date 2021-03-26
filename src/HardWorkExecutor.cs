@@ -138,15 +138,17 @@ namespace RD_AAOW
 		/// </summary>
 		/// <param name="HardWorkProcess">Процесс, выполняющий установку/удаление</param>
 		/// <param name="SetupPath">Путь установки/удаления</param>
-		/// <param name="Uninstall">Флаг удаления ранее установленных файлов</param>
+		/// <param name="Flags">Флаги процедуры: b0 = режим удаления;
+		///										 b1 = разрешено завершение работающих процессов;</param>
+		///										 b2 = разрешён запуск приложения по завершении
 		/// <param name="PackagePath">Путь к пакету развёртки</param>
-		public HardWorkExecutor (DoWorkEventHandler HardWorkProcess, string SetupPath, string PackagePath, bool Uninstall)
+		public HardWorkExecutor (DoWorkEventHandler HardWorkProcess, string SetupPath, string PackagePath, uint Flags)
 			{
 			// Инициализация
 			List<string> argument = new List<string> ();
 			argument.Add (SetupPath);
 			argument.Add (PackagePath);
-			argument.Add (Uninstall.ToString ());
+			argument.Add (Flags.ToString ());
 			parameters = argument;
 
 			// Настройка BackgroundWorker

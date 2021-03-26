@@ -21,7 +21,9 @@ namespace RD_AAOW
 		private SupportedLanguages al;
 		private string updatesMessage = "", description = "", policyLoaderCaption = "";
 
-		private const string adpLink = "https://vk.com/@rdaaow_fupl-adp";           // Ссылка на Политику
+		private const string adpLink = "https://vk.com/@rd_aaow_fdl-adp";           // Ссылка на Политику
+		private const string labLink1 = "https://vk.com/rd_aaow_fdl";               // Ссылки на лабораторию
+		private const string labLink2 = "https://t.me/rd_aaow_fdl";
 		private const string defaultGitLink = "https://github.com/adslbarxatov/";   // Мастер-ссылка проекта
 		private const string gitUpdatesSublink = "/releases";                       // Часть пути для перехода к релизам
 		private const string devLink = "mailto://adslbarxatov@gmail.com";           // Разработчик
@@ -74,7 +76,6 @@ namespace RD_AAOW
 			// Завершение
 			UserManualButton.Enabled = (userManualLink != "");
 			ProjectPageButton.Enabled = (projectLink != "");
-			//UpdatesPageButton.Enabled = (updatesLink != "");
 			}
 
 		/// <summary>
@@ -146,12 +147,12 @@ namespace RD_AAOW
 			switch (al)
 				{
 				case SupportedLanguages.ru_ru:
-					UserManualButton.Text = "Руководство";
-					ProjectPageButton.Text = "О проекте";
+					UserManualButton.Text = "&Руководство";
+					ProjectPageButton.Text = "&О проекте";
 					UpdatesPageButton.Text = "Поиск обновлений...";
-					ADPButton.Text = AcceptMode ? "Открыть в браузере" : "Политика и EULA";
+					ADPButton.Text = AcceptMode ? "Открыть в &браузере" : "&Политика и EULA";
 					ExitButton.Text = AcceptMode ? "&Принять" : "&ОК";
-					AskDeveloper.Text = "Разработчик";
+					AskDeveloper.Text = "Спросить ра&зработчика";
 					MisacceptButton.Text = "О&тклонить";
 					DescriptionBox.Text = AcceptMode ? "Не удалось получить текст Политики. " +
 						"Попробуйте использовать кнопку перехода в браузер" : description;
@@ -161,12 +162,12 @@ namespace RD_AAOW
 					break;
 
 				default:    // en_us
-					UserManualButton.Text = "User manual";
-					ProjectPageButton.Text = "Project webpage";
+					UserManualButton.Text = "&User manual";
+					ProjectPageButton.Text = "Project &webpage";
 					UpdatesPageButton.Text = "Checking updates...";
-					ADPButton.Text = AcceptMode ? "Open in browser" : "Policy and EULA";
+					ADPButton.Text = AcceptMode ? "Open in &browser" : "&Policy and EULA";
 					ExitButton.Text = AcceptMode ? "&Accept" : "&OK";
-					AskDeveloper.Text = "Ask developer";
+					AskDeveloper.Text = "Ask &developer";
 					MisacceptButton.Text = "&Decline";
 					DescriptionBox.Text = AcceptMode ? "Failed to get Policy text. Try button to open it in browser" :
 						description;
@@ -175,6 +176,7 @@ namespace RD_AAOW
 					this.Text = AcceptMode ? "Development policy and user agreement" : "About application";
 					break;
 				}
+			ToLaboratory.Text = "Free development lab";
 
 			// Запуск проверки обновлений
 			HardWorkExecutor hwe;
@@ -203,7 +205,7 @@ namespace RD_AAOW
 
 			// Настройка контролов
 			UserManualButton.Visible = ProjectPageButton.Visible = UpdatesPageButton.Visible =
-				AskDeveloper.Visible = !AcceptMode;
+				AskDeveloper.Visible = ToLaboratory.Visible = !AcceptMode;
 			MisacceptButton.Visible = AcceptMode;
 
 			// Запуск
@@ -342,6 +344,41 @@ namespace RD_AAOW
 				}
 			}
 
+		private void ToLaboratory_Click (object sender, EventArgs e)
+			{
+			string msg = "";
+			if (al == SupportedLanguages.ru_ru)
+				msg = "• «Да» – перейти на страницу Лаборатории в ВКонтакте;\n" +
+					"• «Нет» – перейти в группу Лаборатории в Telegram";
+			else
+				msg = "• “Yes” – go to Laboratory's page in VK;\n" +
+					"• “No” – go to Laboratory's group in Telegram";
+
+			string link = "";
+			switch (MessageBox.Show (msg, ProgramDescription.AssemblyTitle, MessageBoxButtons.YesNoCancel,
+				MessageBoxIcon.Question))
+				{
+				case DialogResult.Yes:
+					link = labLink1;
+					break;
+
+				case DialogResult.No:
+					link = labLink2;
+					break;
+
+				default:
+					return;
+				}
+
+			try
+				{
+				Process.Start (link);
+				}
+			catch
+				{
+				}
+			}
+
 		private void AskDeveloper_Click (object sender, EventArgs e)
 			{
 			try
@@ -417,14 +454,14 @@ namespace RD_AAOW
 					if (ProgramDescription.AssemblyTitle.EndsWith (version))
 						updatesMessage = "Обновлений нет";
 					else
-						updatesMessage = "Доступна " + version;
+						updatesMessage = "&Доступна " + version;
 					break;
 
 				default:    // en_us
 					if (ProgramDescription.AssemblyTitle.EndsWith (version))
 						updatesMessage = "No updates";
 					else
-						updatesMessage = version + " available";
+						updatesMessage = version + " a&vailable";
 					break;
 				}
 
@@ -475,8 +512,6 @@ htmlError:
 		/// <summary>
 		/// Метод-исполнитель загрузки пакета обновлений
 		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
 		public static void PackageLoader (object sender, DoWorkEventArgs e)
 			{
 			// Разбор аргументов
@@ -527,6 +562,7 @@ htmlError:
 				}
 			catch
 				{
+				resp.Close ();
 				e.Result = -3;
 				return;
 				}

@@ -21,7 +21,7 @@ namespace RD_AAOW
 		private SupportedLanguages al;
 		private string updatesMessage = "", description = "", policyLoaderCaption = "";
 
-		private const string adpLink = "https://vk.com/@rd_aaow_fdl-adp";           // Ссылка на Политику
+		private const string adpLink = "https://github.com/adslbarxatov/adp";       // Ссылка на Политику
 		private const string labLink1 = "https://vk.com/rd_aaow_fdl";               // Ссылки на лабораторию
 		private const string labLink2 = "https://t.me/rd_aaow_fdl";
 		private const string defaultGitLink = "https://github.com/adslbarxatov/";   // Мастер-ссылка проекта
@@ -51,6 +51,8 @@ namespace RD_AAOW
 			{
 			// Инициализация
 			InitializeComponent ();
+			this.AcceptButton = ExitButton;
+			this.CancelButton = MisacceptButton;
 
 			// Получение параметров
 			userManualLink = (UserManualLink == null) ? "" : UserManualLink;
@@ -233,30 +235,24 @@ namespace RD_AAOW
 			{
 			string html = GetHTML (adpLink);
 			int textLeft = 0, textRight = 0;
-			string header = "";
-			if (((textLeft = html.IndexOf ("<h1")) >= 0) && ((textRight = html.IndexOf ("</h1", textLeft)) >= 0))
-				{
-				// Обрезка
-				header = html.Substring (textLeft, textRight - textLeft);
-				}
 
-			if (((textLeft = html.IndexOf ("<h3")) >= 0) && ((textRight = html.IndexOf ("<script", textLeft)) >= 0))
+			if (((textLeft = html.IndexOf ("<article")) >= 0) && ((textRight = html.IndexOf ("</a>Changes log", textLeft)) >= 0))
 				{
 				// Обрезка
-				html = header + "\r\n\r\n" + html.Substring (textLeft, textRight - textLeft);
+				html = html.Substring (textLeft, textRight - textLeft);
 
 				// Формирование абзацных отступов
-				html = html.Replace ("<br/>", "\r\n\r\n").Replace ("</p>", "\r\n\r\n").Replace ("</li>", "\r\n\r\n").
-					Replace ("</h1>", "\r\n\r\n").Replace ("<h3", "\r\n<h3").Replace ("</h3>", "\r\n\r\n");
+				html = html.Replace ("<br/>", "\r\n").Replace ("</p>", "\r\n").Replace ("</li>", "\r\n").
+					Replace ("</h1>", "\r\n\r\n").Replace ("</h3>", "\r\n").Replace ("<li>", "• ");
 
 				// Удаление вложенных тегов
 				while (((textLeft = html.IndexOf ("<")) >= 0) && ((textRight = html.IndexOf (">", textLeft)) >= 0))
 					html = html.Replace (html.Substring (textLeft, textRight - textLeft + 1), "");
 
-				// Удаление двойных пробелов
-				while (html.IndexOf ("  ") >= 0)
-					html = html.Replace ("  ", " ");
-				html = html.Replace ("\n ", "");
+				// Удаление последних абзацев и замена спецсимволов
+				string ss = System.Text.Encoding.Unicode.GetString (new byte[] { 0x0F, 0xFE });
+				html = html.Replace ("✔" + ss, "✔").Replace ("⚠" + ss, "❢").Replace ("\n\n", "\n");
+				html = html.Substring (0, html.Length - 6);
 				}
 
 			e.Result = html;
@@ -517,11 +513,32 @@ htmlError:
 			// Разбор аргументов
 			string[] paths = (string[])e.Argument;
 
+			// Инициализация полосы загрузки
+			SupportedLanguages al = Localization.CurrentLanguage;
+			string report = Localization.GetText ("PackageDownload", al) + Path.GetFileName (paths[1]);
+			((BackgroundWorker)sender).ReportProgress ((int)HardWorkExecutor.ProgressBarSize, report);
+
+			// Отдельная обработка ModDB
+			if (paths[0].Contains ("www.moddb.com"))
+				{
+				string html = AboutForm.GetHTML (paths[0]);
+
+				int left, right;
+				if ((html == "") || ((left = html.IndexOf ("<a href=\"")) < 0) ||
+					((right = html.IndexOf ("/?", left)) < 0))
+					{
+					e.Result = -1;
+					return;
+					}
+
+				paths[0] = "https://www.moddb.com" + html.Substring (left + 9, right - left - 9);
+				}
+
 			// Настройка безопасности соединения
 			ServicePointManager.SecurityProtocol = (SecurityProtocolType)0xFC0;
 			// Принудительно открывает TLS1.0, TLS1.1 и TLS1.2; блокирует SSL3
 
-			// Запрос обновлений
+			// Запрос файла
 			HttpWebRequest rq;
 			try
 				{
@@ -535,11 +552,6 @@ htmlError:
 			rq.Method = "GET";
 			rq.KeepAlive = false;
 			rq.Timeout = 10000;
-
-			// Инициализация полосы загрузки
-			SupportedLanguages al = Localization.CurrentLanguage;
-			string report = Localization.GetText ("PackageDownload", al) + Path.GetFileName (paths[1]);
-			((BackgroundWorker)sender).ReportProgress ((int)HardWorkExecutor.ProgressBarSize, report);
 
 			// Отправка запроса
 			HttpWebResponse resp = null;
@@ -672,13 +684,14 @@ htmlError:
 
 			// Запрос обновлений
 			HttpWebRequest rq;
+			string html = "";
 			try
 				{
 				rq = (HttpWebRequest)WebRequest.Create (PageLink);
 				}
 			catch
 				{
-				return "";
+				return html;
 				}
 			rq.Method = "GET";
 			rq.KeepAlive = false;
@@ -686,7 +699,6 @@ htmlError:
 
 			// Отправка запроса
 			HttpWebResponse resp = null;
-			string html = "";
 			try
 				{
 				resp = (HttpWebResponse)rq.GetResponse ();
@@ -694,7 +706,7 @@ htmlError:
 			catch
 				{
 				// Любая ошибка здесь будет означать необходимость прекращения проверки
-				return "";
+				return html;
 				}
 
 			// Чтение ответа
@@ -718,6 +730,7 @@ htmlError:
 		private void MisacceptButton_Click (object sender, EventArgs e)
 			{
 			accepted = false;
+			UpdatesTimer.Enabled = false;
 			this.Close ();
 			}
 

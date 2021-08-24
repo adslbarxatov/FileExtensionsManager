@@ -9,7 +9,7 @@ namespace RD_AAOW
 	/// <summary>
 	/// Класс предоставляет интерфейс визуализации прогресса установки/удаления программы
 	/// </summary>
-	public partial class HardWorkExecutor:Form
+	public partial class HardWorkExecutor: Form
 		{
 		// Переменные
 		private bool allowClose = false;                        // Запрет выхода из формы до окончания работы

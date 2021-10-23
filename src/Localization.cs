@@ -54,27 +54,35 @@ namespace RD_AAOW
 			// Запрос
 			get
 				{
-				// Получение значения
-				string lang = GetCurrentLanguage ();
+				// Получение значения (один раз за запуск приложения)
+				if (currentLanguage == "")
+					currentLanguage = GetCurrentLanguage ();
 
 				// При пустом значении пробуем получить язык от системы
-				if (lang == "")
+				if (currentLanguage == "")
 					{
 					CultureInfo ci = CultureInfo.InstalledUICulture;
 
 					switch (ci.ToString ().ToLower ())
 						{
 						case "ru-ru":
+							currentLanguage = SupportedLanguages.ru_ru.ToString ();
 							return SupportedLanguages.ru_ru;
+
+						default:
+							currentLanguage = SupportedLanguages.en_us.ToString ();
+							return SupportedLanguages.en_us;
 						}
 					}
 
 				// Определение
-				switch (lang)
+				switch (currentLanguage)
 					{
+					// Уже задан
 					case "ru_ru":
 						return SupportedLanguages.ru_ru;
 
+					// Состояние неизвестно
 					default:
 						return SupportedLanguages.en_us;
 					}
@@ -85,11 +93,12 @@ namespace RD_AAOW
 				{
 				try
 					{
+					currentLanguage = value.ToString ();
 #if ANDROID
-					Preferences.Set (LanguageValueName, value.ToString ());
+					Preferences.Set (LanguageValueName, currentLanguage);
 #else
 					Registry.SetValue (ProgramDescription.AssemblySettingsKey,
-						LanguageValueName, value.ToString ());
+						LanguageValueName, currentLanguage);
 #endif
 					}
 				catch
@@ -97,6 +106,7 @@ namespace RD_AAOW
 					}
 				}
 			}
+		private static string currentLanguage = "";
 
 		/// <summary>
 		/// Возвращает факт предыдущей установки языка приложения

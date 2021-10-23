@@ -9,7 +9,7 @@ namespace RD_AAOW
 	/// <summary>
 	/// Класс предоставляет интерфейс визуализации прогресса установки/удаления программы
 	/// </summary>
-	public partial class HardWorkExecutor: Form
+	public partial class HardWorkExecutor:Form
 		{
 		// Переменные
 		private bool allowClose = false;                        // Запрет выхода из формы до окончания работы
@@ -17,6 +17,12 @@ namespace RD_AAOW
 		private Graphics g, gp;
 		private int currentXOffset = 0, currentPercentage = 0;
 		private object parameters;                              // Параметры инициализации потока
+
+		// Цветовая схема
+		private Color backColor = Color.FromArgb (224, 224, 224);
+		private Color foreColor = Color.FromArgb (32, 32, 32);
+		private Color greenColor = Color.FromArgb (0, 160, 80);
+		private Color greyColor = Color.FromArgb (160, 160, 160);
 
 		/// <summary>
 		/// Длина шкалы прогресса
@@ -64,15 +70,9 @@ namespace RD_AAOW
 			{
 			// Настройка контролов
 			InitializeComponent ();
-#if SIMPLE_HWE
-			this.BackColor = Color.FromKnownColor (KnownColor.Control);
-			StateLabel.ForeColor = AbortButton.ForeColor = Color.FromArgb (0, 0, 0);
-			AbortButton.BackColor = Color.FromKnownColor (KnownColor.Control);
-#else
-			this.BackColor = ProgramDescription.MasterBackColor;
-			StateLabel.ForeColor = AbortButton.ForeColor = ProgramDescription.MasterTextColor;
-			AbortButton.BackColor = ProgramDescription.MasterButtonColor;
-#endif
+			this.BackColor = backColor;
+			StateLabel.ForeColor = AbortButton.ForeColor = foreColor;
+			AbortButton.BackColor = backColor;
 
 			// Инициализация
 			progress = new Bitmap (this.Width - 20, 30);
@@ -83,16 +83,16 @@ namespace RD_AAOW
 			Point[] frame = new Point[] {
 					new Point (0, 0),
 					new Point (this.Width / 4, 0),
-					new Point (this.Width / 4 + progress.Height / 2, progress .Height / 2),
+					new Point (this.Width / 4 + progress.Height / 2, progress.Height / 2),
 					new Point (this.Width / 4, progress.Height),
-					new Point (0, progress .Height),
-					new Point (progress .Height / 2, progress .Height / 2)
+					new Point (0, progress.Height),
+					new Point (progress.Height / 2, progress.Height / 2)
 					};
 
 			// Подготовка дескрипторов
-			SolidBrush green = new SolidBrush (Color.FromArgb (0, 160, 80)),
-				grey = new SolidBrush (Color.FromArgb (160, 160, 160)),
-				back = new SolidBrush (this.BackColor);
+			SolidBrush green = new SolidBrush (greenColor),
+				grey = new SolidBrush (greyColor),
+				back = new SolidBrush (backColor);
 
 			frameGreenGrey = new Bitmap (10 * this.Width / 4, progress.Height);
 			frameBack = new Bitmap (10 * this.Width / 4, progress.Height);
@@ -132,7 +132,8 @@ namespace RD_AAOW
 			DrawingTimer.Enabled = true;
 			}
 
-#if !SIMPLE_HWE
+#if DPMODULE
+
 		/// <summary>
 		/// Конструктор. Выполняет настройку и запуск процесса установки/удаления
 		/// </summary>
@@ -145,27 +146,26 @@ namespace RD_AAOW
 		public HardWorkExecutor (DoWorkEventHandler HardWorkProcess, string SetupPath, string PackagePath, uint Flags)
 			{
 			// Инициализация
-			List<string> argument = new List<string> ();
-			argument.Add (SetupPath);
-			argument.Add (PackagePath);
-			argument.Add (Flags.ToString ());
-			parameters = argument;
-
-			// Настройка BackgroundWorker
-			bw.ProgressChanged += ProgressChanged;
-
-			bw.WorkerReportsProgress = true;        // Разрешает возвраты изнутри процесса
-			bw.WorkerSupportsCancellation = true;   // Разрешает завершение процесса
-
-			bw.DoWork += ((HardWorkProcess != null) ? HardWorkProcess : DoWork);
-			bw.RunWorkerCompleted += RunWorkerCompleted;
-
-			// Инициализация ProgressBar
-			InitializeProgressBar ();
-
-			// Готово. Запуск
-			this.ShowDialog ();
+			string[] arguments = new string[] { SetupPath, PackagePath, Flags.ToString () };
+			HardWorkExecutor_Init (HardWorkProcess, arguments, " ", false, true);
 			}
+
+		/*parameters = argument;
+
+		// Настройка BackgroundWorker
+		bw.ProgressChanged += ProgressChanged;
+
+		bw.WorkerReportsProgress = true;        // Разрешает возвраты изнутри процесса
+		bw.WorkerSupportsCancellation = true;   // Разрешает завершение процесса
+
+		bw.DoWork += ((HardWorkProcess != null) ? HardWorkProcess : DoWork);
+		bw.RunWorkerCompleted += RunWorkerCompleted;
+
+		// Инициализация ProgressBar
+		InitializeProgressBar ();
+
+		// Готово. Запуск
+		this.ShowDialog ();*/
 
 		/// <summary>
 		/// Конструктор. Выполняет проверку доступной версии обновления в скрытом режиме
@@ -174,17 +174,18 @@ namespace RD_AAOW
 		/// <param name="PackageVersion">Версия пакета развёртки для сравнения</param>
 		public HardWorkExecutor (DoWorkEventHandler HardWorkProcess, string PackageVersion)
 			{
-			// Настройка BackgroundWorker
-			bw.WorkerReportsProgress = true;        // Разрешает возвраты изнутри процесса
-			bw.WorkerSupportsCancellation = true;   // Разрешает завершение процесса
-
-			bw.DoWork += ((HardWorkProcess != null) ? HardWorkProcess : DoWork);
-			bw.RunWorkerCompleted += RunWorkerCompleted;
-
-			// Запуск
-			bw.RunWorkerAsync (PackageVersion);
+			HardWorkExecutor_Init (HardWorkProcess, PackageVersion, null, true, false);
 			}
-#endif
+
+		/*// Настройка BackgroundWorker
+		bw.WorkerReportsProgress = true;        // Разрешает возвраты изнутри процесса
+		bw.WorkerSupportsCancellation = true;   // Разрешает завершение процесса
+
+		bw.DoWork += ((HardWorkProcess != null) ? HardWorkProcess : DoWork);
+		bw.RunWorkerCompleted += RunWorkerCompleted;
+
+		// Запуск
+		bw.RunWorkerAsync (PackageVersion);*/
 
 		/// <summary>
 		/// Конструктор. Выполняет загрузку файла по URL
@@ -197,32 +198,36 @@ namespace RD_AAOW
 			{
 			// Инициализация
 			string[] arguments = new string[] { URL, TargetPath, Length };
-			parameters = arguments;
-
-			// Настройка BackgroundWorker
-			bw.ProgressChanged += ProgressChanged;
-
-			bw.WorkerReportsProgress = true;        // Разрешает возвраты изнутри процесса
-			bw.WorkerSupportsCancellation = true;   // Разрешает завершение процесса
-
-			bw.DoWork += ((HardWorkProcess != null) ? HardWorkProcess : DoWork);
-			bw.RunWorkerCompleted += RunWorkerCompleted;
-
-			// Инициализация ProgressBar
-			InitializeProgressBar ();
-
-			// Готово. Запуск
-			this.StateLabel.TextAlign = ContentAlignment.MiddleCenter;
-			this.ShowDialog ();
+			HardWorkExecutor_Init (HardWorkProcess, arguments, " ", true, true);
 			}
 
-		/// <summary>
+		/*parameters = arguments;
+
+		// Настройка BackgroundWorker
+		bw.ProgressChanged += ProgressChanged;
+
+		bw.WorkerReportsProgress = true;        // Разрешает возвраты изнутри процесса
+		bw.WorkerSupportsCancellation = true;   // Разрешает завершение процесса
+
+		bw.DoWork += ((HardWorkProcess != null) ? HardWorkProcess : DoWork);
+		bw.RunWorkerCompleted += RunWorkerCompleted;
+
+		// Инициализация ProgressBar
+		InitializeProgressBar ();
+
+		// Готово. Запуск
+		this.StateLabel.TextAlign = ContentAlignment.MiddleCenter;
+		this.ShowDialog ();*/
+
+#endif
+
+		/*/// <summary>
 		/// Конструктор. Выполняет указанное действие с указанными параметрами
 		/// </summary>
 		/// <param name="HardWorkProcess">Выполняемый процесс</param>
 		/// <param name="Parameters">Передаваемые параметры выполнения</param>
-		/// <param name="Caption">Сообщение для отображения (если не задано, окно прогресса не отображается)</param>
-		public HardWorkExecutor (DoWorkEventHandler HardWorkProcess, object Parameters, string Caption)
+		/// <param name="WindowCaption">Сообщение для отображения (если не задано, окно прогресса не отображается)</param>
+		public HardWorkExecutor (DoWorkEventHandler HardWorkProcess, object Parameters, string WindowCaption)
 			{
 			// Настройка BackgroundWorker
 			bw.WorkerReportsProgress = true;        // Разрешает возвраты изнутри процесса
@@ -233,7 +238,7 @@ namespace RD_AAOW
 			bw.ProgressChanged += ProgressChanged;
 
 			// Донастройка окна
-			if ((Caption == null) || (Caption == ""))
+			if ((WindowCaption == null) || (WindowCaption == ""))
 				{
 				bw.RunWorkerAsync (Parameters);
 				}
@@ -244,45 +249,95 @@ namespace RD_AAOW
 				InitializeProgressBar ();
 				currentPercentage = (int)ProgressBarSize;
 
-				this.AbortButton.Visible = this.AbortButton.Enabled = false;
-				this.StateLabel.Text = Caption;
-				this.StateLabel.TextAlign = ContentAlignment.MiddleCenter;
+				AbortButton.Visible = AbortButton.Enabled = false;
+				StateLabel.Text = WindowCaption;
+				StateLabel.TextAlign = ContentAlignment.MiddleCenter;
+
+				// Запуск
+				this.ShowDialog ();
+				}
+			}*/
+
+		/// <summary>
+		/// Конструктор. Выполняет указанное действие с указанными параметрами
+		/// </summary>
+		/// <param name="HardWorkProcess">Выполняемый процесс</param>
+		/// <param name="Parameters">Параметры, передаваемые в процесс; может быть null</param>
+		/// <param name="WindowCaption">Строка, отображаемая при инициализации окна прогресса;
+		/// если null, окно прогресса не отображается</param>
+		/// <param name="CaptionInTheMiddle">Флаг указывает, что подпись будет выравниваться посередине</param>
+		/// <param name="AllowOperationAbort">Флаг указывает, разрешена ли отмена операции</param>
+		public HardWorkExecutor (DoWorkEventHandler HardWorkProcess, object Parameters, string WindowCaption,
+			bool CaptionInTheMiddle, bool AllowOperationAbort)
+			{
+			HardWorkExecutor_Init (HardWorkProcess, Parameters, WindowCaption, CaptionInTheMiddle, AllowOperationAbort);
+			}
+
+		// Общий метод подготовки исполнителя заданий
+		private void HardWorkExecutor_Init (DoWorkEventHandler HWProcess, object Parameters,
+			string Caption, bool CaptionInTheCenter, bool AllowAbort)
+			{
+			// Настройка BackgroundWorker
+			bw.WorkerReportsProgress = true;        // Разрешает возвраты изнутри процесса
+			bw.WorkerSupportsCancellation = true;   // Разрешает завершение процесса
+
+			bw.DoWork += ((HWProcess != null) ? HWProcess : DoWork);
+			bw.RunWorkerCompleted += RunWorkerCompleted;
+
+			// Донастройка окна
+			if (string.IsNullOrEmpty (Caption))
+				{
+				bw.RunWorkerAsync (Parameters);
+				}
+			else
+				{
+				bw.ProgressChanged += ProgressChanged;
+				parameters = Parameters;
+
+				InitializeProgressBar ();
+				currentPercentage = (int)ProgressBarSize;
+
+				AbortButton.Visible = AbortButton.Enabled = AllowAbort;
+				StateLabel.Text = Caption;
+				if (CaptionInTheCenter)
+					StateLabel.TextAlign = ContentAlignment.MiddleCenter;
 
 				// Запуск
 				this.ShowDialog ();
 				}
 			}
 
-		/// <summary>
-		/// Конструктор. Выполняет указанное действие
-		/// </summary>
-		/// <param name="HardWorkProcess">Выполняемый процесс</param>
-		public HardWorkExecutor (DoWorkEventHandler HardWorkProcess)
-			{
-			// Настройка BackgroundWorker
-			bw.WorkerReportsProgress = true;        // Разрешает возвраты изнутри процесса
-			bw.WorkerSupportsCancellation = true;   // Разрешает завершение процесса
-
-			bw.DoWork += ((HardWorkProcess != null) ? HardWorkProcess : DoWork);
-			bw.RunWorkerCompleted += RunWorkerCompleted;
-			bw.ProgressChanged += ProgressChanged;
-
-			// Донастройка окна
-			InitializeProgressBar ();
-			currentPercentage = (int)ProgressBarSize;
-			AbortButton.FlatStyle = FlatStyle.Standard;
-
-			// Запуск
-			this.ShowDialog ();
-			}
-
 		// Метод запускает выполнение процесса
 		private void HardWorkExecutor_Shown (object sender, EventArgs e)
 			{
-#if !SIMPLE_HWE
+#if DPMODULE
 			this.Activate ();
 			this.TopMost = true;
 #endif
+
+			// Запуск отрисовки
+			const int roundingSize = 20;
+			Bitmap bm = new Bitmap (this.Width, this.Height);
+			Graphics gr = Graphics.FromImage (bm);
+
+			SolidBrush br = new SolidBrush (this.TransparencyKey);
+			gr.FillRectangle (br, 0, 0, roundingSize / 2, roundingSize / 2);
+			gr.FillRectangle (br, this.Width - roundingSize / 2, 0, roundingSize / 2, roundingSize / 2);
+			gr.FillRectangle (br, 0, this.Height - roundingSize / 2, roundingSize / 2, roundingSize / 2);
+			gr.FillRectangle (br, this.Width - roundingSize / 2, this.Height - roundingSize / 2, roundingSize / 2, roundingSize / 2);
+			br.Dispose ();
+
+			br = new SolidBrush (this.BackColor);
+			gr.FillEllipse (br, 0, 0, roundingSize, roundingSize);
+			gr.FillEllipse (br, this.Width - roundingSize - 1, 0, roundingSize, roundingSize);
+			gr.FillEllipse (br, 0, this.Height - roundingSize - 1, roundingSize, roundingSize);
+			gr.FillEllipse (br, this.Width - roundingSize - 1, this.Height - roundingSize - 1, roundingSize, roundingSize);
+			br.Dispose ();
+			gr.Dispose ();
+
+			this.BackgroundImage = bm;
+
+			// Запуск
 			bw.RunWorkerAsync (parameters);
 			}
 
@@ -373,7 +428,8 @@ namespace RD_AAOW
 			gp.DrawImage (frameBack, currentPercentage * (progress.Width - progress.Height) / ProgressBarSize -
 				this.Width / 4, 0);
 
-			g.DrawImage (progress, 10, StateLabel.Top + StateLabel.Height + 10);
+			g.DrawImage (progress, 18, StateLabel.Top + StateLabel.Height + 10);
+			// Почему 18? Да хрен его знает. При ожидаемом x = 10 получается левое смещение
 
 			// Смещение
 			if (currentXOffset++ >= -2 * this.Width / 4)

@@ -20,7 +20,7 @@ Version 1.6:
 • Added direct lab link
 
 Version 1.5.6:
-• Added ability to 'ask developer' via E-mail for help, or send wish, advice or bug report;
+• Added ability to “ask developer” via E-mail for help, or send wish, advice or bug report;
 • Applied new paths processor
 
 Version 1.5.5:
@@ -46,7 +46,7 @@ Version 1.5:
 • Cumulative changes applied
 
 Version 1.4.3i:
-• Application info interface now able to get last release's changes log;
+• Application info interface now able to get last release’s changes log;
 • Found and fixed hidden bug that caused an error when starting the application from local network;
 • Fixed bug that caused the web page request method to fail if server disconnected
 

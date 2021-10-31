@@ -150,23 +150,6 @@ namespace RD_AAOW
 			HardWorkExecutor_Init (HardWorkProcess, arguments, " ", false, true);
 			}
 
-		/*parameters = argument;
-
-		// Настройка BackgroundWorker
-		bw.ProgressChanged += ProgressChanged;
-
-		bw.WorkerReportsProgress = true;        // Разрешает возвраты изнутри процесса
-		bw.WorkerSupportsCancellation = true;   // Разрешает завершение процесса
-
-		bw.DoWork += ((HardWorkProcess != null) ? HardWorkProcess : DoWork);
-		bw.RunWorkerCompleted += RunWorkerCompleted;
-
-		// Инициализация ProgressBar
-		InitializeProgressBar ();
-
-		// Готово. Запуск
-		this.ShowDialog ();*/
-
 		/// <summary>
 		/// Конструктор. Выполняет проверку доступной версии обновления в скрытом режиме
 		/// </summary>
@@ -176,16 +159,6 @@ namespace RD_AAOW
 			{
 			HardWorkExecutor_Init (HardWorkProcess, PackageVersion, null, true, false);
 			}
-
-		/*// Настройка BackgroundWorker
-		bw.WorkerReportsProgress = true;        // Разрешает возвраты изнутри процесса
-		bw.WorkerSupportsCancellation = true;   // Разрешает завершение процесса
-
-		bw.DoWork += ((HardWorkProcess != null) ? HardWorkProcess : DoWork);
-		bw.RunWorkerCompleted += RunWorkerCompleted;
-
-		// Запуск
-		bw.RunWorkerAsync (PackageVersion);*/
 
 		/// <summary>
 		/// Конструктор. Выполняет загрузку файла по URL
@@ -201,62 +174,7 @@ namespace RD_AAOW
 			HardWorkExecutor_Init (HardWorkProcess, arguments, " ", true, true);
 			}
 
-		/*parameters = arguments;
-
-		// Настройка BackgroundWorker
-		bw.ProgressChanged += ProgressChanged;
-
-		bw.WorkerReportsProgress = true;        // Разрешает возвраты изнутри процесса
-		bw.WorkerSupportsCancellation = true;   // Разрешает завершение процесса
-
-		bw.DoWork += ((HardWorkProcess != null) ? HardWorkProcess : DoWork);
-		bw.RunWorkerCompleted += RunWorkerCompleted;
-
-		// Инициализация ProgressBar
-		InitializeProgressBar ();
-
-		// Готово. Запуск
-		this.StateLabel.TextAlign = ContentAlignment.MiddleCenter;
-		this.ShowDialog ();*/
-
 #endif
-
-		/*/// <summary>
-		/// Конструктор. Выполняет указанное действие с указанными параметрами
-		/// </summary>
-		/// <param name="HardWorkProcess">Выполняемый процесс</param>
-		/// <param name="Parameters">Передаваемые параметры выполнения</param>
-		/// <param name="WindowCaption">Сообщение для отображения (если не задано, окно прогресса не отображается)</param>
-		public HardWorkExecutor (DoWorkEventHandler HardWorkProcess, object Parameters, string WindowCaption)
-			{
-			// Настройка BackgroundWorker
-			bw.WorkerReportsProgress = true;        // Разрешает возвраты изнутри процесса
-			bw.WorkerSupportsCancellation = true;   // Разрешает завершение процесса
-
-			bw.DoWork += ((HardWorkProcess != null) ? HardWorkProcess : DoWork);
-			bw.RunWorkerCompleted += RunWorkerCompleted;
-			bw.ProgressChanged += ProgressChanged;
-
-			// Донастройка окна
-			if ((WindowCaption == null) || (WindowCaption == ""))
-				{
-				bw.RunWorkerAsync (Parameters);
-				}
-			else
-				{
-				parameters = Parameters;
-
-				InitializeProgressBar ();
-				currentPercentage = (int)ProgressBarSize;
-
-				AbortButton.Visible = AbortButton.Enabled = false;
-				StateLabel.Text = WindowCaption;
-				StateLabel.TextAlign = ContentAlignment.MiddleCenter;
-
-				// Запуск
-				this.ShowDialog ();
-				}
-			}*/
 
 		/// <summary>
 		/// Конструктор. Выполняет указанное действие с указанными параметрами
@@ -270,7 +188,8 @@ namespace RD_AAOW
 		public HardWorkExecutor (DoWorkEventHandler HardWorkProcess, object Parameters, string WindowCaption,
 			bool CaptionInTheMiddle, bool AllowOperationAbort)
 			{
-			HardWorkExecutor_Init (HardWorkProcess, Parameters, WindowCaption, CaptionInTheMiddle, AllowOperationAbort);
+			HardWorkExecutor_Init (HardWorkProcess, Parameters, WindowCaption, CaptionInTheMiddle,
+				AllowOperationAbort);
 			}
 
 		// Общий метод подготовки исполнителя заданий

@@ -29,7 +29,7 @@ namespace RD_AAOW
 
 		private const string labLink1 = "https://vk.com/rd_aaow_fdl";               // Ссылки на лабораторию
 		private const string labLink2 = "https://t.me/rd_aaow_fdl";
-		private const string defaultGitLink = "https://github.com/adslbarxatov/";   // Мастер-ссылка проекта
+		private const string defaultGitLink = "https://github.com/adslbarxatov/";   // Начало мастер-ссылки проекта
 		private const string gitUpdatesSublink = "/releases";                       // Часть пути для перехода к релизам
 		private const string devLink = "mailto://adslbarxatov@gmail.com";           // Разработчик
 		private string versionDescription = "";
@@ -374,7 +374,7 @@ namespace RD_AAOW
 
 		private void ToLaboratory_Click (object sender, EventArgs e)
 			{
-			string msg = "";
+			string msg;
 			if (al == SupportedLanguages.ru_ru)
 				msg = "• «Да» – перейти на страницу Лаборатории в ВКонтакте;\n" +
 					"• «Нет» – перейти в группу Лаборатории в Telegram";
@@ -382,7 +382,7 @@ namespace RD_AAOW
 				msg = "• “Yes” – go to Laboratory's page in VK;\n" +
 					"• “No” – go to Laboratory's group in Telegram";
 
-			string link = "";
+			string link;
 			switch (MessageBox.Show (msg, ProgramDescription.AssemblyTitle, MessageBoxButtons.YesNoCancel,
 				MessageBoxIcon.Question))
 				{
@@ -439,23 +439,23 @@ namespace RD_AAOW
 			{
 			// Запрос обновлений пакета
 			string html = GetHTML (projectLink);
+			bool htmlError = true;  // Сбрасывается при успешной загрузке
 
 			// Разбор ответа (извлечение версии)
-			string version = "";
 			string[] htmlMarkers = { "</a>" + ProgramDescription.AssemblyMainName, "</h1>",
-								   "markdown-body\">", "</div>" };
+								   "markdown-body my-3\">", "</div>" };
 
 			int i = html.IndexOf (htmlMarkers[0]);
 			if (i < 0)
-				goto htmlError;
+				goto policy;
 
 			i += htmlMarkers[0].Length;
 
 			int j = html.IndexOf (htmlMarkers[1], i);
 			if ((j < 0) || (j <= i))
-				goto htmlError;
+				goto policy;
 
-			version = html.Substring (i, j - i).Trim ();
+			string version = html.Substring (i, j - i).Trim ();
 
 			// Запрос описания пакета
 			html = GetHTML (updatesLink);
@@ -463,13 +463,13 @@ namespace RD_AAOW
 			// Разбор ответа (извлечение версии)
 			i = html.IndexOf (htmlMarkers[2]);
 			if (i < 0)
-				goto htmlError;
+				goto policy;
 
 			i += htmlMarkers[2].Length;
 
 			j = html.IndexOf (htmlMarkers[3], i);
 			if ((j < 0) || (j <= i))
-				goto htmlError;
+				goto policy;
 
 			versionDescription = html.Substring (i, j - i);
 			for (int r = 0; r < ucReplacements.Length; r++)
@@ -492,8 +492,10 @@ namespace RD_AAOW
 						updatesMessage = version + " a&vailable";
 					break;
 				}
+			htmlError = false;
 
-			// Получение обновлений Политики (ошибки игнорируются)
+// Получение обновлений Политики (ошибки игнорируются)
+policy:
 			html = GetHTML (ADPLink);
 			if (((i = html.IndexOf ("<title")) >= 0) && ((j = html.IndexOf ("</title", i)) >= 0))
 				{
@@ -516,11 +518,14 @@ namespace RD_AAOW
 					}
 				}
 
-			e.Result = 0;
-			return;
+			// Не было проблем с загрузкой страницы
+			if (!htmlError)
+				{
+				e.Result = 0;
+				return;
+				}
 
-// Есть проблема при загрузке страницы. Отмена
-htmlError:
+			// Есть проблема при загрузке страницы. Отмена
 			switch (al)
 				{
 				case SupportedLanguages.ru_ru:

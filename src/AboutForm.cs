@@ -29,6 +29,7 @@ namespace RD_AAOW
 
 		private const string labLink1 = "https://vk.com/rd_aaow_fdl";               // Ссылки на лабораторию
 		private const string labLink2 = "https://t.me/rd_aaow_fdl";
+		private const string labLink3 = "https://adslbarxatov.github.io/DPModule";
 		private const string defaultGitLink = "https://github.com/adslbarxatov/";   // Начало мастер-ссылки проекта
 		private const string gitUpdatesSublink = "/releases";                       // Часть пути для перехода к релизам
 		private const string devLink = "mailto://adslbarxatov@gmail.com";           // Разработчик
@@ -377,21 +378,21 @@ namespace RD_AAOW
 			string msg;
 			if (al == SupportedLanguages.ru_ru)
 				msg = "• «Да» – перейти на страницу Лаборатории в ВКонтакте;\n" +
-					"• «Нет» – перейти в группу Лаборатории в Telegram";
+					"• «Нет» – перейти на начальную страницу Лаборатории";
 			else
-				msg = "• “Yes” – go to Laboratory's page in VK;\n" +
-					"• “No” – go to Laboratory's group in Telegram";
+				msg = "• “Yes” – go to Laboratory’s page in Telegram;\n" +
+					"• “No” – go to Laboratory’s welcome page";
 
 			string link;
 			switch (MessageBox.Show (msg, ProgramDescription.AssemblyTitle, MessageBoxButtons.YesNoCancel,
 				MessageBoxIcon.Question))
 				{
 				case DialogResult.Yes:
-					link = labLink1;
+					link = (al == SupportedLanguages.ru_ru) ? labLink1 : labLink2;
 					break;
 
 				case DialogResult.No:
-					link = labLink2;
+					link = labLink3;
 					break;
 
 				default:

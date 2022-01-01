@@ -22,17 +22,7 @@ namespace RD_AAOW
 		private string updatesMessage = "", description = "", policyLoaderCaption = "",
 			registryFail = "";
 
-		/// <summary>
-		/// Ссылка на Политику разработки приложений
-		/// </summary>
-		public const string ADPLink = "https://adslbarxatov.github.io/ADP";
-
-		private const string labLink1 = "https://vk.com/rd_aaow_fdl";               // Ссылки на лабораторию
-		private const string labLink2 = "https://t.me/rd_aaow_fdl";
-		private const string labLink3 = "https://adslbarxatov.github.io/DPModule";
-		private const string defaultGitLink = "https://github.com/adslbarxatov/";   // Начало мастер-ссылки проекта
 		private const string gitUpdatesSublink = "/releases";                       // Часть пути для перехода к релизам
-		private const string devLink = "mailto://adslbarxatov@gmail.com";           // Разработчик
 		private string versionDescription = "";
 
 		private bool accepted = false;                                              // Флаг принятия Политики
@@ -45,7 +35,7 @@ namespace RD_AAOW
 
 		// Ключ реестра, хранящий последнюю принятую версию ADP
 		private const string ADPRevisionKey = "ADPRevision";
-		private const string ADPRevisionPath = "HKEY_LOCAL_MACHINE\\SOFTWARE\\DPModule";
+		private const string ADPRevisionPath = RDGenerics.AssemblySettingsStorage + "DPModule";
 
 		/// <summary>
 		/// Конструктор. Инициализирует форму
@@ -63,12 +53,12 @@ namespace RD_AAOW
 			// Получение параметров
 			userManualLink = (UserManualLink == null) ? "" : UserManualLink;
 
-			projectLink = defaultGitLink + ProgramDescription.AssemblyMainName;
-			updatesLink = defaultGitLink + ProgramDescription.AssemblyMainName + gitUpdatesSublink;
+			projectLink = RDGenerics.AssemblyGitLink + ProgramDescription.AssemblyMainName;
+			updatesLink = RDGenerics.AssemblyGitLink + ProgramDescription.AssemblyMainName + gitUpdatesSublink;
 
 			// Загрузка окружения
 			AboutLabel.Text = ProgramDescription.AssemblyTitle + "\n" + ProgramDescription.AssemblyDescription + "\n\n" +
-				ProgramDescription.AssemblyCopyright + "\nv " + ProgramDescription.AssemblyVersion +
+				RDGenerics.AssemblyCopyright + "\nv " + ProgramDescription.AssemblyVersion +
 				"; " + ProgramDescription.AssemblyLastUpdate;
 
 			if (AppIcon != null)
@@ -127,7 +117,7 @@ namespace RD_AAOW
 					{
 					// Исправлен некорректный порядок вызовов
 					adpRevision = Registry.GetValue (ADPRevisionPath, ADPRevisionKey, "").ToString ();
-					helpShownAt = Registry.GetValue (ProgramDescription.AssemblySettingsKey,
+					helpShownAt = Registry.GetValue (RDGenerics.AssemblySettingsKey,
 						LastShownVersionKey, "").ToString ();
 					}
 				catch
@@ -202,14 +192,22 @@ namespace RD_AAOW
 			HardWorkExecutor hwe;
 			if (!AcceptMode)
 				{
+#if DPMODULE
+				hwe = new HardWorkExecutor (UpdatesChecker, null, null, false, false, false);
+#else
 				hwe = new HardWorkExecutor (UpdatesChecker, null, null, false, false);
+#endif
 				UpdatesTimer.Enabled = true;
 				}
 
 			// Получение Политики
 			else
 				{
+#if DPMODULE
+				hwe = new HardWorkExecutor (PolicyLoader, null, policyLoaderCaption, true, false, true);
+#else
 				hwe = new HardWorkExecutor (PolicyLoader, null, policyLoaderCaption, true, false);
+#endif
 
 				string html = hwe.Result.ToString ();
 				if (html != "")
@@ -236,11 +234,11 @@ namespace RD_AAOW
 				{
 				if (StartupMode)
 					{
-					Registry.SetValue (ProgramDescription.AssemblySettingsKey, LastShownVersionKey,
+					Registry.SetValue (RDGenerics.AssemblySettingsKey, LastShownVersionKey,
 						ProgramDescription.AssemblyVersion);
 
 					// Контроль доступа к реестру
-					if (Registry.GetValue (ProgramDescription.AssemblySettingsKey, LastShownVersionKey, "").ToString () !=
+					if (Registry.GetValue (RDGenerics.AssemblySettingsKey, LastShownVersionKey, "").ToString () !=
 						ProgramDescription.AssemblyVersion)
 						{
 						MessageBox.Show (registryFail, ProgramDescription.AssemblyTitle, MessageBoxButtons.OK,
@@ -262,7 +260,7 @@ namespace RD_AAOW
 		// Метод получает Политику разработки
 		private void PolicyLoader (object sender, DoWorkEventArgs e)
 			{
-			string html = GetHTML (ADPLink);
+			string html = GetHTML (RDGenerics.ADPLink);
 			int textLeft = 0, textRight = 0;
 
 			if (((textLeft = html.IndexOf ("code\">")) >= 0) &&
@@ -301,13 +299,11 @@ namespace RD_AAOW
 			try
 				{
 				if (Link == null)
-					Process.Start (defaultGitLink + ProgramDescription.AssemblyMainName + gitUpdatesSublink);
+					Process.Start (RDGenerics.AssemblyGitLink + ProgramDescription.AssemblyMainName + gitUpdatesSublink);
 				else
 					Process.Start (Link);
 				}
-			catch
-				{
-				}
+			catch { }
 			}
 
 		// Закрытие окна
@@ -335,9 +331,7 @@ namespace RD_AAOW
 				{
 				Process.Start (userManualLink);
 				}
-			catch
-				{
-				}
+			catch { }
 			}
 
 		private void ProjectPageButton_Click (object sender, EventArgs e)
@@ -346,9 +340,7 @@ namespace RD_AAOW
 				{
 				Process.Start (projectLink);
 				}
-			catch
-				{
-				}
+			catch { }
 			}
 
 		private void UpdatesPageButton_Click (object sender, EventArgs e)
@@ -357,20 +349,16 @@ namespace RD_AAOW
 				{
 				Process.Start (updatesLink);
 				}
-			catch
-				{
-				}
+			catch { }
 			}
 
 		private void ADP_Click (object sender, EventArgs e)
 			{
 			try
 				{
-				Process.Start (ADPLink);
+				Process.Start (RDGenerics.ADPLink);
 				}
-			catch
-				{
-				}
+			catch { }
 			}
 
 		private void ToLaboratory_Click (object sender, EventArgs e)
@@ -388,11 +376,11 @@ namespace RD_AAOW
 				MessageBoxIcon.Question))
 				{
 				case DialogResult.Yes:
-					link = (al == SupportedLanguages.ru_ru) ? labLink1 : labLink2;
+					link = (al == SupportedLanguages.ru_ru) ? RDGenerics.LabVKLink : RDGenerics.LabTGLink;
 					break;
 
 				case DialogResult.No:
-					link = labLink3;
+					link = RDGenerics.DPModuleLink;
 					break;
 
 				default:
@@ -403,21 +391,17 @@ namespace RD_AAOW
 				{
 				Process.Start (link);
 				}
-			catch
-				{
-				}
+			catch { }
 			}
 
 		private void AskDeveloper_Click (object sender, EventArgs e)
 			{
 			try
 				{
-				Process.Start (devLink + ("?subject=Wish, advice or bug in " +
+				Process.Start (RDGenerics.LabMailLink + ("?subject=Wish, advice or bug in " +
 					ProgramDescription.AssemblyTitle).Replace (" ", "%20"));
 				}
-			catch
-				{
-				}
+			catch { }
 			}
 
 		// Метод-исполнитель проверки обновлений
@@ -497,7 +481,7 @@ namespace RD_AAOW
 
 // Получение обновлений Политики (ошибки игнорируются)
 policy:
-			html = GetHTML (ADPLink);
+			html = GetHTML (RDGenerics.ADPLink);
 			if (((i = html.IndexOf ("<title")) >= 0) && ((j = html.IndexOf ("</title", i)) >= 0))
 				{
 				// Обрезка
@@ -659,7 +643,7 @@ policy:
 			resp.Close ();
 
 			// Завершено. Отображение сообщения
-			((BackgroundWorker)sender).ReportProgress (0, Localization.GetText ("PackageSuccess", al));
+			((BackgroundWorker)sender).ReportProgress (-1, Localization.GetText ("PackageSuccess", al));
 			Thread.Sleep (1000);
 
 			e.Result = 0;
@@ -817,14 +801,14 @@ policy:
 				// Запись значений реестра
 				Registry.SetValue ("HKEY_CLASSES_ROOT\\." + fileExt, "", fileExt + "file");
 				Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file", "", FileTypeName);
-				Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\DefaultIcon", "", AppStartupPath +
+				Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\DefaultIcon", "", RDGenerics.AppStartupPath +
 					fileExt + ".ico");
 
 				if (Openable)
 					{
 					Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\shell", "", "open");
 					Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\shell\\open", "Icon",
-						AppStartupPath + fileExt + ".ico");
+						RDGenerics.AppStartupPath + fileExt + ".ico");
 					Registry.SetValue ("HKEY_CLASSES_ROOT\\" + fileExt + "file\\shell\\open\\command", "",
 						"\"" + Application.ExecutablePath + "\" \"%1\"");
 					}
@@ -839,22 +823,6 @@ policy:
 				}
 
 			return true;
-			}
-
-		/// <summary>
-		/// Возвращает путь, из которого запущен данный экземпляр приложения,
-		/// с завершающим backslash
-		/// </summary>
-		public static string AppStartupPath
-			{
-			get
-				{
-				string s = Application.StartupPath; // В случае запуска из корня диска таки дорисовывает слэш
-				if (s.EndsWith ("\\"))
-					return s;
-
-				return (s + "\\");
-				}
 			}
 		}
 	}

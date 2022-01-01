@@ -8,7 +8,7 @@ namespace RD_AAOW
 	/// <summary>
 	/// Главная форма программы
 	/// </summary>
-	public partial class FileExtensionsManagerForm: Form
+	public partial class FileExtensionsManagerForm:Form
 		{
 		// Переменные
 		private List<RegistryEntriesBaseManager> rebm = new List<RegistryEntriesBaseManager> ();
@@ -42,9 +42,9 @@ namespace RD_AAOW
 			MainTable.Columns.Add ("Entries", "Entries");
 
 			// Инициализация баз реестровых записей
-			if (Directory.Exists (AboutForm.AppStartupPath + RegistryEntriesBaseManager.BasesSubdirectory))
+			if (Directory.Exists (RDGenerics.AppStartupPath + RegistryEntriesBaseManager.BasesSubdirectory))
 				{
-				string[] files = Directory.GetFiles (AboutForm.AppStartupPath + RegistryEntriesBaseManager.BasesSubdirectory,
+				string[] files = Directory.GetFiles (RDGenerics.AppStartupPath + RegistryEntriesBaseManager.BasesSubdirectory,
 					"*" + RegistryEntriesBaseManager.BaseFileExtension);
 				for (int i = 0; i < files.Length; i++)
 					{

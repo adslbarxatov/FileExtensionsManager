@@ -15,8 +15,9 @@ namespace RD_AAOW
 		private bool allowClose = false;                        // Запрет выхода из формы до окончания работы
 		private Bitmap progress, frameGreenGrey, frameBack;     // Объекты-отрисовщики
 		private Graphics g, gp;
-		private int currentXOffset = 0, currentPercentage = 0;
+		private int currentXOffset = 0, oldPercentage = 0, newPercentage = 0;
 		private object parameters;                              // Параметры инициализации потока
+		private bool alwaysOnTop = false;                       // Флаг принудительного размещения поверх всех окон
 
 		// Цветовая схема
 		private Color backColor = Color.FromArgb (224, 224, 224);
@@ -174,7 +175,25 @@ namespace RD_AAOW
 			HardWorkExecutor_Init (HardWorkProcess, arguments, " ", true, true);
 			}
 
-#endif
+		/// <summary>
+		/// Конструктор. Выполняет указанное действие с указанными параметрами
+		/// </summary>
+		/// <param name="HardWorkProcess">Выполняемый процесс</param>
+		/// <param name="Parameters">Параметры, передаваемые в процесс; может быть null</param>
+		/// <param name="WindowCaption">Строка, отображаемая при инициализации окна прогресса;
+		/// если null, окно прогресса не отображается</param>
+		/// <param name="CaptionInTheMiddle">Флаг указывает, что подпись будет выравниваться посередине</param>
+		/// <param name="AllowOperationAbort">Флаг указывает, разрешена ли отмена операции</param>
+		/// <param name="AlwaysOnTop">Флаг указывает на принудительное размежение поверх всех окон</param>
+		public HardWorkExecutor (DoWorkEventHandler HardWorkProcess, object Parameters, string WindowCaption,
+			bool CaptionInTheMiddle, bool AllowOperationAbort, bool AlwaysOnTop)
+			{
+			alwaysOnTop = AlwaysOnTop;
+			HardWorkExecutor_Init (HardWorkProcess, Parameters, WindowCaption, CaptionInTheMiddle,
+				AllowOperationAbort);
+			}
+
+#else
 
 		/// <summary>
 		/// Конструктор. Выполняет указанное действие с указанными параметрами
@@ -191,6 +210,8 @@ namespace RD_AAOW
 			HardWorkExecutor_Init (HardWorkProcess, Parameters, WindowCaption, CaptionInTheMiddle,
 				AllowOperationAbort);
 			}
+
+#endif
 
 		// Общий метод подготовки исполнителя заданий
 		private void HardWorkExecutor_Init (DoWorkEventHandler HWProcess, object Parameters,
@@ -214,7 +235,7 @@ namespace RD_AAOW
 				parameters = Parameters;
 
 				InitializeProgressBar ();
-				currentPercentage = (int)ProgressBarSize;
+				newPercentage = oldPercentage = (int)ProgressBarSize;
 
 				AbortButton.Visible = AbortButton.Enabled = AllowAbort;
 				StateLabel.Text = Caption;
@@ -229,10 +250,11 @@ namespace RD_AAOW
 		// Метод запускает выполнение процесса
 		private void HardWorkExecutor_Shown (object sender, EventArgs e)
 			{
-#if DPMODULE
-			this.Activate ();
-			this.TopMost = true;
-#endif
+			if (alwaysOnTop)
+				{
+				this.Activate ();
+				this.TopMost = true;
+				}
 
 			// Запуск отрисовки
 			const int roundingSize = 20;
@@ -264,8 +286,12 @@ namespace RD_AAOW
 		private void ProgressChanged (object sender, ProgressChangedEventArgs e)
 			{
 			// Обновление ProgressBar
-			currentPercentage = ((e.ProgressPercentage > ProgressBarSize) || (e.ProgressPercentage < 0)) ?
-				(int)ProgressBarSize : e.ProgressPercentage;
+			if (e.ProgressPercentage > ProgressBarSize)
+				newPercentage = (int)ProgressBarSize;
+			else if (e.ProgressPercentage < 0)
+				newPercentage = oldPercentage = 0;  // Скрытие шкалы
+			else
+				newPercentage = e.ProgressPercentage;
 
 			StateLabel.Text = (string)e.UserState;
 			}
@@ -342,10 +368,12 @@ namespace RD_AAOW
 		private void DrawingTimer_Tick (object sender, EventArgs e)
 			{
 			// Отрисовка текущей позиции
+			int recalcPercentage = (int)(oldPercentage + (newPercentage - oldPercentage) / 4);
 			gp.DrawImage (frameGreenGrey, currentXOffset, 0);
 			gp.DrawImage (frameBack, -9 * this.Width / 4, 0);
-			gp.DrawImage (frameBack, currentPercentage * (progress.Width - progress.Height) / ProgressBarSize -
-				this.Width / 4, 0);
+			gp.DrawImage (frameBack, recalcPercentage *
+				(progress.Width - progress.Height) / ProgressBarSize - this.Width / 4, 0);
+			oldPercentage = recalcPercentage;
 
 			g.DrawImage (progress, 18, StateLabel.Top + StateLabel.Height + 10);
 			// Почему 18? Да хрен его знает. При ожидаемом x = 10 получается левое смещение

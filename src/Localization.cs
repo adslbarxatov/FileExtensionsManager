@@ -97,13 +97,10 @@ namespace RD_AAOW
 #if ANDROID
 					Preferences.Set (LanguageValueName, currentLanguage);
 #else
-					Registry.SetValue (ProgramDescription.AssemblySettingsKey,
-						LanguageValueName, currentLanguage);
+					Registry.SetValue (RDGenerics.AssemblySettingsKey, LanguageValueName, currentLanguage);
 #endif
 					}
-				catch
-					{
-					}
+				catch { }
 				}
 			}
 		private static string currentLanguage = "";
@@ -129,13 +126,10 @@ namespace RD_AAOW
 #if ANDROID
 				lang = Preferences.Get (LanguageValueName, "");
 #else
-				lang = Registry.GetValue (ProgramDescription.AssemblySettingsKey,
-					LanguageValueName, "").ToString ();
+				lang = Registry.GetValue (RDGenerics.AssemblySettingsKey, LanguageValueName, "").ToString ();
 #endif
 				}
-			catch
-				{
-				}
+			catch { }
 
 			return lang;
 			}

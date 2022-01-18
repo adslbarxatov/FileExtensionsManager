@@ -1,5 +1,5 @@
-# FileExtensionsManager v 1.7
-> PCC: 0007DC2D2274CDC3
+# FileExtensionsManager v 1.7.3
+> PCC: 00088E3B182F037F
 
 
 A tool for managing Windows registry settings for file extensions
@@ -66,9 +66,10 @@ REG_DWORD, and REG_QWORD
 
 ## Requirements / Требования
 
-Needs Windows XP and newer, Framework 4.0 and newer. Interface language: ru_ru, en_us
+- Windows XP or newer / или новее;
+- [Microsoft .NET Framework 4.0](https://www.microsoft.com/en-us/download/details.aspx?id=17718).
 
-Требуется ОС Windows XP и новее, Framework 4.0 и новее. Язык интерфейса: ru_ru, en_us
+Interface languages / языки интерфейса: ru_ru, en_us.
 
 &nbsp;
 

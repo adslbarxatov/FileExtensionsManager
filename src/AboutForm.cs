@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -19,10 +20,9 @@ namespace RD_AAOW
 		// Переменные
 		private string projectLink, updatesLink, userManualLink;
 		private SupportedLanguages al;
-		private string updatesMessage = "", description = "", policyLoaderCaption = "",
-			registryFail = "";
+		private string updatesMessage = "", updatesMessageForText = "", description = "",
+			policyLoaderCaption = "", registryFail = "";
 
-		private const string gitUpdatesSublink = "/releases";                       // Часть пути для перехода к релизам
 		private string versionDescription = "";
 
 		private bool accepted = false;                                              // Флаг принятия Политики
@@ -54,7 +54,7 @@ namespace RD_AAOW
 			userManualLink = (UserManualLink == null) ? "" : UserManualLink;
 
 			projectLink = RDGenerics.AssemblyGitLink + ProgramDescription.AssemblyMainName;
-			updatesLink = RDGenerics.AssemblyGitLink + ProgramDescription.AssemblyMainName + gitUpdatesSublink;
+			updatesLink = RDGenerics.AssemblyGitLink + ProgramDescription.AssemblyMainName + RDGenerics.GitUpdatesSublink;
 
 			// Загрузка окружения
 			AboutLabel.Text = ProgramDescription.AssemblyTitle + "\n" + ProgramDescription.AssemblyDescription + "\n\n" +
@@ -72,8 +72,8 @@ namespace RD_AAOW
 				}
 
 			// Завершение
-			UserManualButton.Enabled = (userManualLink != "");
-			ProjectPageButton.Enabled = (projectLink != "");
+			UserManualButton.Enabled = !string.IsNullOrWhiteSpace (userManualLink);
+			ProjectPageButton.Enabled = !string.IsNullOrWhiteSpace (projectLink);
 			}
 
 		/// <summary>
@@ -152,11 +152,15 @@ namespace RD_AAOW
 					ExitButton.Text = AcceptMode ? "&Принять" : "&ОК";
 					AskDeveloper.Text = "Спросить ра&зработчика";
 					MisacceptButton.Text = "О&тклонить";
-					DescriptionBox.Text = AcceptMode ? "Не удалось получить текст Политики. " +
-						"Попробуйте использовать кнопку перехода в браузер" : description;
+
+					if (!desciptionHasBeenUpdated)
+						DescriptionBox.Text = AcceptMode ? "Не удалось получить текст Политики. " +
+						"Попробуйте использовать кнопку перехода в браузер" :
+						"[Проверка обновлений...]\r\n\r\n" + description;
 
 					policyLoaderCaption = "Подготовка к запуску...";
-					registryFail = ProgramDescription.AssemblyMainName + " не может сохранить настройки в реестре Windows.\n\n" +
+					registryFail = ProgramDescription.AssemblyMainName +
+						" не может сохранить настройки в реестре Windows. Оно не будет работать корректно.\n\n" +
 						"Попробуйте выполнить следующие изменения в свойствах исполняемого файла:\n" +
 						"• разблокируйте приложение в общих свойствах (кнопка «Разблокировать»);\n" +
 						"• включите запуск от имени администратора для всех пользователей в настройках совместимости.\n\n" +
@@ -173,11 +177,14 @@ namespace RD_AAOW
 					ExitButton.Text = AcceptMode ? "&Accept" : "&OK";
 					AskDeveloper.Text = "Ask &developer";
 					MisacceptButton.Text = "&Decline";
-					DescriptionBox.Text = AcceptMode ? "Failed to get Policy text. Try button to open it in browser" :
-						description;
+
+					if (!desciptionHasBeenUpdated)
+						DescriptionBox.Text = AcceptMode ? "Failed to get Policy text. Try button to open it in browser" :
+							"[Checking for updates...]\r\n\r\n" + description;
 
 					policyLoaderCaption = "Preparing for launch...";
-					registryFail = ProgramDescription.AssemblyMainName + " cannot save settings in the Windows registry.\n\n" +
+					registryFail = ProgramDescription.AssemblyMainName +
+						" cannot save settings in the Windows registry. It will not work properly.\n\n" +
 						"Try the following changes to properties of the executable file:\n" +
 						"• unblock the app in general properties (“Unblock” button);\n" +
 						"• enable running as administrator for all users in compatibility settings.\n\n" +
@@ -238,8 +245,16 @@ namespace RD_AAOW
 						ProgramDescription.AssemblyVersion);
 
 					// Контроль доступа к реестру
-					if (Registry.GetValue (RDGenerics.AssemblySettingsKey, LastShownVersionKey, "").ToString () !=
+					/*if (Registry.GetValue (RDGenerics.AssemblySettingsKey, LastShownVersionKey, "").ToString () !=
 						ProgramDescription.AssemblyVersion)
+						{
+						MessageBox.Show (registryFail, ProgramDescription.AssemblyTitle, MessageBoxButtons.OK,
+							MessageBoxIcon.Exclamation);
+						}*/
+
+					WindowsIdentity identity = WindowsIdentity.GetCurrent ();
+					WindowsPrincipal principal = new WindowsPrincipal (identity);
+					if (!principal.IsInRole (WindowsBuiltInRole.Administrator))
 						{
 						MessageBox.Show (registryFail, ProgramDescription.AssemblyTitle, MessageBoxButtons.OK,
 							MessageBoxIcon.Exclamation);
@@ -251,7 +266,11 @@ namespace RD_AAOW
 				if (AcceptMode && accepted)
 					Registry.SetValue (ADPRevisionPath, ADPRevisionKey, adpRevision.Replace ("!", ""));
 				}
-			catch { }
+			catch
+				{
+				MessageBox.Show (registryFail, ProgramDescription.AssemblyTitle, MessageBoxButtons.OK,
+					MessageBoxIcon.Exclamation);
+				}
 
 			// Завершение
 			return accepted ? 0 : -1;
@@ -298,8 +317,9 @@ namespace RD_AAOW
 			{
 			try
 				{
-				if (Link == null)
-					Process.Start (RDGenerics.AssemblyGitLink + ProgramDescription.AssemblyMainName + gitUpdatesSublink);
+				if (string.IsNullOrWhiteSpace (Link))
+					Process.Start (RDGenerics.AssemblyGitLink + ProgramDescription.AssemblyMainName +
+						RDGenerics.GitUpdatesSublink);
 				else
 					Process.Start (Link);
 				}
@@ -420,6 +440,16 @@ namespace RD_AAOW
 			new string[] { "</code>", "" }
 			};
 
+		/// <summary>
+		/// Левый маркер лога изменений
+		/// </summary>
+		public const string ChangeLogMarkerLeft = "markdown-body my-3\">";
+
+		/// <summary>
+		/// Правый маркер лога изменений
+		/// </summary>
+		public const string ChangeLogMarkerRight = "</div>";
+
 		private void UpdatesChecker (object sender, DoWorkEventArgs e)
 			{
 			// Запрос обновлений пакета
@@ -428,7 +458,7 @@ namespace RD_AAOW
 
 			// Разбор ответа (извлечение версии)
 			string[] htmlMarkers = { "</a>" + ProgramDescription.AssemblyMainName, "</h1>",
-								   "markdown-body my-3\">", "</div>" };
+								   ChangeLogMarkerLeft, ChangeLogMarkerRight };
 
 			int i = html.IndexOf (htmlMarkers[0]);
 			if (i < 0)
@@ -465,16 +495,28 @@ namespace RD_AAOW
 				{
 				case SupportedLanguages.ru_ru:
 					if (ProgramDescription.AssemblyTitle.EndsWith (version))
+						{
 						updatesMessage = "Обновлений нет";
+						updatesMessageForText = "[Версия актуальна, см. описание в конце]";
+						}
 					else
+						{
 						updatesMessage = "&Доступна " + version;
+						updatesMessageForText = "[Доступна " + version + ", см. описание в конце]";
+						}
 					break;
 
 				default:    // en_us
 					if (ProgramDescription.AssemblyTitle.EndsWith (version))
+						{
 						updatesMessage = "No updates";
+						updatesMessageForText = "[Version is up to date, see description below]";
+						}
 					else
+						{
 						updatesMessage = version + " a&vailable";
+						updatesMessageForText = "[" + version + " is available, see description below]";
+						}
 					break;
 				}
 			htmlError = false;
@@ -515,10 +557,12 @@ policy:
 				{
 				case SupportedLanguages.ru_ru:
 					updatesMessage = "Недоступны";
+					updatesMessageForText = "[Страница обновлений недоступна]";
 					break;
 
 				default:    // en_us
 					updatesMessage = "Unavailable";
+					updatesMessageForText = "[Updates page is unavailable]";
 					break;
 				}
 
@@ -653,45 +697,54 @@ policy:
 #endif
 
 		// Контроль сообщения об обновлении
+		private bool desciptionHasBeenUpdated = false;
 		private void UpdatesTimer_Tick (object sender, EventArgs e)
 			{
-			if (updatesMessage != "")
+			if (string.IsNullOrWhiteSpace (updatesMessage))
+				return;
+
+			// Получение описания версии
+			if (!string.IsNullOrWhiteSpace (versionDescription))
 				{
-				// Включение
-				if (UpdatesPageButton.Text == "")
+				description += versionDescription;
+				versionDescription = "";
+				}
+
+			// Обновление состояния
+			if (!desciptionHasBeenUpdated)
+				{
+				DescriptionBox.Text = updatesMessageForText + "\r\n\r\n" + description;
+				desciptionHasBeenUpdated = true;
+				}
+
+			// Включение текста кнопки
+			if (string.IsNullOrWhiteSpace (UpdatesPageButton.Text))
+				{
+				UpdatesPageButton.Text = updatesMessage;
+
+				// Включение кнопки и установка интервала
+				if (!UpdatesPageButton.Enabled)
 					{
-					UpdatesPageButton.Text = updatesMessage;
-
-					// Включение кнопки и установка интервала
-					if (!UpdatesPageButton.Enabled)
+					// Исключение задвоения
+					if (!UpdatesPageButton.Enabled && updatesMessage.Contains ("."))
 						{
-						if (updatesMessage.Contains ("."))
-							{
-							UpdatesTimer.Interval = 1000;
-							UpdatesPageButton.Enabled = true;
-							UpdatesPageButton.Font = new Font (UpdatesPageButton.Font, FontStyle.Bold);
-							}
+						UpdatesTimer.Interval = 1000;
+						UpdatesPageButton.Enabled = true;
+						UpdatesPageButton.Font = new Font (UpdatesPageButton.Font, FontStyle.Bold);
+						}
 
-						// Отключение таймера, если обновлений нет
-						else
-							{
-							UpdatesTimer.Enabled = false;
-							}
+					// Отключение таймера, если обновлений нет
+					else
+						{
+						UpdatesTimer.Enabled = false;
 						}
 					}
+				}
 
-				// Выключение
-				else
-					{
-					UpdatesPageButton.Text = "";
-
-					// Получение описания версии
-					if (versionDescription != "")
-						{
-						DescriptionBox.Text += versionDescription;
-						versionDescription = "";
-						}
-					}
+			// Выключение
+			else
+				{
+				UpdatesPageButton.Text = "";
 				}
 			}
 

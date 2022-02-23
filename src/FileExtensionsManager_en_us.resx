@@ -148,7 +148,7 @@
     <value>Applied {0:D} from {1:D}</value>
   </data>
   <data name="EntryIsIncorrect" xml:space="preserve">
-    <value>Entry is incorrect. Make sure that path to registry key is correct, parameter name doesn't contain the \ character, and value matches the specified type, then try again</value>
+    <value>Entry is incorrect. Make sure that path to registry key is correct, parameter name doesn’t contain the “\” character, and value matches the specified type, then try again</value>
   </data>
   <data name="EntryIsUnavailable" xml:space="preserve">
     <value>Entry cannot be applied: needed registry key is not available</value>
@@ -169,7 +169,7 @@
     <value>Failed to create one or more entries to register the extension. Make sure that application has rights to work with the registry, then try again</value>
   </data>
   <data name="ExtensionRegistrator_AttentionLabel" xml:space="preserve">
-    <value>Attention! Some applications may not support "Open with" command or support it in a non-standard way. In these cases, this function may not work correctly</value>
+    <value>Attention! Some applications may not support “Open with” command or support it in a non-standard way. In these cases, this function may not work correctly</value>
   </data>
   <data name="ExtensionRegistrator_ExecutableLabel" xml:space="preserve">
     <value>Executable for opening:</value>
@@ -228,7 +228,7 @@ You can apply entries one at a time or all at once (all that not applied). The �
 For now, utility only works with entries in registry branch HKEY_CLASSES_ROOT and only with parameter types REG_SZ, REG_DWORD, and REG_QWORD</value>
   </data>
   <data name="IconsNotFound" xml:space="preserve">
-    <value>File "{0:S}" contains no icons</value>
+    <value>File “{0:S}” contains no icons</value>
   </data>
   <data name="IE_OFDialogFilter" xml:space="preserve">
     <value>Executables, libraries, assemblies, icons|*.ico;*.exe;*.dll;*.sfx;*.cpl|All files|*.*</value>

@@ -21,7 +21,8 @@ namespace RD_AAOW
 		private string projectLink, updatesLink, userManualLink;
 		private SupportedLanguages al;
 		private string updatesMessage = "", updatesMessageForText = "", description = "",
-			policyLoaderCaption = "", registryFail = "";
+			policyLoaderCaption = "", registryFail = "",
+			dpModuleAbsence = "", startDownload = "", packageFail = "", fileWriteFail = "";
 
 		private string versionDescription = "";
 
@@ -166,12 +167,19 @@ namespace RD_AAOW
 						"• включите запуск от имени администратора для всех пользователей в настройках совместимости.\n\n" +
 						"После этого перезапустите программу и повторите попытку";
 
-					this.Text = AcceptMode ? "Политика разработки и соглашение пользователя" : "О программе";
+					dpModuleAbsence = "Инструмент развёртки пакетов DPModule не найден на этом ПК. Перейти к его загрузке?" +
+						"\n\nВы можете обновить этот продукт прямо из DPModule или вернуться сюда после его установки. " +
+						"Также Вы можете ознакомиться с презентацией DPModule на YouTube, нажав кнопку «Нет»";
+					packageFail = "Не удалось загрузить пакет развёртки. Проверьте Ваше подключение к Интернету";
+					fileWriteFail = "Не удалось сохранить пакет развёртки. Проверьте Ваши права доступа";
+					startDownload = "Начать загрузку пакета?\n\nПакет развёртки будет сохранён на Рабочем столе";
+
+					this.Text = AcceptMode ? "Политика разработки и соглашение пользователя" : "О приложении";
 					break;
 
 				default:    // en_us
 					UserManualButton.Text = "&User manual";
-					ProjectPageButton.Text = "Project &webpage";
+					ProjectPageButton.Text = "Project’s &webpage";
 					UpdatesPageButton.Text = "Checking updates...";
 					ADPButton.Text = AcceptMode ? "Open in &browser" : "&Policy and EULA";
 					ExitButton.Text = AcceptMode ? "&Accept" : "&OK";
@@ -190,10 +198,17 @@ namespace RD_AAOW
 						"• enable running as administrator for all users in compatibility settings.\n\n" +
 						"Then restart the program and try again";
 
-					this.Text = AcceptMode ? "Development policy and user agreement" : "About application";
+					dpModuleAbsence = "DPModule, the packages deployment tool isn’t installed on this PC. " +
+						"Download it?\n\nYou can update this product directly from DPModule or come back here " +
+						"after installing it. Also you can view the DPModule presentation on YouTube by pressing “No” button";
+					packageFail = "Failed to download deployment package. Check your internet connection";
+					fileWriteFail = "Failed to save deployment package. Check your user access rights";
+					startDownload = "Download the package?\n\nThe deployment package will be saved on the Desktop";
+
+					this.Text = AcceptMode ? "Development policy and user agreement" : "About the application";
 					break;
 				}
-			ToLaboratory.Text = "Free development lab";
+			ToLaboratory.Text = RDGenerics.AssemblyCompany;
 
 			// Запуск проверки обновлений
 			HardWorkExecutor hwe;
@@ -217,7 +232,7 @@ namespace RD_AAOW
 #endif
 
 				string html = hwe.Result.ToString ();
-				if (html != "")
+				if (!string.IsNullOrWhiteSpace (html))
 					{
 					DescriptionBox.Text = html;
 
@@ -231,6 +246,9 @@ namespace RD_AAOW
 			// Настройка контролов
 			UserManualButton.Visible = ProjectPageButton.Visible = UpdatesPageButton.Visible =
 				AskDeveloper.Visible = ToLaboratory.Visible = !AcceptMode;
+#if DPMODULE
+			UpdatesPageButton.Visible = false;
+#endif
 			MisacceptButton.Visible = AcceptMode;
 
 			// Запуск
@@ -245,13 +263,6 @@ namespace RD_AAOW
 						ProgramDescription.AssemblyVersion);
 
 					// Контроль доступа к реестру
-					/*if (Registry.GetValue (RDGenerics.AssemblySettingsKey, LastShownVersionKey, "").ToString () !=
-						ProgramDescription.AssemblyVersion)
-						{
-						MessageBox.Show (registryFail, ProgramDescription.AssemblyTitle, MessageBoxButtons.OK,
-							MessageBoxIcon.Exclamation);
-						}*/
-
 					WindowsIdentity identity = WindowsIdentity.GetCurrent ();
 					WindowsPrincipal principal = new WindowsPrincipal (identity);
 					if (!principal.IsInRole (WindowsBuiltInRole.Administrator))
@@ -289,14 +300,8 @@ namespace RD_AAOW
 				textLeft += 6;
 				html = html.Substring (textLeft, textRight - textLeft);
 
-				// Формирование абзацных отступов
-				html = html.Replace ("<br/>", "\r\n").Replace ("</p>", "\r\n").Replace ("</li>", "\r\n").
-					Replace ("</h1>", "\r\n\r\n").Replace ("</h3>", "\r\n").Replace ("<li>", "• ");
-
-				// Удаление вложенных тегов
-				while (((textLeft = html.IndexOf ("<")) >= 0) && ((textRight = html.IndexOf (">", textLeft)) >= 0))
-					html = html.Replace (html.Substring (textLeft, textRight - textLeft + 1), "");
-
+				// Формирование
+				html = ApplyReplacements (html);
 				html = html.Substring (0, html.Length - 12);
 				}
 			else
@@ -363,15 +368,6 @@ namespace RD_AAOW
 			catch { }
 			}
 
-		private void UpdatesPageButton_Click (object sender, EventArgs e)
-			{
-			try
-				{
-				Process.Start (updatesLink);
-				}
-			catch { }
-			}
-
 		private void ADP_Click (object sender, EventArgs e)
 			{
 			try
@@ -424,21 +420,129 @@ namespace RD_AAOW
 			catch { }
 			}
 
+		// Загрузка пакета обновления изнутри приложения
+		private void UpdatesPageButton_Click (object sender, EventArgs e)
+			{
+			// Контроль наличия DPModule
+			string dpmv = "";
+			try
+				{
+				dpmv = Registry.GetValue (RDGenerics.AssemblySettingsStorage + "DPModule",
+					LastShownVersionKey, "").ToString ();
+				}
+			catch { }
+
+			string downloadLink = RDGenerics.DPModuleStorageLink;
+			string packagePath = Environment.GetFolderPath (Environment.SpecialFolder.Desktop) + "\\";
+			if (string.IsNullOrWhiteSpace (dpmv))
+				{
+				// Выбор варианта обработки
+				switch (MessageBox.Show (dpModuleAbsence, ProgramDescription.AssemblyTitle,
+					MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+					{
+					case DialogResult.Cancel:
+						return;
+
+					case DialogResult.No:
+						try
+							{
+							Process.Start (RDGenerics.DPModuleUserManualLink);
+							}
+						catch { }
+						return;
+					}
+
+				downloadLink = RDGenerics.DPModuleDirectLink;
+				packagePath += "DPModule.sfx.exe";
+				}
+			else
+				{
+				if (MessageBox.Show (startDownload, ProgramDescription.AssemblyTitle,
+					MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+					return;
+
+				downloadLink += ("/raw/master/Packages/" + ProgramDescription.AssemblyMainName + ".dp");
+				packagePath += (ProgramDescription.AssemblyMainName + ".dp");
+				}
+
+			// Запуск загрузки
+			HardWorkExecutor hwe = new HardWorkExecutor (PackageLoader, downloadLink, packagePath, "0");
+
+			// Разбор ответа
+			string msg = "";
+			switch (hwe.ExecutionResult)
+				{
+				case 0:
+					break;
+
+				case -1:
+				case -2:
+					msg = packageFail;
+					break;
+
+				case -3:
+					msg = fileWriteFail;
+					break;
+
+				default: // Отмена
+					try
+						{
+						File.Delete (packagePath);
+						}
+					catch { }
+					return;
+				}
+
+			if (!string.IsNullOrWhiteSpace (msg))
+				{
+				MessageBox.Show (msg, ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				return;
+				}
+
+			// Запуск пакета
+			try
+				{
+				Process.Start (packagePath);
+				}
+			catch { }
+			}
+
 		// Метод-исполнитель проверки обновлений
-		private string[][] ucReplacements = new string[][] {
-			new string[] { "<p>", "\r\n\r\n" },
+		private static string[][] htmlReplacements = new string[][] {
+			new string[] { "<p", "\r\n<" },
 			new string[] { "<li>", "\r\n• " },
 			new string[] { "</p>", "\r\n" },
-			new string[] { "<br>", "\r\n" },
+			new string[] { "<br", "\r\n<" },
 
-			new string[] { "</li>", "" },
-			new string[] { "<ul>", "" },
-			new string[] { "</ul>", "" },
-			new string[] { "<em>", "" },
-			new string[] { "</em>", "" },
-			new string[] { "<code>", "" },
-			new string[] { "</code>", "" }
+			new string[] { "<h1", "\r\n<" },
+			new string[] { "</h1>", "\r\n" },
+			new string[] { "<h3", "\r\n<" },
+
+			new string[] { "&gt;", "›" },
+			new string[] { "&lt;", "‹" },
+			new string[] { "&#39;", "’" }
 			};
+
+		/// <summary>
+		/// Метод выполняет пост-обработку текста лога или политики после загрузки
+		/// </summary>
+		/// <param name="Source">Исходный текст</param>
+		/// <returns>Текст с применёнными заменами символов форматирования</returns>
+		public static string ApplyReplacements (string Source)
+			{
+			string res = Source;
+
+			// Замена элементов разметки
+			for (int i = 0; i < htmlReplacements.Length; i++)
+				res = res.Replace (htmlReplacements[i][0], htmlReplacements[i][1]);
+
+			// Удаление вложенных тегов
+			int textLeft = 0, textRight = 0;
+			while (((textLeft = res.IndexOf ("<")) >= 0) && ((textRight = res.IndexOf (">", textLeft)) >= 0))
+				res = res.Replace (res.Substring (textLeft, textRight - textLeft + 1), "");
+
+			return res;
+			}
 
 		/// <summary>
 		/// Левый маркер лога изменений
@@ -487,8 +591,7 @@ namespace RD_AAOW
 				goto policy;
 
 			versionDescription = html.Substring (i, j - i);
-			for (int r = 0; r < ucReplacements.Length; r++)
-				versionDescription = versionDescription.Replace (ucReplacements[r][0], ucReplacements[r][1]);
+			versionDescription = "\r\n" + ApplyReplacements (versionDescription);
 
 			// Отображение результата
 			switch (al)
@@ -496,7 +599,7 @@ namespace RD_AAOW
 				case SupportedLanguages.ru_ru:
 					if (ProgramDescription.AssemblyTitle.EndsWith (version))
 						{
-						updatesMessage = "Обновлений нет";
+						updatesMessage = "Версия актуальна";
 						updatesMessageForText = "[Версия актуальна, см. описание в конце]";
 						}
 					else
@@ -509,7 +612,7 @@ namespace RD_AAOW
 				default:    // en_us
 					if (ProgramDescription.AssemblyTitle.EndsWith (version))
 						{
-						updatesMessage = "No updates";
+						updatesMessage = "App is up-to-date";
 						updatesMessageForText = "[Version is up to date, see description below]";
 						}
 					else
@@ -570,8 +673,6 @@ policy:
 			return;
 			}
 
-#if DPMODULE
-
 		/// <summary>
 		/// Метод-исполнитель загрузки пакета обновлений
 		/// </summary>
@@ -582,13 +683,21 @@ policy:
 
 			// Инициализация полосы загрузки
 			SupportedLanguages al = Localization.CurrentLanguage;
-			string report = Localization.GetText ("PackageDownload", al) + Path.GetFileName (paths[1]);
+			string downloadMessage = "Downloading deployment package:",
+				downloadSuccess = "Success";
+			if (al == SupportedLanguages.ru_ru)
+				{
+				downloadMessage = "Загрузка установочного пакета:";
+				downloadSuccess = "Успешно";
+				}
+
+			string report = downloadMessage + "\n" + Path.GetFileName (paths[1]);
 			((BackgroundWorker)sender).ReportProgress ((int)HardWorkExecutor.ProgressBarSize, report);
 
 			// Отдельная обработка ModDB
 			if (paths[0].Contains ("www.moddb.com"))
 				{
-				string html = AboutForm.GetHTML (paths[0]);
+				string html = GetHTML (paths[0]);
 
 				int left, right;
 				if ((html == "") || ((left = html.IndexOf ("<a href=\"")) < 0) ||
@@ -687,14 +796,12 @@ policy:
 			resp.Close ();
 
 			// Завершено. Отображение сообщения
-			((BackgroundWorker)sender).ReportProgress (-1, Localization.GetText ("PackageSuccess", al));
-			Thread.Sleep (1000);
+			((BackgroundWorker)sender).ReportProgress (-1, downloadSuccess);
+			Thread.Sleep (500);
 
 			e.Result = 0;
 			return;
 			}
-
-#endif
 
 		// Контроль сообщения об обновлении
 		private bool desciptionHasBeenUpdated = false;
@@ -726,11 +833,15 @@ policy:
 				if (!UpdatesPageButton.Enabled)
 					{
 					// Исключение задвоения
-					if (!UpdatesPageButton.Enabled && updatesMessage.Contains ("."))
+					if (updatesMessage.Contains (" "))    // Интернет доступен
 						{
 						UpdatesTimer.Interval = 1000;
 						UpdatesPageButton.Enabled = true;
-						UpdatesPageButton.Font = new Font (UpdatesPageButton.Font, FontStyle.Bold);
+
+						if (updatesMessage.Contains ("."))
+							UpdatesPageButton.Font = new Font (UpdatesPageButton.Font, FontStyle.Bold);
+						else
+							UpdatesTimer.Enabled = false;
 						}
 
 					// Отключение таймера, если обновлений нет

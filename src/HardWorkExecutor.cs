@@ -162,20 +162,6 @@ namespace RD_AAOW
 			}
 
 		/// <summary>
-		/// Конструктор. Выполняет загрузку файла по URL
-		/// </summary>
-		/// <param name="HardWorkProcess">Выполняемый процесс</param>
-		/// <param name="Length">Размер пакета</param>
-		/// <param name="TargetPath">Путь создаваемого файла</param>
-		/// <param name="URL">Ссылка для загрузки</param>
-		public HardWorkExecutor (DoWorkEventHandler HardWorkProcess, string URL, string TargetPath, string Length)
-			{
-			// Инициализация
-			string[] arguments = new string[] { URL, TargetPath, Length };
-			HardWorkExecutor_Init (HardWorkProcess, arguments, " ", true, true);
-			}
-
-		/// <summary>
 		/// Конструктор. Выполняет указанное действие с указанными параметрами
 		/// </summary>
 		/// <param name="HardWorkProcess">Выполняемый процесс</param>
@@ -212,6 +198,20 @@ namespace RD_AAOW
 			}
 
 #endif
+
+		/// <summary>
+		/// Конструктор. Выполняет загрузку файла по URL
+		/// </summary>
+		/// <param name="HardWorkProcess">Выполняемый процесс</param>
+		/// <param name="Length">Размер пакета</param>
+		/// <param name="TargetPath">Путь создаваемого файла</param>
+		/// <param name="URL">Ссылка для загрузки</param>
+		public HardWorkExecutor (DoWorkEventHandler HardWorkProcess, string URL, string TargetPath, string Length)
+			{
+			// Инициализация
+			string[] arguments = new string[] { URL, TargetPath, Length };
+			HardWorkExecutor_Init (HardWorkProcess, arguments, " ", true, true);
+			}
 
 		// Общий метод подготовки исполнителя заданий
 		private void HardWorkExecutor_Init (DoWorkEventHandler HWProcess, object Parameters,

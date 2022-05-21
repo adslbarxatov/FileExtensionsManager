@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -136,9 +135,9 @@ namespace RD_AAOW
 #if DPMODULE
 
 		/// <summary>
-		/// Конструктор. Выполняет настройку и запуск процесса установки/удаления
+		/// Конструктор. Выполняет настройку и запуск процесса установки / удаления
 		/// </summary>
-		/// <param name="HardWorkProcess">Процесс, выполняющий установку/удаление</param>
+		/// <param name="HardWorkProcess">Процесс, выполняющий установку / удаление</param>
 		/// <param name="SetupPath">Путь установки/удаления</param>
 		/// <param name="Flags">Флаги процедуры: b0 = режим удаления;
 		///										 b1 = разрешено завершение работающих процессов;</param>

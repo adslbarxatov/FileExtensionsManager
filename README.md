@@ -12,9 +12,11 @@ A tool for managing Windows registry settings for file extensions
 Программа позволяет хранить и применять пользовательские настройки расширений файлов, зарегистрированных в операционной системе.
 В списке записей отображаются реестровые сопоставления, хранящиеся в текущей выбранной базе записей.
 
-Зелёным :green: цветом обозначены записи, уже имеющиеся в реестре Windows, синим :blue: – записи, неполностью соответствующие пользовательским
-настройкам, а красным :red: – отсутствующие записи. Если запись помечена как удаляемая, то зелёным помечаются отсутствующие в
-реестре записи, а красным – присутствующие. Наличие серых :grey: записей может говорить об отсутствии доступа к реестру Windows.
+Зелёным :green_circle: цветом обозначены записи, уже имеющиеся в реестре Windows,
+синим :large_blue_circle: – записи, неполностью соответствующие пользовательским настройкам,
+а красным :red_circle: – отсутствующие записи.
+Если запись помечена как удаляемая, то зелёным помечаются отсутствующие в реестре записи, а красным – присутствующие.
+Наличие серых :white_circle: записей может говорить об отсутствии доступа к реестру Windows.
 
 Изменить запись можно по двойному щелчку мыши на соответствующей строке, добавить – с помощью соответствующей кнопки.
 В обоих случаях сведения редактируются в специальном окне, а их корректность контролируется программой. Добавить записи
@@ -40,10 +42,11 @@ A tool for managing Windows registry settings for file extensions
 Utility allows you to store and apply custom settings for file extensions registered in operating system. List of records
 displays registry mappings stored in currently selected base of records.
 
-Green indicates entries that already exist in
-Windows registry, blue indicates entries that partially correspond to user settings, and red indicates missing entries.
-If record is marked as deleted, then entries that are absent in registry are marked in green, otherwise they are marked
-in red. Presence of gray entries may indicate a lack of access to Windows registry.
+Green :green_circle: indicates entries that already exist in Windows registry,
+blue :large_blue_circle: indicates entries that partially correspond to user settings,
+and red :red_circle: indicates missing entries.
+If record is marked as deleted, then entries that are absent in registry are marked in green, otherwise they are marked in red.
+Presence of grey :white_circle: entries may indicate a lack of access to Windows registry.
 
 You can change record by double-clicking on corresponding line, and add it using corresponding button. In both cases,
 information is edited in a special window, and their correctness is controlled by the application. You can also add entries

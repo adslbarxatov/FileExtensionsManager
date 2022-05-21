@@ -1,5 +1,9 @@
 ﻿File extensions manager changes log
 
+ToDo:
+- Add obvious Edit button;
+- Add .reg export option
+
 Version 1.8:
 • Parsing methods for ADP and projects descriptions have been upgraded;
 • Current updates and improvements applied

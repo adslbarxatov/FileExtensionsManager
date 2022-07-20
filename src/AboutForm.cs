@@ -967,7 +967,7 @@ policy:
 			try
 				{
 				// Запись значка
-				FileStream FS = new FileStream (fileExt + ".ico", FileMode.Create);
+				FileStream FS = new FileStream (RDGenerics.AppStartupPath + fileExt + ".ico", FileMode.Create);
 				FileIcon.Save (FS);
 				FS.Close ();
 

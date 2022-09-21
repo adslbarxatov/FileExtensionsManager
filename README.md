@@ -60,8 +60,8 @@ necessary for correct mapping of the extension and the application for working w
 select an icon for the created file type using graphical interface. Function of icons viewing contained in executables,
 libraries, control panel components or icons is available from the main interface.
 
-For now, utility only works with entries in registry branch HKEY_CLASSES_ROOT and only with parameter types REG_SZ,
-REG_DWORD, and REG_QWORD
+For now, utility only works with entries in registry branch `HKEY_CLASSES_ROOT` and only with parameter types `REG_SZ`,
+`REG_DWORD`, and `REG_QWORD`
 
 &nbsp;
 
@@ -78,7 +78,7 @@ Interface languages / языки интерфейса: ru_ru, en_us.
 
 
 
-## [Development policy and EULA / Политика разработки и EULA](https://adslbarxatov.github.io/ADP)
+## [Development policy and EULA](https://adslbarxatov.github.io/ADP) / [Политика разработки и EULA](https://adslbarxatov.github.io/ADP/ru)
 
 This Policy (ADP), its positions, conclusion, EULA and application methods
 describes general rules that we follow in all of our development processes, released applications and implemented ideas.

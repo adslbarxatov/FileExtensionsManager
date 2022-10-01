@@ -8,7 +8,7 @@ namespace RD_AAOW
 	/// <summary>
 	/// Главная форма программы
 	/// </summary>
-	public partial class FileExtensionsManagerForm:Form
+	public partial class FileExtensionsManagerForm: Form
 		{
 		// Переменные
 		private List<RegistryEntriesBaseManager> rebm = new List<RegistryEntriesBaseManager> ();

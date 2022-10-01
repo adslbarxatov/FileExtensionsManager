@@ -4,6 +4,10 @@ ToDo:
 - Add obvious Edit button;
 - Add .reg export option
 
+Version 2.0:
+• Implemented the ability to open localized ADP, SCP and Welcome pages;
+• Required framework version updated from 4.0 to 4.8
+
 Version 1.8.2:
 • Fixed the bug that affected the file association method
 

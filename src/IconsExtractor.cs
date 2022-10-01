@@ -10,7 +10,7 @@ namespace RD_AAOW
 	/// <summary>
 	/// Форма позволяет выполнять обзор иконок, содержащихся в исполняемом файле или библиотеке
 	/// </summary>
-	public partial class IconsExtractor:Form
+	public partial class IconsExtractor: Form
 		{
 		// Константы
 		private const uint iconPositionWidth = 35;      // Ширина поля иконки
@@ -59,8 +59,10 @@ namespace RD_AAOW
 		/// <param name="IconIndex">Номер значка, начиная с 0; -1, если требуется получить количество значков</param>
 		/// <param name="IconLarge">Указатель для получения больших значков</param>
 		/// <param name="IconSmall">Указатель для получения маленьких значков</param>
-		/// <param name="IconsCount">Количество получаемых значков (большой и маленький значок с одним номером считаются за один значок)</param>
-		/// <returns>Количество успешно полученных значков (большой и маленький значок с одним номером считаются за два значка)</returns>
+		/// <param name="IconsCount">Количество получаемых значков (большой и маленький значок с одним номером 
+		/// считаются за один значок)</param>
+		/// <returns>Количество успешно полученных значков (большой и маленький значок с одним номером считаются 
+		/// за два значка)</returns>
 		[DllImport ("shell32.dll")]
 		private static extern UInt32 ExtractIconExA (string FileName, Int32 IconIndex, ref IntPtr IconLarge,
 			ref IntPtr IconSmall, UInt32 IconsCount);
@@ -171,15 +173,16 @@ namespace RD_AAOW
 
 			// Замена изображения
 			MainPicture.BackgroundImage.Dispose ();
-			MainPicture.BackgroundImage = iconsView.Clone (new Rectangle (0, offset, iconsView.Width, iconsView.Height - offset),
-				iconsView.PixelFormat);
+			MainPicture.BackgroundImage = iconsView.Clone (new Rectangle (0, offset, iconsView.Width,
+				iconsView.Height - offset), iconsView.PixelFormat);
 
 			// Отображение выделения
 			if ((selectedNumber >= 0) && (currentPage == PageNumber.Value))
 				{
 				Graphics g = Graphics.FromImage (MainPicture.BackgroundImage);
 				g.FillRectangle (selectionBrush, (selectedNumber % iconsHorizontalCount) * iconPositionWidth,
-					(selectedNumber / iconsHorizontalCount) * iconPositionHeight, iconPositionWidth, iconPositionHeight);
+					(selectedNumber / iconsHorizontalCount) * iconPositionHeight, iconPositionWidth,
+					iconPositionHeight);
 				g.Dispose ();
 				}
 			}

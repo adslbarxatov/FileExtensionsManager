@@ -6,7 +6,7 @@ namespace RD_AAOW
 	/// <summary>
 	/// Форма обеспечивает создание или редактирование записи в базе
 	/// </summary>
-	public partial class RegistryEntryEditor:Form
+	public partial class RegistryEntryEditor: Form
 		{
 		// Параметры
 		private SupportedLanguages al;
@@ -52,9 +52,13 @@ namespace RD_AAOW
 			editedEntry = Entry;
 
 			// Настройка контролов
-			KeyType.Items.Add (RegistryValueTypes.REG_SZ.ToString () + Localization.GetText ("RegistryValue_String", al));
-			KeyType.Items.Add (RegistryValueTypes.REG_DWORD.ToString () + Localization.GetText ("RegistryValue_Int32", al));
-			KeyType.Items.Add (RegistryValueTypes.REG_QWORD.ToString () + Localization.GetText ("RegistryValue_Int64", al));
+			KeyType.Items.Add (RegistryValueTypes.REG_SZ.ToString () +
+				Localization.GetText ("RegistryValue_String", al));
+			KeyType.Items.Add (RegistryValueTypes.REG_DWORD.ToString () +
+				Localization.GetText ("RegistryValue_Int32", al));
+			KeyType.Items.Add (RegistryValueTypes.REG_QWORD.ToString () +
+				Localization.GetText ("RegistryValue_Int64", al));
+
 			if ((int)editedEntry.ValueType < KeyType.Items.Count)
 				KeyType.Text = KeyType.Items[(int)editedEntry.ValueType].ToString ();
 			else
@@ -81,7 +85,8 @@ namespace RD_AAOW
 		// Изменение состояния флага удаления раздела
 		private void PathMustBeDeleted_CheckedChanged (object sender, EventArgs e)
 			{
-			KeyName.Enabled = KeyObject.Enabled = KeyType.Enabled = NameMustBeDeleted.Enabled = !PathMustBeDeleted.Checked;
+			KeyName.Enabled = KeyObject.Enabled = KeyType.Enabled = NameMustBeDeleted.Enabled =
+				!PathMustBeDeleted.Checked;
 			}
 
 		// Отмена изменений
@@ -96,6 +101,7 @@ namespace RD_AAOW
 			// Проверка записи на корректность
 			RegistryEntry re = new RegistryEntry (KeyPath.Text, KeyName.Text, KeyObject.Text,
 				(RegistryValueTypes)KeyType.SelectedIndex, PathMustBeDeleted.Checked, NameMustBeDeleted.Checked);
+
 			if (!re.IsValid)
 				{
 				MessageBox.Show (Localization.GetText ("EntryIsIncorrect", al), ProgramDescription.AssemblyTitle,

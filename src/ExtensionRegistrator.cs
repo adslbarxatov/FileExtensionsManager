@@ -7,7 +7,7 @@ namespace RD_AAOW
 	/// <summary>
 	/// Форма обеспечивает добавление расширения файла в реестр
 	/// </summary>
-	public partial class ExtensionRegistrator:Form
+	public partial class ExtensionRegistrator: Form
 		{
 		// Параметры
 		private RegistryEntriesBaseManager rebm;
@@ -67,7 +67,8 @@ namespace RD_AAOW
 		private void Apply_Click (object sender, EventArgs e)
 			{
 			// Контроль остальных параметров
-			if (FileExtension.Text.Length * FileTypeName.Text.Length * FileIcon.Text.Length * FileApplication.Text.Length == 0)
+			if (FileExtension.Text.Length * FileTypeName.Text.Length * FileIcon.Text.Length *
+				FileApplication.Text.Length == 0)
 				{
 				MessageBox.Show (Localization.GetText ("SomeFieldsAreEmpty", al),
 					ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -90,20 +91,26 @@ namespace RD_AAOW
 			uint a = IconsExtractor.GetIconsCount ("s");
 
 			// Пробуем добавлять
-			if (!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\." + FileExtension.Text, "", FileExtension.Text + "file")) ||
+			if (!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\." + FileExtension.Text, "",
+					FileExtension.Text + "file")) ||
 
-				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file", "", FileTypeName.Text)) ||
+				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file", "",
+					FileTypeName.Text)) ||
 
-				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\DefaultIcon", "",
-					selectedIconFile + "," + selectedIconNumber.ToString ())) ||
+				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\DefaultIcon",
+					"", selectedIconFile + "," + selectedIconNumber.ToString ())) ||
 
-				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell", "", "open")) ||
-				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open", "", Localization.GetText ("OpenButton", al))) ||
-				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open", "Icon",
-					((IconsExtractor.GetIconsCount (FileApplication.Text) == 0) ? selectedIconFile : FileApplication.Text) + ",0")) ||
+				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell", "",
+					"open")) ||
+				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open",
+					"", Localization.GetText ("OpenButton", al))) ||
+				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open",
+					"Icon",
+				((IconsExtractor.GetIconsCount (FileApplication.Text) == 0) ? selectedIconFile :
+					FileApplication.Text) + ",0")) ||
 
-				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open\\command", "",
-					"\"" + FileApplication.Text + "\" \"%1\"")))
+				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text +
+					"file\\shell\\open\\command", "", "\"" + FileApplication.Text + "\" \"%1\"")))
 				{
 				MessageBox.Show (Localization.GetText ("ExtensionRegFailed", al),
 					ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);

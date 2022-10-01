@@ -1,5 +1,5 @@
-# FileExtensionsManager v 1.8.2
-> PCC: 0007BE2BC11DD9B1
+# FileExtensionsManager v 2.0
+> PCC: 0005583AA6894488
 
 
 A tool for managing Windows registry settings for file extensions
@@ -69,8 +69,8 @@ For now, utility only works with entries in registry branch `HKEY_CLASSES_ROOT` 
 
 ## Requirements / Требования
 
-- Windows XP or newer / или новее;
-- [Microsoft .NET Framework 4.0](https://microsoft.com/en-us/download/details.aspx?id=17718).
+- Windows 7 or newer / или новее;
+- [Microsoft .NET Framework 4.8](https://go.microsoft.com/fwlink/?linkid=2088631).
 
 Interface languages / языки интерфейса: ru_ru, en_us.
 

@@ -1,4 +1,4 @@
-_Changes for v 1.8.2_:
-- Fixed the bug that affected the file association method;
-- Parsing methods for ADP and projects descriptions have been upgraded;
-- Current updates and improvements applied
+_Changes for v 2.0_:
+- Implemented the ability to open localized ADP, SCP and Welcome pages;
+- Required framework version updated from 4.0 to 4.8;
+- Fixed the bug that affected the file association method

@@ -12,7 +12,8 @@ namespace RD_AAOW
 		{
 		// Переменные
 		private bool allowClose = false;                        // Запрет выхода из формы до окончания работы
-		private Bitmap progress, frameGreenGrey, frameBack;     // Объекты-отрисовщики
+		private Bitmap progress, frameGreenGrey,
+			frameBack, frameDark;                               // Объекты-отрисовщики
 		private Graphics g, gp;
 		private int currentXOffset = 0, oldPercentage = 0, newPercentage = 0;
 		private object parameters;                              // Параметры инициализации потока
@@ -23,6 +24,7 @@ namespace RD_AAOW
 		private Color foreColor = Color.FromArgb (32, 32, 32);
 		private Color greenColor = Color.FromArgb (0, 160, 80);
 		private Color greyColor = Color.FromArgb (160, 160, 160);
+		private Color darkColor = Color.FromArgb (80, 80, 80);
 
 		/// <summary>
 		/// Длина шкалы прогресса
@@ -92,40 +94,48 @@ namespace RD_AAOW
 			// Подготовка дескрипторов
 			SolidBrush green = new SolidBrush (greenColor),
 				grey = new SolidBrush (greyColor),
-				back = new SolidBrush (backColor);
+				back = new SolidBrush (backColor),
+				dark = new SolidBrush (darkColor);
 
 			frameGreenGrey = new Bitmap (10 * this.Width / 4, progress.Height);
 			frameBack = new Bitmap (10 * this.Width / 4, progress.Height);
+			frameDark = new Bitmap (10 * this.Width / 4, progress.Height);
+
 			Graphics g1 = Graphics.FromImage (frameGreenGrey),
-				g2 = Graphics.FromImage (frameBack);
+				g2 = Graphics.FromImage (frameBack),
+				g3 = Graphics.FromImage (frameDark);
 
 			// Сборка
 			for (int i = 0; i < 8; i++)
 				{
 				for (int j = 0; j < frame.Length; j++)
-					{
 					frame[j].X += this.Width / 4;
-					}
 
 				g1.FillPolygon ((i % 2 == 0) ? green : grey, frame);
 				g2.FillPolygon (back, frame);
+				g3.FillPolygon (dark, frame);
 				}
 
 			// Объём
 			for (int i = 0; i < frameGreenGrey.Height; i++)
 				{
-				Pen p = new Pen (Color.FromArgb (200 - (int)(200.0 * Math.Sin (Math.PI * (double)i /
+				Pen p = new Pen (Color.FromArgb (200 - (int)(185.0 * Math.Sin (Math.PI * (double)i /
 					(double)frameGreenGrey.Height)), this.BackColor));
 				g1.DrawLine (p, 0, i, frameGreenGrey.Width, i);
+				g3.DrawLine (p, this.Width / 4 + frameGreenGrey.Height / 2 - Math.Abs (frameGreenGrey.Height / 2 - i),
+					i, frameGreenGrey.Width, i);
 				p.Dispose ();
 				}
 
 			// Освобождение ресурсов
 			g1.Dispose ();
 			g2.Dispose ();
+			g3.Dispose ();
+
 			green.Dispose ();
 			grey.Dispose ();
 			back.Dispose ();
+			dark.Dispose ();
 
 			// Запуск таймера
 			DrawingTimer.Interval = 1;
@@ -237,6 +247,9 @@ namespace RD_AAOW
 				newPercentage = oldPercentage = (int)ProgressBarSize;
 
 				AbortButton.Visible = AbortButton.Enabled = AllowAbort;
+				if (AbortButton.Enabled)
+					AbortButton.FlatAppearance.MouseDownBackColor = greenColor;
+
 				StateLabel.Text = Caption;
 				if (CaptionInTheCenter)
 					StateLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -284,7 +297,7 @@ namespace RD_AAOW
 		// Метод обрабатывает изменение состояния процесса
 		private void ProgressChanged (object sender, ProgressChangedEventArgs e)
 			{
-			// Обновление ProgressBar
+			// Обновление прогрессбара
 			if (e.ProgressPercentage > ProgressBarSize)
 				newPercentage = (int)ProgressBarSize;
 			else if (e.ProgressPercentage < 0)
@@ -292,6 +305,7 @@ namespace RD_AAOW
 			else
 				newPercentage = e.ProgressPercentage;
 
+			// Обновление текста над прогрессбаром
 			StateLabel.Text = (string)e.UserState;
 			}
 
@@ -321,6 +335,7 @@ namespace RD_AAOW
 		// Кнопка инициирует остановку процесса
 		private void AbortButton_Click (object sender, EventArgs e)
 			{
+			AbortButton.Enabled = false;
 			bw.CancelAsync ();
 			}
 
@@ -361,6 +376,8 @@ namespace RD_AAOW
 				frameGreenGrey.Dispose ();
 			if (frameBack != null)
 				frameBack.Dispose ();
+			if (frameDark != null)
+				frameDark.Dispose ();
 			}
 
 		// Отрисовка прогресс-бара
@@ -368,10 +385,12 @@ namespace RD_AAOW
 			{
 			// Отрисовка текущей позиции
 			int recalcPercentage = (int)(oldPercentage + (newPercentage - oldPercentage) / 4);
-			gp.DrawImage (frameGreenGrey, currentXOffset, 0);
-			gp.DrawImage (frameBack, -9 * this.Width / 4, 0);
-			gp.DrawImage (frameBack, recalcPercentage *
-				(progress.Width - progress.Height) / ProgressBarSize - this.Width / 4, 0);
+
+			gp.DrawImage (frameGreenGrey, currentXOffset, 0);   // Полоса прогресса
+			gp.DrawImage (frameBack, -9 * this.Width / 4, 0);   // Маска
+			gp.DrawImage (frameDark, recalcPercentage *
+				(progress.Width - progress.Height) / ProgressBarSize - this.Width / 4, 0);  // Фон
+			gp.DrawImage (frameBack, progress.Width - progress.Height - this.Width / 4, 0); // Маска фона
 			oldPercentage = recalcPercentage;
 
 			g.DrawImage (progress, 18, StateLabel.Top + StateLabel.Height + 10);

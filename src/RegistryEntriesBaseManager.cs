@@ -13,10 +13,10 @@ namespace RD_AAOW
 		// Переменные и константы
 		private List<RegistryEntry> entries = new List<RegistryEntry> ();   // База реестровых записей
 
-		private Encoding registryFileEncoding = Encoding.Unicode;           // Кодировки файлов
+		private Encoding registryFileEncoding = Encoding.Unicode;       // Кодировки файлов
 		private Encoding baseFileEncoding = Encoding.GetEncoding (1251);
-		private string registryFileSplitter = "=";                          // Сплиттер параметра и значения в файле реестра
-		private char[] baseFileSplitters = new char[] { '\x1' };            // Сплиттер записей в базе
+		private string registryFileSplitter = "=";                      // Сплиттер параметра и значения в файле реестра
+		private char[] baseFileSplitters = new char[] { '\x1' };        // Сплиттер записей в базе
 
 		private bool changed = true;                            // Флаг указывает, что в базу были внесены изменения
 		private List<string> ebp = new List<string> ();         // Список представлений записей в базе
@@ -51,9 +51,7 @@ namespace RD_AAOW
 			if (!LoadBase ())       // Если загрузка завершается с ошибкой
 				{
 				if (!SaveBase ())   // Пробуем создать базу
-					{
 					return;         // Если не получается, прерываем загрузку
-					}
 				}
 
 			isInited = true;
@@ -94,7 +92,9 @@ namespace RD_AAOW
 			while (!SR.EndOfStream)
 				{
 				string s = SR.ReadLine ();
-				string[] values = s.Split (baseFileSplitters);  // Пустые поля не удалять, т.к. они отвечают за значения по умолчанию
+				string[] values = s.Split (baseFileSplitters);
+				// Пустые поля не удалять, т.к. они отвечают за значения по умолчанию
+
 				if (values.Length != 6)
 					continue;   // Если вдруг попадётся битая запись, пропустить её
 
@@ -103,10 +103,10 @@ namespace RD_AAOW
 					{
 					valueType = (RegistryValueTypes)uint.Parse (values[3]);
 					}
-				catch
-					{
-					}
-				RegistryEntry re = new RegistryEntry (values[0], values[1], values[2], valueType, values[4] != "0", values[5] != "0");
+				catch { }
+
+				RegistryEntry re = new RegistryEntry (values[0], values[1], values[2], valueType,
+					values[4] != "0", values[5] != "0");
 				if (!re.IsValid)
 					continue;   // Аналогично
 
@@ -146,7 +146,8 @@ namespace RD_AAOW
 			// Попытка открытия базы
 			try
 				{
-				FS = new FileStream (BasesSubdirectory + "\\" + baseName + BaseFileExtension, FileMode.Create);    // Перезаписывает недоступный файл при необходимости
+				FS = new FileStream (BasesSubdirectory + "\\" + baseName + BaseFileExtension, FileMode.Create);
+				// Перезаписывает недоступный файл при необходимости
 				}
 			catch
 				{
@@ -155,7 +156,9 @@ namespace RD_AAOW
 			SW = new StreamWriter (FS, baseFileEncoding);
 
 			// Запись
-			SW.Write (ProgramDescription.AssemblyTitle + "; timestamp: " + DateTime.Now.ToString ("dd.MM.yyyy, HH:mm") + "\n");
+			SW.Write (ProgramDescription.AssemblyTitle + "; timestamp: " +
+				DateTime.Now.ToString ("dd.MM.yyyy, HH:mm") + "\n");
+
 			for (int i = 0; i < entries.Count; i++)
 				{
 				SW.Write (entries[i].ValuePath + baseFileSplitters[0].ToString () +
@@ -212,9 +215,11 @@ namespace RD_AAOW
 					ebp.Clear ();
 					for (int i = 0; i < entries.Count; i++)
 						{
-						ebp.Add ("[" + entries[i].ValuePath + "]: " + ((entries[i].ValueName == "") ? "@" : entries[i].ValueName) + " = " +
+						ebp.Add ("[" + entries[i].ValuePath + "]: " + ((entries[i].ValueName == "") ? "@" :
+							entries[i].ValueName) + " = " +
 							entries[i].ValueObject +
-							((entries[i].ValueType != RegistryValueTypes.REG_SZ) ? " (" + entries[i].ValueType.ToString () + ")" : "") +
+							((entries[i].ValueType != RegistryValueTypes.REG_SZ) ? " (" +
+							entries[i].ValueType.ToString () + ")" : "") +
 							(entries[i].PathMustBeDeleted ? "; -RB-" : "") +
 							(entries[i].NameMustBeDeleted ? "; -RV-" : ""));
 						}
@@ -238,9 +243,7 @@ namespace RD_AAOW
 					// Сборка списка
 					esp.Clear ();
 					for (int i = 0; i < entries.Count; i++)
-						{
 						esp.Add (entries[i].GetEntryApplicationState ());
-						}
 					}
 
 				return esp;
@@ -296,7 +299,8 @@ namespace RD_AAOW
 
 			// Контроль состава файла
 			string s = SR.ReadLine ().ToLower (), s2;
-			if (!s.Contains ("regedit") && !s.Contains ("windows registry"))    // Заодно исключает возможные проблемы с кодировкой
+			if (!s.Contains ("regedit") && !s.Contains ("windows registry"))
+				// Заодно исключает возможные проблемы с кодировкой
 				return 0;
 
 			// Начало чтения
@@ -315,7 +319,9 @@ namespace RD_AAOW
 
 					// Проверяем, не содержит ли путь пометку на удаление
 					RegistryEntry re = new RegistryEntry (s, "\\", "");
-					if (re.IsValid)     // В таком варианте запись будет валидна только и исключительно в случае наличия пометки
+
+					// В таком варианте запись будет валидна только и исключительно в случае наличия пометки
+					if (re.IsValid)
 						{
 						entries.Add (re);
 						entriesCounter++;
@@ -330,8 +336,11 @@ namespace RD_AAOW
 					{
 					// Проверяем наличие сплиттера
 					int indexOfSplitter = s.IndexOf (registryFileSplitter);
-					if ((indexOfSplitter <= 0) || (indexOfSplitter >= s.Length - 1))    // Сплиттер отсутствует или стоит на краю строки
-						continue;                                                       // (или в обработку попала некорректная строка)
+
+					// Сплиттер отсутствует или стоит на краю строки
+					// (или в обработку попала некорректная строка)
+					if ((indexOfSplitter <= 0) || (indexOfSplitter >= s.Length - 1))
+						continue;
 
 					// Пробуем собрать запись
 					s2 = s.Substring (indexOfSplitter + 1); // Сначала нужно обрубить лишние кавычки

@@ -7,7 +7,7 @@ namespace RD_AAOW
 	/// <summary>
 	/// Класс описывает отдельную запись в реестре Windows
 	/// </summary>
-	public class RegistryEntry:IComparable<RegistryEntry>, ICloneable, IEquatable<RegistryEntry>
+	public class RegistryEntry: IComparable<RegistryEntry>, ICloneable, IEquatable<RegistryEntry>
 		{
 		/// <summary>
 		/// Полный путь к разделу реестра
@@ -86,13 +86,15 @@ namespace RD_AAOW
 		/// при значении true принудительно задаёт признак '-' в параметре Path</param>
 		/// <param name="Type">Тип значения параметра реестра; при значении, не равном REG_SZ, принудительно
 		/// задаёт тип в обход спецификации в параметре Value</param>
-		public RegistryEntry (string Path, string Name, string Value, RegistryValueTypes Type, bool DeletePath, bool DeleteName)
+		public RegistryEntry (string Path, string Name, string Value, RegistryValueTypes Type,
+			bool DeletePath, bool DeleteName)
 			{
 			CreateRegistryEntry (Path, Name, Value, Type, DeletePath, DeleteName);
 			}
 
 		// Метод-инициализатор экземпляра класса
-		private void CreateRegistryEntry (string Path, string Name, string Value, RegistryValueTypes Type, bool DeletePath, bool DeleteName)
+		private void CreateRegistryEntry (string Path, string Name, string Value, RegistryValueTypes Type,
+			bool DeletePath, bool DeleteName)
 			{
 			// Переменные
 			char[] pathSplitters = new char[] { '\\' };
@@ -100,10 +102,10 @@ namespace RD_AAOW
 
 			// Контроль пути
 			string[] values = Path.Split (valuesSplitters, StringSplitOptions.RemoveEmptyEntries);
-			if (values.Length != 1)		// Означает наличие недопустимых символов или пустую строку
+			if (values.Length != 1)     // Означает наличие недопустимых символов или пустую строку
 				return;
 
-			pathMustBeDeleted = (values[0].Substring (0, 1) == "-");		// Раздел помечен на удаление
+			pathMustBeDeleted = (values[0].Substring (0, 1) == "-");        // Раздел помечен на удаление
 
 			string s = values[0];
 			if (pathMustBeDeleted)
@@ -111,22 +113,14 @@ namespace RD_AAOW
 
 			pathMustBeDeleted |= DeletePath;
 
-			values = s.Split (pathSplitters, StringSplitOptions.RemoveEmptyEntries);	// Убираем лишние слэшы
-			if (values.Length < 1)	// Такого не должно случиться, но вдруг там только слэшы и были
+			values = s.Split (pathSplitters, StringSplitOptions.RemoveEmptyEntries);    // Убираем лишние слэшы
+			if (values.Length < 1)  // Такого не должно случиться, но вдруг там только слэшы и были
 				return;
 
 			if (values[0] == Registry.ClassesRoot.Name)
 				valueMasterKey = Registry.ClassesRoot;
-			/*else if (values[0] == Registry.CurrentConfig.Name)
-				valueMasterKey = Registry.CurrentConfig;
-			else if (values[0] == Registry.CurrentUser.Name)
-				valueMasterKey = Registry.CurrentUser;
-			else if (values[0] == Registry.LocalMachine.Name)
-				valueMasterKey = Registry.LocalMachine;
-			else if (values[0] == Registry.Users.Name)
-				valueMasterKey = Registry.Users;*/		// Остальные разделы запрещены областью применения программы
 			else
-				return;		// Если корневой раздел не является допустимым
+				return;     // Если корневой раздел не является допустимым
 
 			// Пересобираем путь
 			valuePath = values[0];
@@ -142,13 +136,17 @@ namespace RD_AAOW
 
 			// Контроль имени
 			values = Name.Split (valuesSplitters, StringSplitOptions.RemoveEmptyEntries);
-			if (values.Length == 0)		// Пустая строка здесь допустима - для значения по умолчанию
+
+			// Пустая строка здесь допустима - для значения по умолчанию
+			if (values.Length == 0)
 				{
 				valueName = "";
 				}
+
+			// Означает наличие недопустимых символов или пустую строку
 			else if (values.Length > 1)
 				{
-				return;					// Означает наличие недопустимых символов или пустую строку
+				return;
 				}
 			else
 				{
@@ -162,7 +160,7 @@ namespace RD_AAOW
 				valueName = "";
 
 			// Контроль значения (может содержать любые символы; предполагается, что кавычки уже удалены)
-			if ((Value == "-") || DeleteName)		// Параметр помечен на удаление
+			if ((Value == "-") || DeleteName)       // Параметр помечен на удаление
 				{
 				nameMustBeDeleted = isValid = true;
 				valueObject = "-";
@@ -218,7 +216,7 @@ namespace RD_AAOW
 					break;
 
 				default:
-					return;		// Остальные типы мы пока обрабатывать не умеем
+					return;     // Остальные типы мы пока обрабатывать не умеем
 				}
 
 			// Переопределение, если указано (делается позже остального, чтобы не вынуждать значения, 
@@ -333,21 +331,25 @@ namespace RD_AAOW
 			try
 				{
 				// Если раздел помечен на удаление
-				if (pathMustBeDeleted)		// Возврат отсюда обязателен
+				if (pathMustBeDeleted)      // Возврат отсюда обязателен
 					{
-					if ((obj = Registry.GetValue (valuePath, valueName, "")) == null)	// При отсутствии раздела вернёт именно null
+					// При отсутствии раздела вернёт именно null
+					if ((obj = Registry.GetValue (valuePath, valueName, "")) == null)
 						return RegistryEntryApplicationResults.FullyApplied;
 
-					return RegistryEntryApplicationResults.NotApplied;	// Если что-то вернулось, значит, раздел существует
+					// Если что-то вернулось, значит, раздел существует
+					return RegistryEntryApplicationResults.NotApplied;
 					}
 
 				// Если значение помечено на удаление
-				if (nameMustBeDeleted)		// Возврат отсюда обязателен
+				if (nameMustBeDeleted)      // Возврат отсюда обязателен
 					{
-					if ((obj = Registry.GetValue (valuePath, valueName, null)) == null)	// При отсутствии параметра или раздела вернёт null
+					// При отсутствии параметра или раздела вернёт null
+					if ((obj = Registry.GetValue (valuePath, valueName, null)) == null)
 						return RegistryEntryApplicationResults.FullyApplied;
 
-					return RegistryEntryApplicationResults.NotApplied;	// Если что-то вернулось, значит, раздел существует
+					// Если что-то вернулось, значит, раздел существует
+					return RegistryEntryApplicationResults.NotApplied;
 					}
 
 				if ((obj = Registry.GetValue (valuePath, valueName, null)) == null)
@@ -386,10 +388,9 @@ namespace RD_AAOW
 					key.DeleteValue (valueName, false);
 					key.Dispose ();
 					}
-				catch
-					{
-					// Пропускаем это состояние, т.к. оно может означать отсутствие ключа
-					}
+
+				// Пропускаем это состояние, т.к. оно может означать отсутствие ключа
+				catch { }
 				}
 
 			try
@@ -433,7 +434,8 @@ namespace RD_AAOW
 		/// <returns></returns>
 		public object Clone ()
 			{
-			return new RegistryEntry (valuePath, valueName, valueObject, valueType, pathMustBeDeleted, nameMustBeDeleted);
+			return new RegistryEntry (valuePath, valueName, valueObject, valueType,
+				pathMustBeDeleted, nameMustBeDeleted);
 			}
 
 		// Члены IEquatable<RegistryEntry>

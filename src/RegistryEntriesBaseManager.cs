@@ -278,8 +278,7 @@ namespace RD_AAOW
 		/// <summary>
 		/// Метод загружает файл реестра в базу
 		/// </summary>
-		/// <param name="FileName"></param>
-		/// <returns></returns>
+		/// <param name="FileName">Путь к файлу для загрузки</param>
 		public uint LoadRegistryFile (string FileName)
 			{
 			// Контроль
@@ -369,6 +368,69 @@ namespace RD_AAOW
 			FS.Close ();
 			changed = (entriesCounter != 0);
 			return entriesCounter;
+			}
+
+		/// <summary>
+		/// Метод сохраняет выбранные записи файл реестра
+		/// </summary>
+		/// <param name="FileName">Путь к файлу для сохранения</param>
+		/// <param name="PositionsToSave">Индексы позиций для сохранения</param>
+		public bool SaveRegistryFile (string FileName, List<int> PositionsToSave)
+			{
+			// Контроль
+			if (!isInited)
+				return false;
+
+			// Попытка открытия файла
+			try
+				{
+				FS = new FileStream (FileName, FileMode.Create);
+				}
+			catch
+				{
+				return false;
+				}
+			SW = new StreamWriter (FS, registryFileEncoding);
+
+			// Запись
+			SW.WriteLine ("Windows Registry Editor Version 5.00");
+			SW.WriteLine ("");
+
+			for (int i = 0; i < PositionsToSave.Count; i++)
+				{
+				// Защита
+				int p = PositionsToSave[i];
+				if ((p >= entries.Count) || (p < 0))
+					continue;
+				if (!entries[p].IsValid || (entries[p].ValueType != RegistryValueTypes.REG_SZ))
+					continue;
+
+				// Сборка строки
+				SW.Write ("[");
+				if (entries[p].PathMustBeDeleted)
+					SW.Write ("-");
+				SW.Write (entries[p].ValuePath);
+				SW.WriteLine ("]");
+				if (entries[p].PathMustBeDeleted)
+					continue;
+
+				if (string.IsNullOrWhiteSpace (entries[p].ValueName))
+					SW.Write ("@");
+				else
+					SW.Write ("\"" + entries[p].ValueName + "\"");
+				SW.Write ("=");
+				if (entries[p].NameMustBeDeleted)
+					SW.WriteLine ("-");
+				else
+					SW.WriteLine ("\"" + entries[p].ValueObject + "\"");
+				SW.WriteLine ("");
+				}
+
+			// Завершено
+			SW.Close ();
+			FS.Close ();
+
+			return true;
 			}
 
 		/// <summary>

@@ -377,14 +377,15 @@ namespace RD_AAOW
 		/// <summary>
 		/// Конструктор. Открывает указанную ссылку без запуска формы
 		/// </summary>
-		/// <param name="Link">Ссылка для отображения (если null, запускается стандартная)</param>
+		/// <param name="Link">Ссылка для отображения;
+		/// если указан null, запускается ссылка на релизы продукта</param>
 		public AboutForm (string Link)
 			{
 			try
 				{
 				if (string.IsNullOrWhiteSpace (Link))
 					Process.Start (RDGenerics.AssemblyGitLink + ProgramDescription.AssemblyMainName +
-						RDGenerics.GitUpdatesSublink);
+						RDGenerics.GitUpdatesSublink + "/latest");
 				else
 					Process.Start (Link);
 				}
@@ -1000,7 +1001,8 @@ policy:
 		/// </summary>
 		/// <param name="ProtocolCode">Имя протокола; если передаётся расширение, точка отсекается</param>
 		/// <param name="ProtocolName">Название протокола</param>
-		/// <param name="ShowWarning">Флаг указывает, что необходимо отобразить предупреждение перед регистрацией</param>
+		/// <param name="ShowWarning">Флаг указывает, что необходимо отобразить предупреждение 
+		/// перед регистрацией</param>
 		/// <param name="FileIcon">Ресурс, хранящий значок формата файла</param>
 		/// <returns>Возвращает true в случае успеха</returns>
 		public static bool RegisterProtocol (string ProtocolCode, string ProtocolName, Icon FileIcon,

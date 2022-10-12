@@ -120,9 +120,6 @@
   <data name="AbortButton" xml:space="preserve">
     <value>&amp;Cancel</value>
   </data>
-  <data name="AlreadyStarted" xml:space="preserve">
-    <value>{0:S} is already running</value>
-  </data>
   <data name="AppliedText" xml:space="preserve">
     <value>Applied: </value>
   </data>
@@ -140,6 +137,36 @@
   </data>
   <data name="BasesNotFound" xml:space="preserve">
     <value>No bases of registry entries found</value>
+  </data>
+  <data name="ButtonsPanel_AddRecord" xml:space="preserve">
+    <value>&amp;Add</value>
+  </data>
+  <data name="ButtonsPanel_Apply" xml:space="preserve">
+    <value>A&amp;pply selected</value>
+  </data>
+  <data name="ButtonsPanel_ApplyAll" xml:space="preserve">
+    <value>Appl&amp;y all</value>
+  </data>
+  <data name="ButtonsPanel_DeleteRecord" xml:space="preserve">
+    <value>&amp;Delete selected</value>
+  </data>
+  <data name="ButtonsPanel_EditRecord" xml:space="preserve">
+    <value>&amp;Edit</value>
+  </data>
+  <data name="ButtonsPanel_Exit" xml:space="preserve">
+    <value>E&amp;xit</value>
+  </data>
+  <data name="ButtonsPanel_FindIcon" xml:space="preserve">
+    <value>Find &amp;icon</value>
+  </data>
+  <data name="ButtonsPanel_LoadRegFile" xml:space="preserve">
+    <value>&amp;Load from file</value>
+  </data>
+  <data name="ButtonsPanel_RegExtension" xml:space="preserve">
+    <value>&amp;Register extension</value>
+  </data>
+  <data name="ButtonsPanel_SaveRegFile" xml:space="preserve">
+    <value>&amp;Save to file</value>
   </data>
   <data name="EntriesAdded" xml:space="preserve">
     <value>Added: </value>
@@ -189,32 +216,8 @@
   <data name="FEMF_OFDialogTitle" xml:space="preserve">
     <value>Specify registry file for loading</value>
   </data>
-  <data name="FileExtensionsManagerForm_AddRecord" xml:space="preserve">
-    <value>&amp;Add entry</value>
-  </data>
-  <data name="FileExtensionsManagerForm_Apply" xml:space="preserve">
-    <value>A&amp;pply selected</value>
-  </data>
-  <data name="FileExtensionsManagerForm_ApplyAll" xml:space="preserve">
-    <value>Appl&amp;y all</value>
-  </data>
   <data name="FileExtensionsManagerForm_BaseLabel" xml:space="preserve">
-    <value>Current base:</value>
-  </data>
-  <data name="FileExtensionsManagerForm_DeleteRecord" xml:space="preserve">
-    <value>&amp;Delete selected</value>
-  </data>
-  <data name="FileExtensionsManagerForm_Exit" xml:space="preserve">
-    <value>E&amp;xit</value>
-  </data>
-  <data name="FileExtensionsManagerForm_FindIcon" xml:space="preserve">
-    <value>Find &amp;icon</value>
-  </data>
-  <data name="FileExtensionsManagerForm_LoadRegFile" xml:space="preserve">
-    <value>&amp;Load from registry file</value>
-  </data>
-  <data name="FileExtensionsManagerForm_RegExtension" xml:space="preserve">
-    <value>&amp;Register extension</value>
+    <value>Current &amp;base:</value>
   </data>
   <data name="HelpText" xml:space="preserve">
     <value>Application allows you to store and apply custom settings for file extensions registered in the operating system. List of records displays registry mappings stored in currently selected base of records.

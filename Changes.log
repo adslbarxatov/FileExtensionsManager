@@ -1,8 +1,11 @@
 ﻿File extensions manager changes log
 
-ToDo:
-- Add obvious Edit button;
-- Add .reg export option
+Version 2.1:
+• Added the ability to export saved records to .reg file;
+• Added an obvious edit button;
+• Adjusted the tabstop order;
+• XPR control has been implemented;
+• Adjusted the control of single active copy
 
 Version 2.0:
 • Implemented the ability to open localized ADP, SCP and Welcome pages;

@@ -44,11 +44,14 @@ namespace RD_AAOW
 			// Инициализация баз реестровых записей
 			if (Directory.Exists (RDGenerics.AppStartupPath + RegistryEntriesBaseManager.BasesSubdirectory))
 				{
-				string[] files = Directory.GetFiles (RDGenerics.AppStartupPath + RegistryEntriesBaseManager.BasesSubdirectory,
+				string[] files = Directory.GetFiles (RDGenerics.AppStartupPath +
+					RegistryEntriesBaseManager.BasesSubdirectory,
 					"*" + RegistryEntriesBaseManager.BaseFileExtension);
+
 				for (int i = 0; i < files.Length; i++)
 					{
-					RegistryEntriesBaseManager re = new RegistryEntriesBaseManager (Path.GetFileNameWithoutExtension (files[i]));
+					RegistryEntriesBaseManager re =
+						new RegistryEntriesBaseManager (Path.GetFileNameWithoutExtension (files[i]));
 					if (re.IsInited)
 						rebm.Add (re);
 					}
@@ -56,7 +59,8 @@ namespace RD_AAOW
 
 			if (rebm.Count == 0)
 				{
-				MessageBox.Show (Localization.GetText ("BasesNotFound", al) + "\n\n" + Localization.GetText ("NewBaseAdded", al),
+				MessageBox.Show (Localization.GetText ("BasesNotFound", al) + "\n\n" +
+					Localization.GetText ("NewBaseAdded", al),
 					ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 				RegistryEntriesBaseManager re = new RegistryEntriesBaseManager ();
@@ -80,11 +84,14 @@ namespace RD_AAOW
 			MainTable.Width = this.Width - 32;
 			MainTable.Height = this.Height - 186;
 
-			Applied.Top = PartiallyApplied.Top = this.Height - 138;
+			ButtonsPanel.Top = this.Height - 137;
+			ButtonsPanel.Left = (this.Width - ButtonsPanel.Width) / 2 - 4;
+
+			/*Applied.Top = PartiallyApplied.Top = this.Height - 138;
 			NotApplied.Top = NoAccess.Top = this.Height - 118;
 
 			AddRecord.Top = DeleteRecord.Top = LoadRegFile.Top = RegExtension.Top = this.Height - 95;
-			Apply.Top = ApplyAll.Top = Exit.Top = FindIcon.Top = this.Height - 64;
+			Apply.Top = ApplyAll.Top = Exit.Top = FindIcon.Top = this.Height - 64;*/
 			}
 
 		// Обновление таблицы
@@ -274,6 +281,27 @@ namespace RD_AAOW
 				MainTable.CurrentCell = MainTable.Rows[row].Cells[0];
 			}
 
+		// Сохранение в файл реестра
+		private void SaveRegFile_Click (object sender, EventArgs e)
+			{
+			// Контроль
+			if (MainTable.SelectedRows.Count <= 0)
+				return;
+
+			// Извлечение выборки
+			List<int> idx = new List<int> ();
+			foreach (DataGridViewRow r in MainTable.SelectedRows)
+				idx.Add (r.Index);
+			idx.Sort ();
+
+			// Запрос сохранения
+			if (SFDialog.ShowDialog () != DialogResult.OK)
+				return;
+
+			// Выполнение
+			rebm[BasesCombo.SelectedIndex].SaveRegistryFile (SFDialog.FileName, idx);
+			}
+
 		// Добавление записи
 		private void AddRecord_Click (object sender, EventArgs e)
 			{
@@ -303,6 +331,11 @@ namespace RD_AAOW
 			}
 
 		// Редактирование записей
+		private void EditRecord_Click (object sender, EventArgs e)
+			{
+			EditRecord_Click (null, null);
+			}
+
 		private void EditRecord_Click (object sender, DataGridViewCellEventArgs e)
 			{
 			// Контроль
@@ -311,19 +344,20 @@ namespace RD_AAOW
 
 			// Редактирование
 			int row = MainTable.SelectedRows[0].Index;
-			RegistryEntryEditor ree = new RegistryEntryEditor (rebm[BasesCombo.SelectedIndex].GetRegistryEntry ((uint)row), al);
-			if (ree.Confirmed)
-				{
-				rebm[BasesCombo.SelectedIndex].DeleteEntry ((uint)row);
-				rebm[BasesCombo.SelectedIndex].AddEntry (ree.EditedEntry);
+			RegistryEntryEditor ree = new RegistryEntryEditor
+				(rebm[BasesCombo.SelectedIndex].GetRegistryEntry ((uint)row), al);
+			if (!ree.Confirmed)
+				return;
 
-				// Обновление таблицы
-				UpdateTable ();
-				MainTable.CurrentCell = MainTable.Rows[row].Cells[0];
+			rebm[BasesCombo.SelectedIndex].DeleteEntry ((uint)row);
+			rebm[BasesCombo.SelectedIndex].AddEntry (ree.EditedEntry);
 
-				// Запрос на применение
-				Apply_Click (null, null);
-				}
+			// Обновление таблицы
+			UpdateTable ();
+			MainTable.CurrentCell = MainTable.Rows[row].Cells[0];
+
+			// Запрос на применение
+			Apply_Click (null, null);
 			}
 
 		private void MainTable_KeyDown (object sender, KeyEventArgs e)
@@ -386,10 +420,12 @@ namespace RD_AAOW
 			Localization.CurrentLanguage = al = (SupportedLanguages)LanguageCombo.SelectedIndex;
 
 			// Локализация
-			OFDialog.Title = Localization.GetText ("FEMF_OFDialogTitle", al);
-			OFDialog.Filter = Localization.GetText ("FEMF_OFDialogFilter", al);
+			OFDialog.Title = SFDialog.Title = Localization.GetText ("FEMF_OFDialogTitle", al);
+			OFDialog.Filter = SFDialog.Filter = Localization.GetText ("FEMF_OFDialogFilter", al);
 
 			Localization.SetControlsText (this, al);
+			Localization.SetControlsText (ButtonsPanel, al);
+
 			UpdateResults ();
 			}
 		}

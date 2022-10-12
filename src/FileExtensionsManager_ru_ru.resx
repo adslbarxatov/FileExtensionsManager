@@ -120,9 +120,6 @@
   <data name="AbortButton" xml:space="preserve">
     <value>От&amp;мена</value>
   </data>
-  <data name="AlreadyStarted" xml:space="preserve">
-    <value>Программа {0:S} уже запущена</value>
-  </data>
   <data name="AppliedText" xml:space="preserve">
     <value>Применены: </value>
   </data>
@@ -140,6 +137,36 @@
   </data>
   <data name="BasesNotFound" xml:space="preserve">
     <value>Не найдена ни одна база реестровых записей</value>
+  </data>
+  <data name="ButtonsPanel_AddRecord" xml:space="preserve">
+    <value>&amp;Добавить</value>
+  </data>
+  <data name="ButtonsPanel_Apply" xml:space="preserve">
+    <value>&amp;Применить выбранные</value>
+  </data>
+  <data name="ButtonsPanel_ApplyAll" xml:space="preserve">
+    <value>Применить &amp;все</value>
+  </data>
+  <data name="ButtonsPanel_DeleteRecord" xml:space="preserve">
+    <value>&amp;Удалить выбранные</value>
+  </data>
+  <data name="ButtonsPanel_EditRecord" xml:space="preserve">
+    <value>&amp;Изменить</value>
+  </data>
+  <data name="ButtonsPanel_Exit" xml:space="preserve">
+    <value>В&amp;ыход</value>
+  </data>
+  <data name="ButtonsPanel_FindIcon" xml:space="preserve">
+    <value>Найти и&amp;конку</value>
+  </data>
+  <data name="ButtonsPanel_LoadRegFile" xml:space="preserve">
+    <value>&amp;Загрузить из файла</value>
+  </data>
+  <data name="ButtonsPanel_RegExtension" xml:space="preserve">
+    <value>Зарегистрировать &amp;расширение</value>
+  </data>
+  <data name="ButtonsPanel_SaveRegFile" xml:space="preserve">
+    <value>&amp;Сохранить в файл</value>
   </data>
   <data name="EntriesAdded" xml:space="preserve">
     <value>Добавлено: </value>
@@ -189,32 +216,8 @@
   <data name="FEMF_OFDialogTitle" xml:space="preserve">
     <value>Выберите файл реестра для загрузки</value>
   </data>
-  <data name="FileExtensionsManagerForm_AddRecord" xml:space="preserve">
-    <value>&amp;Добавить запись</value>
-  </data>
-  <data name="FileExtensionsManagerForm_Apply" xml:space="preserve">
-    <value>&amp;Применить выбранные</value>
-  </data>
-  <data name="FileExtensionsManagerForm_ApplyAll" xml:space="preserve">
-    <value>Применить &amp;все</value>
-  </data>
   <data name="FileExtensionsManagerForm_BaseLabel" xml:space="preserve">
-    <value>Текущая база:</value>
-  </data>
-  <data name="FileExtensionsManagerForm_DeleteRecord" xml:space="preserve">
-    <value>&amp;Удалить выбранные</value>
-  </data>
-  <data name="FileExtensionsManagerForm_Exit" xml:space="preserve">
-    <value>В&amp;ыход</value>
-  </data>
-  <data name="FileExtensionsManagerForm_FindIcon" xml:space="preserve">
-    <value>Найти &amp;иконку</value>
-  </data>
-  <data name="FileExtensionsManagerForm_LoadRegFile" xml:space="preserve">
-    <value>Загрузить из файла &amp;реестра</value>
-  </data>
-  <data name="FileExtensionsManagerForm_RegExtension" xml:space="preserve">
-    <value>&amp;Зарегистрировать расширение</value>
+    <value>Текущая &amp;база:</value>
   </data>
   <data name="HelpText" xml:space="preserve">
     <value>Программа позволяет хранить и применять пользовательские настройки расширений файлов, зарегистрированных в операционной системе. В списке записей отображаются реестровые сопоставления, хранящиеся в текущей выбранной базе записей.

@@ -1,4 +1,5 @@
-_Changes for v 2.1_:
+_Changes for v 2.1.2_:
+- Some minor fixes applied;
 - Added the ability to export saved records to `.reg` file;
 - Added an obvious edit button;
 - Adjusted the tabstop order;

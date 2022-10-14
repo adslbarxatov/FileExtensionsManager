@@ -422,7 +422,7 @@ namespace RD_AAOW
 				if (entries[p].NameMustBeDeleted)
 					SW.WriteLine ("-");
 				else
-					SW.WriteLine ("\"" + entries[p].ValueObject + "\"");
+					SW.WriteLine ("\"" + entries[p].ValueObject.Replace ("\"", "\\\"") + "\"");
 				SW.WriteLine ("");
 				}
 

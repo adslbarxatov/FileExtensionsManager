@@ -118,8 +118,10 @@ namespace RD_AAOW
 			iconsCount = ExtractIconExA (OFDialog.FileName, -1, ref bigIcon, ref smallIcon, 1);
 			if (iconsCount == 0)
 				{
-				MessageBox.Show (string.Format (Localization.GetText ("IconsNotFound", al), OFDialog.FileName),
-					ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+				/*MessageBox.Shw (string.Format (Localization.GetText ("IconsNotFound", al), OFDialog.FileName),
+					ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);*/
+				RDGenerics.MessageBox (RDMessageTypes.Information,
+					string.Format (Localization.GetText ("IconsNotFound", al), OFDialog.FileName));
 				this.Close ();
 				return;
 				}

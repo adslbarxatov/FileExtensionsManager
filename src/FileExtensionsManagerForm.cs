@@ -28,6 +28,7 @@ namespace RD_AAOW
 			{
 			// Настройка контролов
 			this.Text = ProgramDescription.AssemblyTitle;
+			RDGenerics.LoadWindowDimensions (this);
 
 			LanguageCombo.Items.AddRange (Localization.LanguagesNames);
 			try
@@ -59,9 +60,11 @@ namespace RD_AAOW
 
 			if (rebm.Count == 0)
 				{
-				MessageBox.Show (Localization.GetText ("BasesNotFound", al) + "\n\n" +
+				/*MessageBox.Shw (Localization.GetText ("BasesNotFound", al) + "\n\n" +
 					Localization.GetText ("NewBaseAdded", al),
-					ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+					ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);*/
+				RDGenerics.MessageBox (RDMessageTypes.Information,
+					Localization.GetText ("BasesNotFound", al) + "\n\n" + Localization.GetText ("NewBaseAdded", al));
 
 				RegistryEntriesBaseManager re = new RegistryEntriesBaseManager ();
 
@@ -155,12 +158,25 @@ namespace RD_AAOW
 		// Выход из программы
 		private void Exit_Click (object sender, EventArgs e)
 			{
+			this.Close ();
+			}
+
+		private void FileExtensionsManagerForm_FormClosing (object sender, FormClosingEventArgs e)
+			{
+			RDMessageButtons res = RDGenerics.LocalizedMessageBox (RDMessageTypes.Question,
+				"SaveBasesMessage", Localization.DefaultButtons.Yes, Localization.DefaultButtons.No,
+				Localization.DefaultButtons.Cancel);
+
 			// Сохранение баз
-			for (int i = 0; i < rebm.Count; i++)
-				rebm[i].SaveBase ();
+			if (res == RDMessageButtons.ButtonOne)
+				{
+				for (int i = 0; i < rebm.Count; i++)
+					rebm[i].SaveBase ();
+				}
 
 			// Выход
-			this.Close ();
+			RDGenerics.SaveWindowDimensions (this);
+			e.Cancel = (res == RDMessageButtons.ButtonThree);
 			}
 
 		// Удаление записи
@@ -170,8 +186,11 @@ namespace RD_AAOW
 			if (MainTable.SelectedRows.Count <= 0)
 				return;
 
-			if (MessageBox.Show (Localization.GetText ("RemoveEntry", al), ProgramDescription.AssemblyTitle,
+			/*if (MessageBox.Shw (Localization.GetText ("RemoveEntry", al), ProgramDescription.AssemblyTitle,
 				MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+				return;*/
+			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Question, "RemoveEntry",
+				Localization.DefaultButtons.Yes, Localization.DefaultButtons.No) != RDMessageButtons.ButtonOne)
 				return;
 
 			// Удаление
@@ -201,15 +220,19 @@ namespace RD_AAOW
 			if (MainTable.SelectedRows.Count <= 0)
 				return;
 
-			if (MessageBox.Show (Localization.GetText ("ApplyEntry", al), ProgramDescription.AssemblyTitle,
+			/*if (MessageBox.Shw (Localization.GetText ("ApplyEntry", al), ProgramDescription.AssemblyTitle,
 				MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
+				return;*/
+			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Question, "ApplyEntry",
+				Localization.DefaultButtons.Yes, Localization.DefaultButtons.No) != RDMessageButtons.ButtonOne)
 				return;
 
 			// Применение записей
 			for (int i = 0; i < MainTable.SelectedRows.Count; i++)
 				{
 				string msg = "";
-				switch (rebm[BasesCombo.SelectedIndex].GetRegistryEntry ((uint)MainTable.SelectedRows[i].Index).ApplyEntry ())
+				switch (rebm[BasesCombo.SelectedIndex].GetRegistryEntry
+					((uint)MainTable.SelectedRows[i].Index).ApplyEntry ())
 					{
 					case RegistryEntryApplicationResults.CannotGetAccess:
 						msg = Localization.GetText ("EntryIsUnavailable", al);
@@ -221,8 +244,10 @@ namespace RD_AAOW
 						break;
 					}
 
-				if (msg != "")
-					MessageBox.Show (msg, ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+				if (!string.IsNullOrWhiteSpace (msg))
+					RDGenerics.MessageBox (RDMessageTypes.Warning, msg);
+				/*MessageBox.Shw (msg, ProgramDescription.AssemblyTitle, MessageBoxButtons.OK,
+					MessageBoxIcon.Information);*/
 				}
 
 			// Обновление таблицы
@@ -235,25 +260,40 @@ namespace RD_AAOW
 		private void ApplyAll_Click (object sender, EventArgs e)
 			{
 			// Контроль
-			if (MessageBox.Show (Localization.GetText ("ApplyAllEntries", al), ProgramDescription.AssemblyTitle,
-				MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+			/*if (MessageBox.Shw (Localization.GetText ("ApplyAllEntries", al), ProgramDescription.AssemblyTitle,
+				MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) !=
+				DialogResult.Yes)
 				return;
 
-			if (MessageBox.Show (Localization.GetText ("ApplyAllEntries2", al), ProgramDescription.AssemblyTitle,
+			if (MessageBox.Shw (Localization.GetText ("ApplyAllEntries2", al), ProgramDescription.AssemblyTitle,
 				MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.No)
+				return;*/
+
+			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning, "ApplyAllEntries",
+				Localization.DefaultButtons.YesNoFocus, Localization.DefaultButtons.No) !=
+				RDMessageButtons.ButtonOne)
+				return;
+
+			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning, "ApplyAllEntries2",
+				Localization.DefaultButtons.Yes, Localization.DefaultButtons.No) !=
+				RDMessageButtons.ButtonTwo)
 				return;
 
 			// Применение записей
 			uint res = rebm[BasesCombo.SelectedIndex].ApplyAllEntries ();
 
-			MessageBox.Show (string.Format (Localization.GetText ("EntriesApplied", al), res,
+			/*MessageBox.Shw (string.Format (Localization.GetText ("EntriesApplied", al), res,
 				rebm[BasesCombo.SelectedIndex].EntriesCount),
-				ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+				ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);*/
+			RDGenerics.MessageBox (RDMessageTypes.Success,
+				string.Format (Localization.GetText ("EntriesApplied", al), res,
+				rebm[BasesCombo.SelectedIndex].EntriesCount));
 
 			// Обновление таблицы
 			int row = 0;
 			if (MainTable.SelectedRows.Count > 0)
 				row = MainTable.SelectedRows[0].Index;
+
 			UpdateTable ();
 			if (MainTable.SelectedRows.Count > 0)
 				MainTable.CurrentCell = MainTable.Rows[row].Cells[0];
@@ -269,13 +309,16 @@ namespace RD_AAOW
 			// Загрузка
 			uint res = rebm[BasesCombo.SelectedIndex].LoadRegistryFile (OFDialog.FileName);
 
-			MessageBox.Show (Localization.GetText ("EntriesAdded", al) + res.ToString (),
-				ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+			/*MessageBox.Shw (Localization.GetText ("EntriesAdded", al) + res.ToString (),
+				ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);*/
+			RDGenerics.MessageBox (RDMessageTypes.Success,
+				Localization.GetText ("EntriesAdded", al) + res.ToString ());
 
 			// Обновление таблицы
 			int row = 0;
 			if (MainTable.SelectedRows.Count > 0)
 				row = MainTable.SelectedRows[0].Index;
+
 			UpdateTable ();
 			if (MainTable.SelectedRows.Count > 0)
 				MainTable.CurrentCell = MainTable.Rows[row].Cells[0];
@@ -389,14 +432,15 @@ namespace RD_AAOW
 			{
 			RegistryEntriesBaseManager re = new RegistryEntriesBaseManager ();
 
-			MessageBox.Show (Localization.GetText ("NewBaseAdded", al), ProgramDescription.AssemblyTitle,
-				 MessageBoxButtons.OK, MessageBoxIcon.Information);
+			/*MessageBox.Shw (Localization.GetText ("NewBaseAdded", al), ProgramDescription.AssemblyTitle,
+				 MessageBoxButtons.OK, MessageBoxIcon.Information);*/
+			RDGenerics.LocalizedMessageBox (RDMessageTypes.Success, "NewBaseAdded");
 			}
 
 		// Запрос справки
 		private void GetHelp_Click (object sender, EventArgs e)
 			{
-			ProgramDescription.ShowAbout (false);
+			RDGenerics.ShowAbout (false);
 			}
 
 		// Просмотр иконок

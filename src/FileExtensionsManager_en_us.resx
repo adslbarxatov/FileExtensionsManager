@@ -302,6 +302,9 @@ For now, utility only works with entries in registry branch HKEY_CLASSES_ROOT an
   <data name="RemoveEntry" xml:space="preserve">
     <value>Remove selected entries?</value>
   </data>
+  <data name="SaveBasesMessage" xml:space="preserve">
+    <value>Apply changes made to existing databases of extensions?</value>
+  </data>
   <data name="SomeFieldsAreEmpty" xml:space="preserve">
     <value>One of required fields is empty</value>
   </data>

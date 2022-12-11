@@ -1,5 +1,9 @@
 ﻿File extensions manager changes log
 
+Version 2.2:
+• The app now uses a new, secure method for setting the size and position of windows;
+• Implemented support for HypeHelp mechanics
+
 Version 2.1.2:
 • Some minor fixes applied
 

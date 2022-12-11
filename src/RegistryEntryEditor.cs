@@ -104,8 +104,9 @@ namespace RD_AAOW
 
 			if (!re.IsValid)
 				{
-				MessageBox.Show (Localization.GetText ("EntryIsIncorrect", al), ProgramDescription.AssemblyTitle,
-					 MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				/*MessageBox.Shw (Localization.GetText ("EntryIsIncorrect", al), ProgramDescription.AssemblyTitle,
+					 MessageBoxButtons.OK, MessageBoxIcon.Exclamation);*/
+				RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning, "EntryIsIncorrect");
 				return;
 				}
 

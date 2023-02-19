@@ -20,12 +20,12 @@ namespace RD_AAOW
 			Application.SetCompatibleTextRenderingDefault (false);
 
 			// Язык интерфейса и контроль XPR
-			SupportedLanguages al = Localization.CurrentLanguage;
-			if (!Localization.IsXPRClassAcceptable)
+			/*SupportedLanguages al = Localization.CurrentLanguage;*/
+			if (!Localization.IsXPUNClassAcceptable)
 				return;
 
 			// Проверка запуска единственной копии
-			if (!RDGenerics.IsThisInstanceUnique (al == SupportedLanguages.ru_ru))
+			if (!RDGenerics.IsThisInstanceUnique (Localization.IsCurrentLanguageRuRu))
 				return;
 
 			// Отображение справки и запроса на принятие Политики

@@ -17,7 +17,7 @@ namespace RD_AAOW
 		{
 		// Переменные
 		private string projectLink, updatesLink, userManualLink;
-		private SupportedLanguages al;
+		/*private SupportedLanguages al;*/
 		private string updatesMessage = "", updatesMessageForText = "", description = "",
 			policyLoaderCaption = "", registryFail = "", dpModuleAbsence = "",
 			startDownload = "", packageFail = "", fileWriteFail = "", versionDescription = "",
@@ -211,7 +211,8 @@ namespace RD_AAOW
 
 			new string[] { "&gt;", "›" },
 			new string[] { "&lt;", "‹" },
-			new string[] { "&#39;", "’" }
+			new string[] { "&#39;", "’" },
+			new string[] { "&bull;", "•" }
 			};
 
 		/// <summary>
@@ -257,15 +258,14 @@ namespace RD_AAOW
 		/// <summary>
 		/// Метод отображает справочное окно приложения
 		/// </summary>
-		/// <param name="InterfaceLanguage">Язык интерфейса</param>
 		/// <param name="Description">Описание программы и/или справочная информация</param>
 		/// <param name="StartupMode">Флаг, указывающий, что справка не должна отображаться, если
 		/// она уже была показана для данной версии приложения</param>
 		/// <returns>Возвращает 1, если справка уже отображалась для данной версии (при StartupMode == true);
 		/// Другое значение, если окно справки было отображено</returns>
-		public int ShowAbout (SupportedLanguages InterfaceLanguage, string Description, bool StartupMode)
+		public int ShowAbout (/*SupportedLanguages InterfaceLanguage,*/ string Description, bool StartupMode)
 			{
-			al = InterfaceLanguage;
+			/*al = InterfaceLanguage;*/
 			description = Description;
 
 			return LaunchForm (StartupMode, false);
@@ -274,13 +274,12 @@ namespace RD_AAOW
 		/// <summary>
 		/// Метод запускает окно в режиме принятия Политики
 		/// </summary>
-		/// <param name="InterfaceLanguage">Язык интерфейса</param>
 		/// <returns>Возвращает 0, если Политика принята;
 		/// 1, если Политика уже принималась ранее;
 		/// -1, если Политика отклонена</returns>
-		public int AcceptEULA (SupportedLanguages InterfaceLanguage)
+		public int AcceptEULA (/*SupportedLanguages InterfaceLanguage*/)
 			{
-			al = InterfaceLanguage;
+			/*al = InterfaceLanguage;*/
 			return LaunchForm (false, true);
 			}
 
@@ -333,30 +332,33 @@ namespace RD_AAOW
 				return 1;
 
 			// Настройка контролов
-			int i = (int)al;
-			UserManualButton.Text = locale[i][0];
-			ProjectPageButton.Text = locale[i][1];
-			UpdatesPageButton.Text = locale[i][2];
-			ADPButton.Text = locale[i][AcceptMode ? 3 : 4];
-			ExitButton.Text = locale[i][AcceptMode ? 5 : 6];
-			AskDeveloper.Text = locale[i][7];
-			MisacceptButton.Text = locale[i][8];
+			/*SupportedLanguages al = Localization.CurrentLanguage;*/
+			int al = (int)Localization.CurrentLanguage;
+
+			UserManualButton.Text = locale[al][0];
+			ProjectPageButton.Text = locale[al][1];
+			UpdatesPageButton.Text = locale[al][2];
+			ADPButton.Text = locale[al][AcceptMode ? 3 : 4];
+			ExitButton.Text = locale[al][AcceptMode ? 5 : 6];
+			AskDeveloper.Text = locale[al][7];
+			MisacceptButton.Text = locale[al][8];
 
 			if (!desciptionHasBeenUpdated)
-				DescriptionBox.Text = locale[i][AcceptMode ? 9 : 10] + description;
+				DescriptionBox.Text = locale[al][AcceptMode ? 9 : 10] + description;
 
-			policyLoaderCaption = locale[i][11];
-			registryFail = ProgramDescription.AssemblyMainName + locale[i][12];
-			dpModuleAbsence = locale[i][13];
-			packageFail = locale[i][14];
-			fileWriteFail = locale[i][15];
-			startDownload = locale[i][16];
+			policyLoaderCaption = locale[al][11];
+			registryFail = ProgramDescription.AssemblyMainName + locale[al][12];
+			dpModuleAbsence = locale[al][13];
+			packageFail = locale[al][14];
+			fileWriteFail = locale[al][15];
+			startDownload = locale[al][16];
 
 			if (ToLaboratoryCombo.Items.Count < 1)
-				ToLaboratoryCombo.Items.AddRange (RDGenerics.GetCommunitiesNames (al != SupportedLanguages.ru_ru));
+				ToLaboratoryCombo.Items.AddRange (RDGenerics.GetCommunitiesNames (!Localization.IsCurrentLanguageRuRu
+					/*al != SupportedLanguages.ru_ru*/));
 			ToLaboratoryCombo.SelectedIndex = 0;
 
-			this.Text = locale[i][AcceptMode ? 17 : 18];
+			this.Text = locale[al][AcceptMode ? 17 : 18];
 
 			// Запуск проверки обновлений
 			if (!AcceptMode)
@@ -444,7 +446,8 @@ namespace RD_AAOW
 		// Метод получает Политику разработки
 		private void PolicyLoader (object sender, DoWorkEventArgs e)
 			{
-			string html = GetHTML (RDGenerics.GetADPLink (al == SupportedLanguages.ru_ru));
+			string html = GetHTML (RDGenerics.GetADPLink (Localization.IsCurrentLanguageRuRu
+				/*Localization.CurrentLanguage == SupportedLanguages.ru_ru*/));
 			int textLeft, textRight;
 
 			if (((textLeft = html.IndexOf ("code\">")) >= 0) &&
@@ -528,7 +531,8 @@ namespace RD_AAOW
 			{
 			try
 				{
-				Process.Start (RDGenerics.GetADPLink (al == SupportedLanguages.ru_ru));
+				Process.Start (RDGenerics.GetADPLink (Localization.IsCurrentLanguageRuRu
+					/*Localization.CurrentLanguage == SupportedLanguages.ru_ru*/));
 				}
 			catch { }
 			}
@@ -539,7 +543,8 @@ namespace RD_AAOW
 			switch (ToLaboratoryCombo.SelectedIndex)
 				{
 				default:
-					link = RDGenerics.GetDPArrayLink (al == SupportedLanguages.ru_ru);
+					link = RDGenerics.GetDPArrayLink (Localization.IsCurrentLanguageRuRu
+						/*al == SupportedLanguages.ru_ru*/);
 					break;
 
 				case 1:
@@ -575,8 +580,7 @@ namespace RD_AAOW
 
 			// Контроль наличия DPModule
 			string dpmv = RDGenerics.GetAppSettingsValue (LastShownVersionKey, ADPRevisionPath);
-			string downloadLink;
-			string packagePath; /*= Environment.GetFolderPath (Environment.SpecialFolder.Desktop) + "\\";*/
+			string downloadLink, packagePath;
 
 			int l;
 			if (string.IsNullOrWhiteSpace (dpmv))
@@ -584,7 +588,7 @@ namespace RD_AAOW
 				// Выбор варианта обработки
 				switch (RDGenerics.MessageBox (RDMessageTypes.Question, dpModuleAbsence,
 						Localization.GetDefaultButtonName (Localization.DefaultButtons.Yes),
-						locale[(int)al][29],
+						locale[(int)Localization.CurrentLanguage][29],
 						Localization.GetDefaultButtonName (Localization.DefaultButtons.Cancel)))
 					{
 					case RDMessageButtons.ButtonThree:
@@ -669,7 +673,7 @@ namespace RD_AAOW
 		private void HypeHelpFlag_CheckedChanged (object sender, EventArgs e)
 			{
 			if (HypeHelpFlag.Checked)
-				RDGenerics.MessageBox (RDMessageTypes.Success, locale[(int)al][30]);
+				RDGenerics.MessageBox (RDMessageTypes.Success, locale[(int)Localization.CurrentLanguage][30]);
 			}
 
 		/// <summary>
@@ -697,6 +701,7 @@ namespace RD_AAOW
 		private void UpdatesChecker (object sender, DoWorkEventArgs e)
 			{
 			// Запрос обновлений пакета
+			int al = (int)Localization.CurrentLanguage;
 			string html = GetHTML (projectLink);
 			bool htmlError = true;  // Сбрасывается при успешной загрузке
 
@@ -740,19 +745,20 @@ namespace RD_AAOW
 			// Отображение результата
 			if (ProgramDescription.AssemblyTitle.EndsWith (version))
 				{
-				updatesMessage = locale[(int)al][19];
-				updatesMessageForText = locale[(int)al][20];
+				updatesMessage = locale[al][19];
+				updatesMessageForText = locale[al][20];
 				}
 			else
 				{
-				updatesMessage = string.Format (locale[(int)al][21], version);
-				updatesMessageForText = string.Format (locale[(int)al][22], version);
+				updatesMessage = string.Format (locale[al][21], version);
+				updatesMessageForText = string.Format (locale[al][22], version);
 				}
 			htmlError = false;
 
 // Получение обновлений Политики (ошибки игнорируются)
 policy:
-			html = GetHTML (RDGenerics.GetADPLink (al == SupportedLanguages.ru_ru));
+			html = GetHTML (RDGenerics.GetADPLink (Localization.IsCurrentLanguageRuRu
+				/*al == SupportedLanguages.ru_ru*/));
 			if (((i = html.IndexOf ("<title")) >= 0) && ((j = html.IndexOf ("</title", i)) >= 0))
 				{
 				// Обрезка
@@ -776,8 +782,8 @@ policy:
 				}
 
 			// Есть проблема при загрузке страницы. Отмена
-			updatesMessage = locale[(int)al][23];
-			updatesMessageForText = locale[(int)al][24];
+			updatesMessage = locale[al][23];
+			updatesMessageForText = locale[al][24];
 
 			e.Result = -2;
 			return;
@@ -799,9 +805,9 @@ policy:
 			string[] paths = (string[])e.Argument;
 
 			// Инициализация полосы загрузки
-			SupportedLanguages al = Localization.CurrentLanguage;
-			string downloadMessage = locale[(int)al][25];
-			string downloadSuccess = locale[(int)al][26];
+			int al = (int)Localization.CurrentLanguage;
+			string downloadMessage = locale[al][25];
+			string downloadSuccess = locale[al][26];
 
 			string report = downloadMessage + "\n" + Path.GetFileName (paths[1]);
 			((BackgroundWorker)sender).ReportProgress ((int)HardWorkExecutor.ProgressBarSize, report);

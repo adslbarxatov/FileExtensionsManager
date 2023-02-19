@@ -26,7 +26,7 @@ namespace RD_AAOW
 
 		private Brush selectionBrush = new SolidBrush (Color.FromArgb (128, 255, 255, 0));  // Кисть для выбранной иконки
 
-		private SupportedLanguages al;
+		/*private SupportedLanguages al;*/
 
 		/// <summary>
 		/// Возвращает номер выбранной иконки, начиная с 0, или -1, если иконка не была выбрана
@@ -70,18 +70,17 @@ namespace RD_AAOW
 		/// <summary>
 		/// Конструктор. Запускает форму
 		/// </summary>
-		/// <param name="InterfaceLanguage">Язык интерфейса</param>
-		public IconsExtractor (SupportedLanguages InterfaceLanguage)
+		public IconsExtractor (/*SupportedLanguages InterfaceLanguage*/)
 			{
 			// Инициализация
 			InitializeComponent ();
-			al = InterfaceLanguage;
+			/*al = InterfaceLanguage;*/
 			this.AcceptButton = SelectButton;
 			this.CancelButton = AbortButton;
 
 			// Настройка контролов
-			OFDialog.Title = Localization.GetText ("IE_OFDialogTitle", al);
-			OFDialog.Filter = Localization.GetText ("IE_OFDialogFilter", al);
+			OFDialog.Title = Localization.GetText ("IE_OFDialogTitle");
+			OFDialog.Filter = Localization.GetText ("IE_OFDialogFilter");
 
 			MainPicture.Width = (int)(iconPositionWidth * iconsHorizontalCount + 4);
 			MainPicture.Height = (int)(iconPositionHeight * iconsVerticalCount + 4);
@@ -95,11 +94,11 @@ namespace RD_AAOW
 			SelectButton.Left = this.Width / 2 - SelectButton.Width - 6;
 			AbortButton.Left = this.Width / 2 + 6;
 
-			AbortButton.Text = Localization.GetText ("AbortButton", al);
-			PageLabel.Text = Localization.GetText ("IE_PageLabel", al);
+			AbortButton.Text = Localization.GetText ("AbortButton");
+			PageLabel.Text = Localization.GetText ("IE_PageLabel");
 
 			// Запуск
-			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("IE_Title", al);
+			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("IE_Title");
 			this.ShowDialog ();
 			}
 
@@ -118,10 +117,8 @@ namespace RD_AAOW
 			iconsCount = ExtractIconExA (OFDialog.FileName, -1, ref bigIcon, ref smallIcon, 1);
 			if (iconsCount == 0)
 				{
-				/*MessageBox.Shw (string.Format (Localization.GetText ("IconsNotFound", al), OFDialog.FileName),
-					ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);*/
 				RDGenerics.MessageBox (RDMessageTypes.Information,
-					string.Format (Localization.GetText ("IconsNotFound", al), OFDialog.FileName));
+					string.Format (Localization.GetText ("IconsNotFound"), OFDialog.FileName));
 				this.Close ();
 				return;
 				}
@@ -161,8 +158,9 @@ namespace RD_AAOW
 
 			// Отображение
 			MainPicture.BackgroundImage = (Bitmap)iconsView.Clone ();
-			PageNumber.Maximum = Math.Ceiling ((decimal)iconsCount / ((decimal)iconsVerticalCount * (decimal)iconsHorizontalCount));
-			TotalLabel.Text = Localization.GetText ("IE_TotalLabelText", al) + iconsCount.ToString ();
+			PageNumber.Maximum = Math.Ceiling ((decimal)iconsCount /
+				((decimal)iconsVerticalCount * (decimal)iconsHorizontalCount));
+			TotalLabel.Text = Localization.GetText ("IE_TotalLabelText") + iconsCount.ToString ();
 			allowExit = false;
 			this.Activate ();
 			}
@@ -200,7 +198,7 @@ namespace RD_AAOW
 			if (selectedNumber < iconsCount)
 				{
 				SelectButton.Enabled = true;
-				SelectButton.Text = Localization.GetText ("IE_SelectButtonText", al) + selectedNumber.ToString ();
+				SelectButton.Text = Localization.GetText ("IE_SelectButtonText") + selectedNumber.ToString ();
 
 				selectedIconNumber = (int)selectedNumber;
 				currentPage = PageNumber.Value;

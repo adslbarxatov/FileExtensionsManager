@@ -9,7 +9,7 @@ namespace RD_AAOW
 	public partial class RegistryEntryEditor: Form
 		{
 		// Параметры
-		private SupportedLanguages al;
+		/*private SupportedLanguages al;*/
 
 		/// <summary>
 		/// Возвращает изменённую запись
@@ -39,12 +39,11 @@ namespace RD_AAOW
 		/// Конструктор. Запускает создание или редактирование записи
 		/// </summary>
 		/// <param name="Entry">Запись реестра</param>
-		/// <param name="InterfaceLanguage">Язык интерфейса</param>
-		public RegistryEntryEditor (RegistryEntry Entry, SupportedLanguages InterfaceLanguage)
+		public RegistryEntryEditor (RegistryEntry Entry/*, SupportedLanguages InterfaceLanguage*/)
 			{
 			// Инициализация
 			InitializeComponent ();
-			al = InterfaceLanguage;
+			/*al = InterfaceLanguage;*/
 			this.AcceptButton = Apply;
 			this.CancelButton = Abort;
 
@@ -53,11 +52,11 @@ namespace RD_AAOW
 
 			// Настройка контролов
 			KeyType.Items.Add (RegistryValueTypes.REG_SZ.ToString () +
-				Localization.GetText ("RegistryValue_String", al));
+				Localization.GetText ("RegistryValue_String"));
 			KeyType.Items.Add (RegistryValueTypes.REG_DWORD.ToString () +
-				Localization.GetText ("RegistryValue_Int32", al));
+				Localization.GetText ("RegistryValue_Int32"));
 			KeyType.Items.Add (RegistryValueTypes.REG_QWORD.ToString () +
-				Localization.GetText ("RegistryValue_Int64", al));
+				Localization.GetText ("RegistryValue_Int64"));
 
 			if ((int)editedEntry.ValueType < KeyType.Items.Count)
 				KeyType.Text = KeyType.Items[(int)editedEntry.ValueType].ToString ();
@@ -72,11 +71,11 @@ namespace RD_AAOW
 			NameMustBeDeleted.Checked = editedEntry.NameMustBeDeleted;
 
 			// Локализация
-			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("REE_Title", al);
+			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("REE_Title");
 
-			Localization.SetControlsText (this, al);
-			Apply.Text = Localization.GetText ("ApplyButton", al);
-			Abort.Text = Localization.GetText ("AbortButton", al);
+			Localization.SetControlsText (this);
+			Apply.Text = Localization.GetText ("ApplyButton");
+			Abort.Text = Localization.GetText ("AbortButton");
 
 			// Запуск
 			this.ShowDialog ();

@@ -103,13 +103,12 @@ namespace RD_AAOW
 		/// Конструктор. Запускает форму выбора языка приложения
 		/// </summary>
 		/// <param name="CurrentInterfaceLanguage">Текущий язык интерфейса</param>
-		/// <param name="ButtonOneName">Название кнопки принятия</param>
-		/// <param name="ButtonTwoName">Название кнопки отмены</param>
-		/// <param name="Message">Сообщение для пользователя</param>
-		public RDMessageForm (SupportedLanguages CurrentInterfaceLanguage, string Message, string ButtonOneName,
-			string ButtonTwoName)
+		public RDMessageForm (SupportedLanguages CurrentInterfaceLanguage)
 			{
-			RDMessageFormInit (RDMessageTypes.LanguageSelector, Message, ButtonOneName, ButtonTwoName,
+			RDMessageFormInit (RDMessageTypes.LanguageSelector,
+				Localization.GetDefaultButtonName (Localization.DefaultButtons.LanguageSelector),
+				Localization.GetDefaultButtonName (Localization.DefaultButtons.Apply),
+				Localization.GetDefaultButtonName (Localization.DefaultButtons.Cancel),
 				null, CurrentInterfaceLanguage);
 			}
 

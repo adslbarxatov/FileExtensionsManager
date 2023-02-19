@@ -13,7 +13,7 @@ namespace RD_AAOW
 		private RegistryEntriesBaseManager rebm;
 		private string selectedIconFile;
 		private uint selectedIconNumber;
-		private SupportedLanguages al;
+		/*private SupportedLanguages al;*/
 
 		/// <summary>
 		/// Флаг указывает, что изменение записи было подтверждено
@@ -31,27 +31,26 @@ namespace RD_AAOW
 		/// Конструктор. Запускает добавление расширения
 		/// </summary>
 		/// <param name="Manager">База записей, в которую необходимо добавить расширение</param>
-		/// <param name="InterfaceLanguage">Язык интерфейса</param>
-		public ExtensionRegistrator (RegistryEntriesBaseManager Manager, SupportedLanguages InterfaceLanguage)
+		public ExtensionRegistrator (RegistryEntriesBaseManager Manager/*, SupportedLanguages InterfaceLanguage*/)
 			{
 			// Инициализация
 			InitializeComponent ();
-			al = InterfaceLanguage;
+			/*al = InterfaceLanguage;*/
 			this.AcceptButton = Apply;
 			this.CancelButton = Abort;
 
-			OFDialog.Title = Localization.GetText ("ER_OFDialogText", al);
-			OFDialog.Filter = Localization.GetText ("ER_OFDialogFilter", al);
+			OFDialog.Title = Localization.GetText ("ER_OFDialogText");
+			OFDialog.Filter = Localization.GetText ("ER_OFDialogFilter");
 
 			// Сохранение параметров
 			rebm = Manager;
 
 			// Настройка контролов
-			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("ER_Title", al);
+			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("ER_Title");
 
-			Localization.SetControlsText (this, al);
-			Apply.Text = Localization.GetText ("ApplyButton", al);
-			Abort.Text = Localization.GetText ("AbortButton", al);
+			Localization.SetControlsText (this);
+			Apply.Text = Localization.GetText ("ApplyButton");
+			Abort.Text = Localization.GetText ("AbortButton");
 
 			// Запуск
 			this.ShowDialog ();
@@ -70,8 +69,6 @@ namespace RD_AAOW
 			if (FileExtension.Text.Length * FileTypeName.Text.Length * FileIcon.Text.Length *
 				FileApplication.Text.Length == 0)
 				{
-				/*MessageBox.Shw (Localization.GetText ("SomeFieldsAreEmpty", al),
-					ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);*/
 				RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning, "SomeFieldsAreEmpty");
 				return;
 				}
@@ -83,11 +80,8 @@ namespace RD_AAOW
 				{
 				if (FileExtension.Text.Contains (c[i].ToString ()))
 					{
-					/*MessageBox.Shw (string.Format (Localization.GetText ("UnsupportedCharacter", al), 
-						c[i].ToString ()),
-						ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);*/
 					RDGenerics.MessageBox (RDMessageTypes.Warning,
-						string.Format (Localization.GetText ("UnsupportedCharacter", al), c[i].ToString ()));
+						string.Format (Localization.GetText ("UnsupportedCharacter"), c[i].ToString ()));
 					return;
 					}
 				}
@@ -107,7 +101,7 @@ namespace RD_AAOW
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell", "",
 					"open")) ||
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open",
-					"", Localization.GetText ("OpenButton", al))) ||
+					"", Localization.GetText ("OpenButton"))) ||
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open",
 					"Icon",
 				((IconsExtractor.GetIconsCount (FileApplication.Text) == 0) ? selectedIconFile :
@@ -116,8 +110,6 @@ namespace RD_AAOW
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text +
 					"file\\shell\\open\\command", "", "\"" + FileApplication.Text + "\" \"%1\"")))
 				{
-				/*MessageBox.Shw (Localization.GetText ("ExtensionRegFailed", al),
-					ProgramDescription.AssemblyTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);*/
 				RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning, "ExtensionRegFailed");
 				return;
 				}
@@ -130,7 +122,7 @@ namespace RD_AAOW
 		private void SelectIcon_Click (object sender, EventArgs e)
 			{
 			// Запуск выбора
-			IconsExtractor ie = new IconsExtractor (al);
+			IconsExtractor ie = new IconsExtractor (/*al*/);
 			if (ie.SelectedIconNumber >= 0)
 				{
 				selectedIconNumber = (uint)ie.SelectedIconNumber;

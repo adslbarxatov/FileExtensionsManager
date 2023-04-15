@@ -242,7 +242,7 @@ namespace RD_AAOW
 				AbortButton.Visible = AbortButton.Enabled = AllowAbort;
 				if (AbortButton.Enabled)
 					{
-					AbortButton.Text = Localization.GetDefaultButtonName (Localization.DefaultButtons.Cancel);
+					AbortButton.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Cancel);
 					AbortButton.FlatAppearance.MouseDownBackColor =
 						RDGenerics.GetInterfaceColor (RDInterfaceColors.DefaultEmerald);
 					}

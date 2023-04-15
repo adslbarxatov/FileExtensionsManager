@@ -19,13 +19,12 @@ namespace RD_AAOW
 			Application.EnableVisualStyles ();
 			Application.SetCompatibleTextRenderingDefault (false);
 
-			// Язык интерфейса и контроль XPR
-			/*SupportedLanguages al = Localization.CurrentLanguage;*/
+			// Язык интерфейса и контроль XPUN
 			if (!Localization.IsXPUNClassAcceptable)
 				return;
 
 			// Проверка запуска единственной копии
-			if (!RDGenerics.IsThisInstanceUnique (Localization.IsCurrentLanguageRuRu))
+			if (!RDGenerics.IsAppInstanceUnique (true))
 				return;
 
 			// Отображение справки и запроса на принятие Политики

@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AbortButton" xml:space="preserve">
-    <value>От&amp;мена</value>
-  </data>
   <data name="AppliedText" xml:space="preserve">
     <value>Применены: </value>
   </data>
@@ -129,17 +126,11 @@
   <data name="ApplyAllEntries2" xml:space="preserve">
     <value>Ваше решение изменилось?</value>
   </data>
-  <data name="ApplyButton" xml:space="preserve">
-    <value>&amp;Применить</value>
-  </data>
   <data name="ApplyEntry" xml:space="preserve">
     <value>Применить выбранные записи?</value>
   </data>
   <data name="BasesNotFound" xml:space="preserve">
     <value>Не найдена ни одна база реестровых записей</value>
-  </data>
-  <data name="ButtonsPanel_AddRecord" xml:space="preserve">
-    <value>&amp;Добавить</value>
   </data>
   <data name="ButtonsPanel_Apply" xml:space="preserve">
     <value>&amp;Применить выбранные</value>
@@ -149,12 +140,6 @@
   </data>
   <data name="ButtonsPanel_DeleteRecord" xml:space="preserve">
     <value>&amp;Удалить выбранные</value>
-  </data>
-  <data name="ButtonsPanel_EditRecord" xml:space="preserve">
-    <value>&amp;Изменить</value>
-  </data>
-  <data name="ButtonsPanel_Exit" xml:space="preserve">
-    <value>В&amp;ыход</value>
   </data>
   <data name="ButtonsPanel_FindIcon" xml:space="preserve">
     <value>Найти и&amp;конку</value>
@@ -259,9 +244,6 @@
   </data>
   <data name="NotAppliedText" xml:space="preserve">
     <value>Не применены: </value>
-  </data>
-  <data name="OpenButton" xml:space="preserve">
-    <value>&amp;Открыть</value>
   </data>
   <data name="PartiallyAppliedText" xml:space="preserve">
     <value>Применены частично: </value>

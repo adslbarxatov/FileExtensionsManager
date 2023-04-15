@@ -12,7 +12,6 @@ namespace RD_AAOW
 		{
 		// Переменные
 		private List<RegistryEntriesBaseManager> rebm = new List<RegistryEntriesBaseManager> ();
-		/*private SupportedLanguages al = Localization.CurrentLanguage;*/
 		private uint applied = 0, partiallyApplied = 0, notApplied = 0, noAccess = 0;
 
 		/// <summary>
@@ -86,12 +85,6 @@ namespace RD_AAOW
 
 			ButtonsPanel.Top = this.Height - 137;
 			ButtonsPanel.Left = (this.Width - ButtonsPanel.Width) / 2 - 4;
-
-			/*Applied.Top = PartiallyApplied.Top = this.Height - 138;
-			NotApplied.Top = NoAccess.Top = this.Height - 118;
-
-			AddRecord.Top = DeleteRecord.Top = LoadRegFile.Top = RegExtension.Top = this.Height - 95;
-			Apply.Top = ApplyAll.Top = Exit.Top = FindIcon.Top = this.Height - 64;*/
 			}
 
 		// Обновление таблицы
@@ -161,8 +154,8 @@ namespace RD_AAOW
 		private void FileExtensionsManagerForm_FormClosing (object sender, FormClosingEventArgs e)
 			{
 			RDMessageButtons res = RDGenerics.LocalizedMessageBox (RDMessageTypes.Question,
-				"SaveBasesMessage", Localization.DefaultButtons.Yes, Localization.DefaultButtons.No,
-				Localization.DefaultButtons.Cancel);
+				"SaveBasesMessage", LzDefaultTextValues.Button_Yes, LzDefaultTextValues.Button_No,
+				LzDefaultTextValues.Button_Cancel);
 
 			// Сохранение баз
 			if (res == RDMessageButtons.ButtonOne)
@@ -183,11 +176,8 @@ namespace RD_AAOW
 			if (MainTable.SelectedRows.Count <= 0)
 				return;
 
-			/*if (MessageBox.Shw (Localization.GetText ("RemoveEntry", al), ProgramDescription.AssemblyTitle,
-				MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-				return;*/
 			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Question, "RemoveEntry",
-				Localization.DefaultButtons.Yes, Localization.DefaultButtons.No) != RDMessageButtons.ButtonOne)
+				LzDefaultTextValues.Button_Yes, LzDefaultTextValues.Button_No) != RDMessageButtons.ButtonOne)
 				return;
 
 			// Удаление
@@ -218,7 +208,8 @@ namespace RD_AAOW
 				return;
 
 			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Question, "ApplyEntry",
-				Localization.DefaultButtons.Yes, Localization.DefaultButtons.No) != RDMessageButtons.ButtonOne)
+				LzDefaultTextValues.Button_Yes, LzDefaultTextValues.Button_No) !=
+				RDMessageButtons.ButtonOne)
 				return;
 
 			// Применение записей
@@ -253,12 +244,12 @@ namespace RD_AAOW
 			{
 			// Контроль
 			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning, "ApplyAllEntries",
-				Localization.DefaultButtons.YesNoFocus, Localization.DefaultButtons.No) !=
+				LzDefaultTextValues.Button_YesNoFocus, LzDefaultTextValues.Button_No) !=
 				RDMessageButtons.ButtonOne)
 				return;
 
 			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning, "ApplyAllEntries2",
-				Localization.DefaultButtons.Yes, Localization.DefaultButtons.No) !=
+				LzDefaultTextValues.Button_Yes, LzDefaultTextValues.Button_No) !=
 				RDMessageButtons.ButtonTwo)
 				return;
 
@@ -410,8 +401,6 @@ namespace RD_AAOW
 			{
 			RegistryEntriesBaseManager re = new RegistryEntriesBaseManager ();
 
-			/*MessageBox.Shw (Localization.GetText ("NewBaseAdded", al), ProgramDescription.AssemblyTitle,
-				 MessageBoxButtons.OK, MessageBoxIcon.Information);*/
 			RDGenerics.LocalizedMessageBox (RDMessageTypes.Success, "NewBaseAdded");
 			}
 
@@ -447,6 +436,9 @@ namespace RD_AAOW
 
 			Localization.SetControlsText (this);
 			Localization.SetControlsText (ButtonsPanel);
+			AddRecord.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Add);
+			EditRecord.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Edit);
+			Exit.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Exit);
 
 			UpdateResults ();
 			}

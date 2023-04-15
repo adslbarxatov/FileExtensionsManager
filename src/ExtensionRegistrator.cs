@@ -13,7 +13,6 @@ namespace RD_AAOW
 		private RegistryEntriesBaseManager rebm;
 		private string selectedIconFile;
 		private uint selectedIconNumber;
-		/*private SupportedLanguages al;*/
 
 		/// <summary>
 		/// Флаг указывает, что изменение записи было подтверждено
@@ -31,11 +30,10 @@ namespace RD_AAOW
 		/// Конструктор. Запускает добавление расширения
 		/// </summary>
 		/// <param name="Manager">База записей, в которую необходимо добавить расширение</param>
-		public ExtensionRegistrator (RegistryEntriesBaseManager Manager/*, SupportedLanguages InterfaceLanguage*/)
+		public ExtensionRegistrator (RegistryEntriesBaseManager Manager)
 			{
 			// Инициализация
 			InitializeComponent ();
-			/*al = InterfaceLanguage;*/
 			this.AcceptButton = Apply;
 			this.CancelButton = Abort;
 
@@ -49,8 +47,8 @@ namespace RD_AAOW
 			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("ER_Title");
 
 			Localization.SetControlsText (this);
-			Apply.Text = Localization.GetText ("ApplyButton");
-			Abort.Text = Localization.GetText ("AbortButton");
+			Apply.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Apply);
+			Abort.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Cancel);
 
 			// Запуск
 			this.ShowDialog ();
@@ -101,7 +99,7 @@ namespace RD_AAOW
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell", "",
 					"open")) ||
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open",
-					"", Localization.GetText ("OpenButton"))) ||
+					"", Localization.GetDefaultText (LzDefaultTextValues.Button_Open))) ||
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open",
 					"Icon",
 				((IconsExtractor.GetIconsCount (FileApplication.Text) == 0) ? selectedIconFile :
@@ -122,7 +120,7 @@ namespace RD_AAOW
 		private void SelectIcon_Click (object sender, EventArgs e)
 			{
 			// Запуск выбора
-			IconsExtractor ie = new IconsExtractor (/*al*/);
+			IconsExtractor ie = new IconsExtractor ();
 			if (ie.SelectedIconNumber >= 0)
 				{
 				selectedIconNumber = (uint)ie.SelectedIconNumber;

@@ -26,8 +26,6 @@ namespace RD_AAOW
 
 		private Brush selectionBrush = new SolidBrush (Color.FromArgb (128, 255, 255, 0));  // Кисть для выбранной иконки
 
-		/*private SupportedLanguages al;*/
-
 		/// <summary>
 		/// Возвращает номер выбранной иконки, начиная с 0, или -1, если иконка не была выбрана
 		/// </summary>
@@ -70,11 +68,10 @@ namespace RD_AAOW
 		/// <summary>
 		/// Конструктор. Запускает форму
 		/// </summary>
-		public IconsExtractor (/*SupportedLanguages InterfaceLanguage*/)
+		public IconsExtractor ()
 			{
 			// Инициализация
 			InitializeComponent ();
-			/*al = InterfaceLanguage;*/
 			this.AcceptButton = SelectButton;
 			this.CancelButton = AbortButton;
 
@@ -94,7 +91,7 @@ namespace RD_AAOW
 			SelectButton.Left = this.Width / 2 - SelectButton.Width - 6;
 			AbortButton.Left = this.Width / 2 + 6;
 
-			AbortButton.Text = Localization.GetText ("AbortButton");
+			AbortButton.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Cancel);
 			PageLabel.Text = Localization.GetText ("IE_PageLabel");
 
 			// Запуск

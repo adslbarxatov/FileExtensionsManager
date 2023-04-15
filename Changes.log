@@ -1,5 +1,9 @@
 File extensions manager: changes log
 
+Version 2.3:
+• The text tips processing code has been refactored, some methods have been unified and simplified;
+• Removed some redundant code
+
 Version 2.2.7:
 • Updated the HypeHelp mechanics
 

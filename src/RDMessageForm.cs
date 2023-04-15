@@ -100,16 +100,34 @@ namespace RD_AAOW
 		private RDMessageButtons resultButton = RDMessageButtons.NotSelected;
 
 		/// <summary>
+		/// Конструктор. Запускает простейшую форму сообщения для пользователя (с таймаутом автозакрытия)
+		/// </summary>
+		/// <param name="Message">Сообщение для пользователя</param>
+		/// <param name="Type">Тип создаваемого окна</param>
+		/// <param name="Timeout">Таймаут (в миллисекундах), по истечении которого 
+		/// сообщение автоматически закроется (от 100 до 60000 мс)</param>
+		public RDMessageForm (RDMessageTypes Type, string Message, uint Timeout)
+			{
+			uint to = Timeout;
+			if (to < 100)
+				to = 100;
+			if (to > 60000)
+				to = 60000;
+
+			RDMessageFormInit (Type, Message, "-", null, null, SupportedLanguages.en_us, to);
+			}
+
+		/// <summary>
 		/// Конструктор. Запускает форму выбора языка приложения
 		/// </summary>
 		/// <param name="CurrentInterfaceLanguage">Текущий язык интерфейса</param>
 		public RDMessageForm (SupportedLanguages CurrentInterfaceLanguage)
 			{
 			RDMessageFormInit (RDMessageTypes.LanguageSelector,
-				Localization.GetDefaultButtonName (Localization.DefaultButtons.LanguageSelector),
-				Localization.GetDefaultButtonName (Localization.DefaultButtons.Apply),
-				Localization.GetDefaultButtonName (Localization.DefaultButtons.Cancel),
-				null, CurrentInterfaceLanguage);
+				Localization.GetDefaultText (LzDefaultTextValues.Message_LanguageSelection),
+				Localization.GetDefaultText (LzDefaultTextValues.Button_Apply),
+				Localization.GetDefaultText (LzDefaultTextValues.Button_Cancel),
+				null, CurrentInterfaceLanguage, 0);
 			}
 
 		/// <summary>
@@ -119,8 +137,8 @@ namespace RD_AAOW
 		/// <param name="Type">Тип создаваемого окна</param>
 		public RDMessageForm (RDMessageTypes Type, string Message)
 			{
-			RDMessageFormInit (Type, Message, Localization.GetDefaultButtonName (Localization.DefaultButtons.OK),
-				null, null, SupportedLanguages.en_us);
+			RDMessageFormInit (Type, Message, Localization.GetDefaultText (LzDefaultTextValues.Button_OK),
+				null, null, SupportedLanguages.en_us, 0);
 			}
 
 		/// <summary>
@@ -131,7 +149,7 @@ namespace RD_AAOW
 		/// <param name="Type">Тип создаваемого окна</param>
 		public RDMessageForm (RDMessageTypes Type, string Message, string ButtonOneName)
 			{
-			RDMessageFormInit (Type, Message, ButtonOneName, null, null, SupportedLanguages.en_us);
+			RDMessageFormInit (Type, Message, ButtonOneName, null, null, SupportedLanguages.en_us, 0);
 			}
 
 		/// <summary>
@@ -143,7 +161,7 @@ namespace RD_AAOW
 		/// <param name="Type">Тип создаваемого окна</param>
 		public RDMessageForm (RDMessageTypes Type, string Message, string ButtonOneName, string ButtonTwoName)
 			{
-			RDMessageFormInit (Type, Message, ButtonOneName, ButtonTwoName, null, SupportedLanguages.en_us);
+			RDMessageFormInit (Type, Message, ButtonOneName, ButtonTwoName, null, SupportedLanguages.en_us, 0);
 			}
 
 		/// <summary>
@@ -158,12 +176,12 @@ namespace RD_AAOW
 			string ButtonThreeName)
 			{
 			RDMessageFormInit (Type, Message, ButtonOneName, ButtonTwoName, ButtonThreeName,
-				SupportedLanguages.en_us);
+				SupportedLanguages.en_us, 0);
 			}
 
 		// Основная инициализация формы
 		private void RDMessageFormInit (RDMessageTypes Type, string Message, string ButtonOneName, string ButtonTwoName,
-			string ButtonThreeName, SupportedLanguages CurrentInterfaceLanguage)
+			string ButtonThreeName, SupportedLanguages CurrentInterfaceLanguage, uint Timeout)
 			{
 			// Инициализация
 			InitializeComponent ();
@@ -204,8 +222,17 @@ namespace RD_AAOW
 					// Определение высоты
 					Label01.Height = (Label01.GetLineFromCharIndex (int.MaxValue) + 2) *
 						TextRenderer.MeasureText ("X", Label01.Font).Height;
-					this.Height = Label01.Height + 57;
-					Button01.Top = Button02.Top = Button03.Top = this.Height - 48;
+
+					this.Height = Label01.Height;
+					if (Timeout > 0)
+						{
+						this.Height += 17;
+						}
+					else
+						{
+						this.Height += 57;
+						Button01.Top = Button02.Top = Button03.Top = this.Height - 48;
+						}
 					}
 				}
 
@@ -220,7 +247,7 @@ namespace RD_AAOW
 				}
 			else
 				{
-				Button01.Text = Localization.GetDefaultButtonName (Localization.DefaultButtons.OK);
+				Button01.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_OK);
 				}
 
 			if (!string.IsNullOrWhiteSpace (ButtonTwoName))
@@ -286,6 +313,9 @@ namespace RD_AAOW
 				LanguagesCombo.BackColor = this.BackColor;
 				}
 
+			if (Timeout > 0)
+				MainTimer.Interval = (int)Timeout;
+
 			// Запуск
 			this.StartPosition = FormStartPosition.CenterParent;
 			this.ShowDialog ();
@@ -299,6 +329,10 @@ namespace RD_AAOW
 
 			// Запуск отрисовки
 			CreateBackground (this);
+
+			// Запуск таймера, если предусмотрен
+			if (MainTimer.Interval > 75)
+				MainTimer.Enabled = true;
 			}
 
 		// Выбор размера
@@ -322,10 +356,12 @@ namespace RD_AAOW
 		private void AlignButtons ()
 			{
 			// Настройка
-			//Button01.Enabled = Button01.Visible = true;
-			Button01.BackColor = this.BackColor;
-			Button01.ForeColor = RDGenerics.GetInterfaceColor (RDInterfaceColors.DefaultText);
-
+			if (Button01.Text != "-")
+				{
+				Button01.Enabled = Button01.Visible = true;
+				Button01.BackColor = this.BackColor;
+				Button01.ForeColor = RDGenerics.GetInterfaceColor (RDInterfaceColors.DefaultText);
+				}
 			if (Button01.Enabled && (Button02.Text != "-"))
 				{
 				Button02.Enabled = Button02.Visible = true;
@@ -414,6 +450,14 @@ namespace RD_AAOW
 			gr.Dispose ();
 			pDark.Dispose ();
 			DialogForm.BackgroundImage = bm;
+			}
+
+		// Автоматическое закрытие по таймеру
+		private void MainTimer_Tick (object sender, EventArgs e)
+			{
+			resultButton = RDMessageButtons.ButtonOne;
+			exitAllowed = true;
+			this.Close ();
 			}
 		}
 	}

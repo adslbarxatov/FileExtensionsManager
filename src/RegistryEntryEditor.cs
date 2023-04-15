@@ -8,9 +8,6 @@ namespace RD_AAOW
 	/// </summary>
 	public partial class RegistryEntryEditor: Form
 		{
-		// Параметры
-		/*private SupportedLanguages al;*/
-
 		/// <summary>
 		/// Возвращает изменённую запись
 		/// </summary>
@@ -39,11 +36,10 @@ namespace RD_AAOW
 		/// Конструктор. Запускает создание или редактирование записи
 		/// </summary>
 		/// <param name="Entry">Запись реестра</param>
-		public RegistryEntryEditor (RegistryEntry Entry/*, SupportedLanguages InterfaceLanguage*/)
+		public RegistryEntryEditor (RegistryEntry Entry)
 			{
 			// Инициализация
 			InitializeComponent ();
-			/*al = InterfaceLanguage;*/
 			this.AcceptButton = Apply;
 			this.CancelButton = Abort;
 
@@ -74,8 +70,8 @@ namespace RD_AAOW
 			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("REE_Title");
 
 			Localization.SetControlsText (this);
-			Apply.Text = Localization.GetText ("ApplyButton");
-			Abort.Text = Localization.GetText ("AbortButton");
+			Apply.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Apply);
+			Abort.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Cancel);
 
 			// Запуск
 			this.ShowDialog ();
@@ -103,8 +99,6 @@ namespace RD_AAOW
 
 			if (!re.IsValid)
 				{
-				/*MessageBox.Shw (Localization.GetText ("EntryIsIncorrect", al), ProgramDescription.AssemblyTitle,
-					 MessageBoxButtons.OK, MessageBoxIcon.Exclamation);*/
 				RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning, "EntryIsIncorrect");
 				return;
 				}

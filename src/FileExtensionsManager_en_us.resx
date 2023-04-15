@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AbortButton" xml:space="preserve">
-    <value>&amp;Cancel</value>
-  </data>
   <data name="AppliedText" xml:space="preserve">
     <value>Applied: </value>
   </data>
@@ -129,17 +126,11 @@
   <data name="ApplyAllEntries2" xml:space="preserve">
     <value>Has your decision changed?</value>
   </data>
-  <data name="ApplyButton" xml:space="preserve">
-    <value>&amp;Apply</value>
-  </data>
   <data name="ApplyEntry" xml:space="preserve">
     <value>Apply selected entries?</value>
   </data>
   <data name="BasesNotFound" xml:space="preserve">
     <value>No bases of registry entries found</value>
-  </data>
-  <data name="ButtonsPanel_AddRecord" xml:space="preserve">
-    <value>&amp;Add</value>
   </data>
   <data name="ButtonsPanel_Apply" xml:space="preserve">
     <value>A&amp;pply selected</value>
@@ -149,12 +140,6 @@
   </data>
   <data name="ButtonsPanel_DeleteRecord" xml:space="preserve">
     <value>&amp;Delete selected</value>
-  </data>
-  <data name="ButtonsPanel_EditRecord" xml:space="preserve">
-    <value>&amp;Edit</value>
-  </data>
-  <data name="ButtonsPanel_Exit" xml:space="preserve">
-    <value>E&amp;xit</value>
   </data>
   <data name="ButtonsPanel_FindIcon" xml:space="preserve">
     <value>Find &amp;icon</value>
@@ -259,9 +244,6 @@ For now, utility only works with entries in registry branch HKEY_CLASSES_ROOT an
   </data>
   <data name="NotAppliedText" xml:space="preserve">
     <value>Not applied: </value>
-  </data>
-  <data name="OpenButton" xml:space="preserve">
-    <value>&amp;Open</value>
   </data>
   <data name="PartiallyAppliedText" xml:space="preserve">
     <value>Partially applied: </value>

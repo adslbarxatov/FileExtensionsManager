@@ -1,0 +1,13 @@
+markdown: GFM
+#theme: slate
+remote_theme: pages-themes/slate@v0.2.0
+plugins:
+  - jekyll-remote-theme
+  - jemoji
+  - jekyll-seo-tag
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /img/FEM.png

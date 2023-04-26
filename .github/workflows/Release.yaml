@@ -15,31 +15,31 @@ jobs:
     
 # Константы, используемые далее по тексту
     env:
-      PROJ: FileExtensionsManager
-      TAG: 2.3
+      PROJ: ${{ github.event.repository.name }}
+      TAG: '2.3.2'
 
     steps:
 # Проверка состава репозитория (без анализа, как может показаться)
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
   
 # Формирование релиза
       - name: Create release
         id: create_release
-        uses: actions/create-release@v1
+        uses: ncipollo/release-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ env.TAG }}
-          release_name: ${{ env.PROJ }} v ${{ env.TAG }}
-          body_path: .release/Release.md
+          tag: v${{ env.TAG }}
+          name: ${{ env.PROJ }} v ${{ env.TAG }}
+          bodyFile: .release/Release.md
           draft: false
           prerelease: false
 
 # Загрузка бинарных файлов в релиз
       - name: Upload release asset
         id: upload-release-asset
-        uses: actions/github-script@v2
+        uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |

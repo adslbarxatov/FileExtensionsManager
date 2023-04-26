@@ -285,7 +285,7 @@
     <value>Удалить выбранные записи?</value>
   </data>
   <data name="SaveBasesMessage" xml:space="preserve">
-    <value>Применить выполненные изменения к существующим базам расширений?</value>
+    <value>Применить выполненные изменения к существующим базам расширений файлов?</value>
   </data>
   <data name="SomeFieldsAreEmpty" xml:space="preserve">
     <value>Одно из обязательных полей не заполнено</value>

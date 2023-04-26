@@ -16,7 +16,7 @@
 Utility allows you to store and apply custom settings for file extensions registered in operating system. List of records
 displays registry mappings stored in currently selected base of records.
 
-Green :green_circle: indicates entries that already exist in Windows registry,
+Green :green_square: indicates entries that already exist in Windows registry,
 blue :large_blue_circle: indicates entries that partially correspond to user settings,
 and red :red_circle: indicates missing entries.
 If record is marked as deleted, then entries that are absent in registry are marked in green, otherwise they are marked in red.

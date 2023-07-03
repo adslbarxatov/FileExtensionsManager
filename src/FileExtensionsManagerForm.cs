@@ -44,11 +44,15 @@ namespace RD_AAOW
 			// Инициализация баз реестровых записей
 			if (Directory.Exists (RDGenerics.AppStartupPath + RegistryEntriesBaseManager.BasesSubdirectory))
 				{
-				string[] files = Directory.GetFiles (RDGenerics.AppStartupPath +
-					RegistryEntriesBaseManager.BasesSubdirectory,
-					"*" + RegistryEntriesBaseManager.BaseFileExtension);
+				List<string> files = new List<string> ();
+				files.AddRange (Directory.GetFiles (RDGenerics.AppStartupPath +
+				   RegistryEntriesBaseManager.BasesSubdirectory,
+				   "*" + RegistryEntriesBaseManager.OldBaseFileExtension));
+				files.AddRange (Directory.GetFiles (RDGenerics.AppStartupPath +
+				   RegistryEntriesBaseManager.BasesSubdirectory,
+				   "*" + RegistryEntriesBaseManager.NewBaseFileExtension));
 
-				for (int i = 0; i < files.Length; i++)
+				for (int i = 0; i < files.Count; i++)
 					{
 					RegistryEntriesBaseManager re =
 						new RegistryEntriesBaseManager (Path.GetFileNameWithoutExtension (files[i]));
@@ -81,9 +85,9 @@ namespace RD_AAOW
 		private void MainForm_Resize (object sender, EventArgs e)
 			{
 			MainTable.Width = this.Width - 32;
-			MainTable.Height = this.Height - 186;
+			MainTable.Height = this.Height - 196;
 
-			ButtonsPanel.Top = this.Height - 137;
+			ButtonsPanel.Top = this.Height - 147;
 			ButtonsPanel.Left = (this.Width - ButtonsPanel.Width) / 2 - 4;
 			}
 

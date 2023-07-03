@@ -326,8 +326,8 @@ namespace RD_AAOW
 				return RegistryEntryApplicationResults.CannotGetAccess;
 
 			// Запрос
-			string val = "";
-			object obj = null;
+			string val;
+			object obj;
 			try
 				{
 				// Если раздел помечен на удаление
@@ -362,7 +362,10 @@ namespace RD_AAOW
 				}
 
 			// Определение статуса
-			if (val != valueObject)
+			val = val.ToLower ();
+			string vObject = valueObject.ToLower ();
+
+			if ((val != vObject) && (val.Replace ("syswow64", "system32") != vObject))
 				return RegistryEntryApplicationResults.PartiallyApplied;
 			else
 				return RegistryEntryApplicationResults.FullyApplied;

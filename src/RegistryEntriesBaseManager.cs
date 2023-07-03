@@ -13,8 +13,8 @@ namespace RD_AAOW
 		// Переменные и константы
 		private List<RegistryEntry> entries = new List<RegistryEntry> ();   // База реестровых записей
 
-		private Encoding registryFileEncoding = Encoding.Unicode;       // Кодировки файлов
-		private Encoding baseFileEncoding = Encoding.GetEncoding (1251);
+		/*private Encoding registryFileEncoding = Encoding.Unicode;*/
+		private Encoding oldBaseFileEncoding = Encoding.GetEncoding (1251);
 		private string registryFileSplitter = "=";                      // Сплиттер параметра и значения в файле реестра
 		private char[] baseFileSplitters = new char[] { '\x1' };        // Сплиттер записей в базе
 
@@ -29,9 +29,14 @@ namespace RD_AAOW
 		private const string newBaseFileName = "New base";      // Имя файла новой базы реестровых записей
 
 		/// <summary>
-		/// Расширение имени файла базы реестровых записей
+		/// Старое расширение имени файла базы реестровых записей
 		/// </summary>
-		public const string BaseFileExtension = ".reb";
+		public const string OldBaseFileExtension = ".reb";
+
+		/// <summary>
+		/// Новое расширение имени файла базы реестровых записей
+		/// </summary>
+		public const string NewBaseFileExtension = ".reu";
 
 		/// <summary>
 		/// Субдиректория для хранения сохранённых баз реестровых записей
@@ -48,9 +53,9 @@ namespace RD_AAOW
 			baseName = BaseName;
 
 			// Загрузка базы
-			if (!LoadBase ())       // Если загрузка завершается с ошибкой
+			if (LoadBase () != 0)   // Если загрузка завершается с ошибкой
 				{
-				if (!SaveBase ())   // Пробуем создать базу
+				if (!SaveBase ())   // Пробуем создать / пересохранить базу
 					return;         // Если не получается, прерываем загрузку
 				}
 
@@ -73,18 +78,31 @@ namespace RD_AAOW
 			}
 
 		// Метод загружает базу
-		private bool LoadBase ()
+		// Возвращает 0 в случае успеха, -1 в случае ошибки, 1 при необходимости пересохранить базу
+		private int LoadBase ()
 			{
-			// Попытка открытия файла
+			// Попытка открытия старого файла
+			bool old = false;
 			try
 				{
-				FS = new FileStream (BasesSubdirectory + "\\" + baseName + BaseFileExtension, FileMode.Open);
+				FS = new FileStream (RDGenerics.AppStartupPath + BasesSubdirectory + "\\"
+					+ baseName + OldBaseFileExtension, FileMode.Open);
+				SR = new StreamReader (FS, oldBaseFileEncoding);
+				old = true;
 				}
 			catch
 				{
-				return false;
+				try
+					{
+					FS = new FileStream (RDGenerics.AppStartupPath + BasesSubdirectory + "\\"
+						+ baseName + NewBaseFileExtension, FileMode.Open);
+					SR = new StreamReader (FS, RDGenerics.GetEncoding (SupportedEncodings.UTF8));
+					}
+				catch
+					{
+					return -1;
+					}
 				}
-			SR = new StreamReader (FS, baseFileEncoding);
 
 			// Чтение файла
 			SR.ReadLine ();     // Версия
@@ -117,7 +135,21 @@ namespace RD_AAOW
 			// Завершено
 			SR.Close ();
 			FS.Close ();
-			return true;
+
+			// Постобработка
+			if (old)
+				{
+				try
+					{
+					File.Move (RDGenerics.AppStartupPath + BasesSubdirectory + "\\"
+						+ baseName + OldBaseFileExtension,
+						RDGenerics.AppStartupPath + BasesSubdirectory + "\\"
+						+ baseName + ".bak");
+					}
+				catch { }
+				}
+
+			return (old ? 1 : 0);
 			}
 
 		/// <summary>
@@ -146,14 +178,15 @@ namespace RD_AAOW
 			// Попытка открытия базы
 			try
 				{
-				FS = new FileStream (BasesSubdirectory + "\\" + baseName + BaseFileExtension, FileMode.Create);
+				FS = new FileStream (RDGenerics.AppStartupPath + BasesSubdirectory + "\\" +
+					baseName + NewBaseFileExtension, FileMode.Create);
 				// Перезаписывает недоступный файл при необходимости
 				}
 			catch
 				{
 				return false;
 				}
-			SW = new StreamWriter (FS, baseFileEncoding);
+			SW = new StreamWriter (FS, RDGenerics.GetEncoding (SupportedEncodings.UTF8));
 
 			// Запись
 			SW.Write (ProgramDescription.AssemblyTitle + "; timestamp: " +
@@ -294,7 +327,7 @@ namespace RD_AAOW
 				{
 				return 0;
 				}
-			SR = new StreamReader (FS, registryFileEncoding);
+			SR = new StreamReader (FS, RDGenerics.GetEncoding (SupportedEncodings.Unicode16));
 
 			// Контроль состава файла
 			string s = SR.ReadLine ().ToLower (), s2;
@@ -390,7 +423,7 @@ namespace RD_AAOW
 				{
 				return false;
 				}
-			SW = new StreamWriter (FS, registryFileEncoding);
+			SW = new StreamWriter (FS, RDGenerics.GetEncoding (SupportedEncodings.Unicode16));
 
 			// Запись
 			SW.WriteLine ("Windows Registry Editor Version 5.00");

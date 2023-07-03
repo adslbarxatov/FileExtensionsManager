@@ -14,7 +14,6 @@ namespace RD_AAOW
 		[STAThread]
 		public static void Main ()
 			{
-
 			// Инициализация
 			Application.EnableVisualStyles ();
 			Application.SetCompatibleTextRenderingDefault (false);

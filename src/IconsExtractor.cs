@@ -13,16 +13,16 @@ namespace RD_AAOW
 	public partial class IconsExtractor: Form
 		{
 		// Константы
-		private const uint iconPositionWidth = 35;      // Ширина поля иконки
-		private const uint iconHeight = 32;             // Высота иконки
-		private const uint iconPositionHeight = 48;     // Высота поля иконки
-		private const uint iconsHorizontalCount = 20;   // Количество иконок в строке
-		private const uint iconsVerticalCount = 10;     // Количество иконок в столбце
+		private const uint iconPositionWidth = 35;		// Ширина поля иконки
+		private const uint iconHeight = 32;				// Высота иконки
+		private const uint iconPositionHeight = 48;		// Высота поля иконки
+		private const uint iconsHorizontalCount = 20;	// Количество иконок в строке
+		private const uint iconsVerticalCount = 10;		// Количество иконок в столбце
 
 		// Переменные
-		private Bitmap iconsView;           // Конечная страница с иконками
-		private UInt32 iconsCount;          // Количество найденных иконок
-		private bool allowExit = true;      // Флаг разрешения закрытия окна
+		private Bitmap iconsView;			// Конечная страница с иконками
+		private UInt32 iconsCount;			// Количество найденных иконок
+		private bool allowExit = true;		// Флаг разрешения закрытия окна
 
 		private Brush selectionBrush = new SolidBrush (Color.FromArgb (128, 255, 255, 0));  // Кисть для выбранной иконки
 
@@ -36,8 +36,8 @@ namespace RD_AAOW
 				return selectedIconNumber;
 				}
 			}
-		private int selectedIconNumber = -1;    // Выбранная иконка
-		private decimal currentPage = 0;        // Страница, на которой она расположена
+		private int selectedIconNumber = -1;	// Выбранная иконка
+		private decimal currentPage = 0;		// Страница, на которой она расположена
 
 		/// <summary>
 		/// Возвращает путь к файлу, в котором содержится выбранная иконка
@@ -82,10 +82,10 @@ namespace RD_AAOW
 			MainPicture.Width = (int)(iconPositionWidth * iconsHorizontalCount + 4);
 			MainPicture.Height = (int)(iconPositionHeight * iconsVerticalCount + 4);
 
-			this.Width = MainPicture.Width + 30;
-			this.Height = MainPicture.Height + 80;
+			this.Width = MainPicture.Width + 40;
+			this.Height = MainPicture.Height + 90;
 
-			PageNumber.Top = PageLabel.Top = TotalLabel.Top = SelectButton.Top = AbortButton.Top = this.Height - 60;
+			PageNumber.Top = PageLabel.Top = TotalLabel.Top = SelectButton.Top = AbortButton.Top = this.Height - 70;
 			TotalLabel.Left = MainPicture.Left + MainPicture.Width - TotalLabel.Width;
 
 			SelectButton.Left = this.Width / 2 - SelectButton.Width - 6;

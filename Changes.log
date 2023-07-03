@@ -4,7 +4,7 @@ Version 2.3.7:
 • Added UTF32 encoding;
 • Fixed incorrect detection of entries application for x64 systems;
 • .reb file format replaced with .reu with UTF8 text encoding;
-• Windows: the interface was adapted to Windows 10, incorrect window borders were fixed
+• The interface was adapted to Windows 10, incorrect window borders were fixed
 
 Version 2.3.5:
 • Cumulative updates have been applied

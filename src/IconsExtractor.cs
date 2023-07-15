@@ -12,19 +12,32 @@ namespace RD_AAOW
 	/// </summary>
 	public partial class IconsExtractor: Form
 		{
-		// Константы
-		private const uint iconPositionWidth = 35;		// Ширина поля иконки
-		private const uint iconHeight = 32;				// Высота иконки
-		private const uint iconPositionHeight = 48;		// Высота поля иконки
-		private const uint iconsHorizontalCount = 20;	// Количество иконок в строке
-		private const uint iconsVerticalCount = 10;		// Количество иконок в столбце
+		// Ширина поля иконки
+		private const uint iconPositionWidth = 35;
 
-		// Переменные
-		private Bitmap iconsView;			// Конечная страница с иконками
-		private UInt32 iconsCount;			// Количество найденных иконок
-		private bool allowExit = true;		// Флаг разрешения закрытия окна
+		// Высота иконки
+		private const uint iconHeight = 32;
 
-		private Brush selectionBrush = new SolidBrush (Color.FromArgb (128, 255, 255, 0));  // Кисть для выбранной иконки
+		// Высота поля иконки
+		private const uint iconPositionHeight = 48;
+
+		// Количество иконок в строке
+		private const uint iconsHorizontalCount = 20;
+
+		// Количество иконок в столбце
+		private const uint iconsVerticalCount = 10;
+
+		// Конечная страница с иконками
+		private Bitmap iconsView;
+
+		// Количество найденных иконок
+		private UInt32 iconsCount;
+
+		// Флаг разрешения закрытия окна
+		private bool allowExit = true;
+
+		// Кисть для выбранной иконки
+		private Brush selectionBrush = new SolidBrush (Color.FromArgb (128, 255, 255, 0));
 
 		/// <summary>
 		/// Возвращает номер выбранной иконки, начиная с 0, или -1, если иконка не была выбрана
@@ -36,8 +49,8 @@ namespace RD_AAOW
 				return selectedIconNumber;
 				}
 			}
-		private int selectedIconNumber = -1;	// Выбранная иконка
-		private decimal currentPage = 0;		// Страница, на которой она расположена
+		private int selectedIconNumber = -1;    // Выбранная иконка
+		private decimal currentPage = 0;        // Страница, на которой она расположена
 
 		/// <summary>
 		/// Возвращает путь к файлу, в котором содержится выбранная иконка
@@ -114,7 +127,7 @@ namespace RD_AAOW
 			iconsCount = ExtractIconExA (OFDialog.FileName, -1, ref bigIcon, ref smallIcon, 1);
 			if (iconsCount == 0)
 				{
-				RDGenerics.MessageBox (RDMessageTypes.Information,
+				RDGenerics.MessageBox (RDMessageTypes.Information_Center,
 					string.Format (Localization.GetText ("IconsNotFound"), OFDialog.FileName));
 				this.Close ();
 				return;

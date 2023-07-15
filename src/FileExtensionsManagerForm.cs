@@ -63,8 +63,8 @@ namespace RD_AAOW
 
 			if (rebm.Count == 0)
 				{
-				RDGenerics.MessageBox (RDMessageTypes.Information,
-					Localization.GetText ("BasesNotFound") + "\n\n" + Localization.GetText ("NewBaseAdded"));
+				RDGenerics.MessageBox (RDMessageTypes.Information_Left,
+					Localization.GetText ("BasesNotFound") + ".\n\n" + Localization.GetText ("NewBaseAdded"));
 
 				RegistryEntriesBaseManager re = new RegistryEntriesBaseManager ();
 
@@ -157,7 +157,7 @@ namespace RD_AAOW
 
 		private void FileExtensionsManagerForm_FormClosing (object sender, FormClosingEventArgs e)
 			{
-			RDMessageButtons res = RDGenerics.LocalizedMessageBox (RDMessageTypes.Question,
+			RDMessageButtons res = RDGenerics.LocalizedMessageBox (RDMessageTypes.Question_Center,
 				"SaveBasesMessage", LzDefaultTextValues.Button_Yes, LzDefaultTextValues.Button_No,
 				LzDefaultTextValues.Button_Cancel);
 
@@ -180,8 +180,8 @@ namespace RD_AAOW
 			if (MainTable.SelectedRows.Count <= 0)
 				return;
 
-			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Question, "RemoveEntry",
-				LzDefaultTextValues.Button_Yes, LzDefaultTextValues.Button_No) != RDMessageButtons.ButtonOne)
+			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Question_Center, "RemoveEntry",
+				LzDefaultTextValues.Button_YesNoFocus, LzDefaultTextValues.Button_No) != RDMessageButtons.ButtonOne)
 				return;
 
 			// Удаление
@@ -211,7 +211,7 @@ namespace RD_AAOW
 			if (MainTable.SelectedRows.Count <= 0)
 				return;
 
-			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Question, "ApplyEntry",
+			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Question_Center, "ApplyEntry",
 				LzDefaultTextValues.Button_Yes, LzDefaultTextValues.Button_No) !=
 				RDMessageButtons.ButtonOne)
 				return;
@@ -234,7 +234,7 @@ namespace RD_AAOW
 					}
 
 				if (!string.IsNullOrWhiteSpace (msg))
-					RDGenerics.MessageBox (RDMessageTypes.Warning, msg);
+					RDGenerics.MessageBox (RDMessageTypes.Warning_Center, msg);
 				}
 
 			// Обновление таблицы
@@ -247,12 +247,12 @@ namespace RD_AAOW
 		private void ApplyAll_Click (object sender, EventArgs e)
 			{
 			// Контроль
-			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning, "ApplyAllEntries",
+			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning_Center, "ApplyAllEntries",
 				LzDefaultTextValues.Button_YesNoFocus, LzDefaultTextValues.Button_No) !=
 				RDMessageButtons.ButtonOne)
 				return;
 
-			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning, "ApplyAllEntries2",
+			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning_Center, "ApplyAllEntries2",
 				LzDefaultTextValues.Button_Yes, LzDefaultTextValues.Button_No) !=
 				RDMessageButtons.ButtonTwo)
 				return;
@@ -260,7 +260,7 @@ namespace RD_AAOW
 			// Применение записей
 			uint res = rebm[BasesCombo.SelectedIndex].ApplyAllEntries ();
 
-			RDGenerics.MessageBox (RDMessageTypes.Success,
+			RDGenerics.MessageBox (RDMessageTypes.Success_Center,
 				string.Format (Localization.GetText ("EntriesApplied"), res,
 				rebm[BasesCombo.SelectedIndex].EntriesCount));
 
@@ -284,7 +284,7 @@ namespace RD_AAOW
 			// Загрузка
 			uint res = rebm[BasesCombo.SelectedIndex].LoadRegistryFile (OFDialog.FileName);
 
-			RDGenerics.MessageBox (RDMessageTypes.Success,
+			RDGenerics.MessageBox (RDMessageTypes.Success_Center,
 				Localization.GetText ("EntriesAdded") + res.ToString ());
 
 			// Обновление таблицы
@@ -405,7 +405,7 @@ namespace RD_AAOW
 			{
 			RegistryEntriesBaseManager re = new RegistryEntriesBaseManager ();
 
-			RDGenerics.LocalizedMessageBox (RDMessageTypes.Success, "NewBaseAdded");
+			RDGenerics.LocalizedMessageBox (RDMessageTypes.Success_Center, "NewBaseAdded");
 			}
 
 		// Запрос справки

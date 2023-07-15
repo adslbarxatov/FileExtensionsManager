@@ -67,7 +67,7 @@ namespace RD_AAOW
 			if (FileExtension.Text.Length * FileTypeName.Text.Length * FileIcon.Text.Length *
 				FileApplication.Text.Length == 0)
 				{
-				RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning, "SomeFieldsAreEmpty");
+				RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning_Center, "SomeFieldsAreEmpty");
 				return;
 				}
 
@@ -78,7 +78,7 @@ namespace RD_AAOW
 				{
 				if (FileExtension.Text.Contains (c[i].ToString ()))
 					{
-					RDGenerics.MessageBox (RDMessageTypes.Warning,
+					RDGenerics.MessageBox (RDMessageTypes.Warning_Center,
 						string.Format (Localization.GetText ("UnsupportedCharacter"), c[i].ToString ()));
 					return;
 					}
@@ -108,7 +108,7 @@ namespace RD_AAOW
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text +
 					"file\\shell\\open\\command", "", "\"" + FileApplication.Text + "\" \"%1\"")))
 				{
-				RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning, "ExtensionRegFailed");
+				RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning_Center, "ExtensionRegFailed");
 				return;
 				}
 

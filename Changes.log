@@ -1,5 +1,9 @@
 File extensions manager: changes log
 
+Version 2.4:
+• Rewritten settings operator: it should fix problems with requiring administrator rights;
+• Updated the interface of message boxes
+
 Version 2.3.7:
 • Added UTF32 encoding;
 • Fixed incorrect detection of entries application for x64 systems;

@@ -27,6 +27,9 @@ namespace RD_AAOW
 			{
 			// Настройка контролов
 			this.Text = ProgramDescription.AssemblyTitle;
+			if (!RDGenerics.IsRegistryAccessible)
+				this.Text += Localization.GetDefaultText (LzDefaultTextValues.Message_LimitedFunctionality);
+
 			RDGenerics.LoadWindowDimensions (this);
 
 			LanguageCombo.Items.AddRange (Localization.LanguagesNames);
@@ -64,7 +67,8 @@ namespace RD_AAOW
 			if (rebm.Count == 0)
 				{
 				RDGenerics.MessageBox (RDMessageTypes.Information_Left,
-					Localization.GetText ("BasesNotFound") + ".\n\n" + Localization.GetText ("NewBaseAdded"));
+					Localization.GetText ("BasesNotFound") + "." + Localization.RNRN +
+					Localization.GetText ("NewBaseAdded"));
 
 				RegistryEntriesBaseManager re = new RegistryEntriesBaseManager ();
 
@@ -315,7 +319,10 @@ namespace RD_AAOW
 				return;
 
 			// Выполнение
-			rebm[BasesCombo.SelectedIndex].SaveRegistryFile (SFDialog.FileName, idx);
+			if (!rebm[BasesCombo.SelectedIndex].SaveRegistryFile (SFDialog.FileName, idx))
+				RDGenerics.MessageBox (RDMessageTypes.Warning_Center,
+					Localization.GetFileProcessingMessage (SFDialog.FileName,
+					LzFileProcessingMessageTypes.Save_Failure));
 			}
 
 		// Добавление записи

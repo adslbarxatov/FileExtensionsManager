@@ -10,23 +10,32 @@ namespace RD_AAOW
 	/// </summary>
 	public class RegistryEntriesBaseManager
 		{
-		// Переменные и константы
-		private List<RegistryEntry> entries = new List<RegistryEntry> ();   // База реестровых записей
+		// База реестровых записей
+		private List<RegistryEntry> entries = new List<RegistryEntry> ();
 
-		/*private Encoding registryFileEncoding = Encoding.Unicode;*/
+		// Кодировка старого формата базы записей
 		private Encoding oldBaseFileEncoding = Encoding.GetEncoding (1251);
-		private string registryFileSplitter = "=";                      // Сплиттер параметра и значения в файле реестра
-		private char[] baseFileSplitters = new char[] { '\x1' };        // Сплиттер записей в базе
 
-		private bool changed = true;                            // Флаг указывает, что в базу были внесены изменения
-		private List<string> ebp = new List<string> ();         // Список представлений записей в базе
+		// Сплиттер параметра и значения в файле реестра
+		private string registryFileSplitter = "=";
+
+		// Сплиттер записей в базе
+		private char[] baseFileSplitters = new char[] { '\x1' };
+
+		// Флаг указывает, что в базу были внесены изменения
+		private bool changed = true;
+
+		// Список представлений записей в базе
+		private List<string> ebp = new List<string> ();
 		private List<RegistryEntryApplicationResults> esp = new List<RegistryEntryApplicationResults> ();
 
-		private FileStream FS = null;                           // Файловые дескрипторы
+		// Файловые дескрипторы
+		private FileStream FS = null;
 		private StreamReader SR = null;
 		private StreamWriter SW = null;
 
-		private const string newBaseFileName = "New base";      // Имя файла новой базы реестровых записей
+		// Имя файла новой базы реестровых записей
+		private const string newBaseFileName = "New base";
 
 		/// <summary>
 		/// Старое расширение имени файла базы реестровых записей
@@ -190,7 +199,7 @@ namespace RD_AAOW
 
 			// Запись
 			SW.Write (ProgramDescription.AssemblyTitle + "; timestamp: " +
-				DateTime.Now.ToString ("dd.MM.yyyy, HH:mm") + "\n");
+				DateTime.Now.ToString ("dd.MM.yyyy, HH:mm") + Localization.RN);
 
 			for (int i = 0; i < entries.Count; i++)
 				{
@@ -199,7 +208,7 @@ namespace RD_AAOW
 					entries[i].ValueObject + baseFileSplitters[0].ToString () +
 					((uint)(entries[i].ValueType)).ToString () + baseFileSplitters[0].ToString () +
 					(entries[i].PathMustBeDeleted ? "1" : "0") + baseFileSplitters[0].ToString () +
-					(entries[i].NameMustBeDeleted ? "1" : "0") + "\n");
+					(entries[i].NameMustBeDeleted ? "1" : "0") + Localization.RN);
 				}
 
 			// Завершено

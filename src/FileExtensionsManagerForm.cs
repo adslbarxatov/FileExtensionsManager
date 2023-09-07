@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -43,6 +44,11 @@ namespace RD_AAOW
 				}
 
 			MainTable.Columns.Add ("Entries", "Entries");
+			MainTable.ContextMenu = new ContextMenu (new MenuItem[] {
+				new MenuItem (EditRecord.Text, EditRecord_Click),
+				new MenuItem (Apply.Text, Apply_Click),
+				new MenuItem (DeleteRecord.Text, DeleteRecord_Click),
+				});
 
 			// Инициализация баз реестровых записей
 			if (Directory.Exists (RDGenerics.AppStartupPath + RegistryEntriesBaseManager.BasesSubdirectory))
@@ -70,7 +76,7 @@ namespace RD_AAOW
 					Localization.GetText ("BasesNotFound") + "." + Localization.RNRN +
 					Localization.GetText ("NewBaseAdded"));
 
-				RegistryEntriesBaseManager re = new RegistryEntriesBaseManager ();
+				RegistryEntriesBaseManager _ = new RegistryEntriesBaseManager ();
 
 				this.Close ();
 				return;
@@ -335,11 +341,11 @@ namespace RD_AAOW
 			if (MainTable.SelectedRows.Count > 0)
 				{
 				row = MainTable.SelectedRows[0].Index;
-				ree = new RegistryEntryEditor (rebm[BasesCombo.SelectedIndex].GetRegistryEntry ((uint)row));
+				ree = new RegistryEntryEditor (rebm[BasesCombo.SelectedIndex].GetRegistryEntry ((uint)row), true);
 				}
 			else
 				{
-				ree = new RegistryEntryEditor (new RegistryEntry ("HKEY_CLASSES_ROOT\\", "", ""));
+				ree = new RegistryEntryEditor (new RegistryEntry ("HKEY_CLASSES_ROOT\\", "", ""), true);
 				}
 
 			if (ree.Confirmed)
@@ -368,7 +374,7 @@ namespace RD_AAOW
 			// Редактирование
 			int row = MainTable.SelectedRows[0].Index;
 			RegistryEntryEditor ree = new RegistryEntryEditor
-				(rebm[BasesCombo.SelectedIndex].GetRegistryEntry ((uint)row));
+				(rebm[BasesCombo.SelectedIndex].GetRegistryEntry ((uint)row), false);
 			if (!ree.Confirmed)
 				return;
 
@@ -419,6 +425,14 @@ namespace RD_AAOW
 		private void GetHelp_Click (object sender, EventArgs e)
 			{
 			RDGenerics.ShowAbout (false);
+			}
+
+		// Вызов меню
+		private void MainTable_CellContextClick (object sender, DataGridViewCellMouseEventArgs e)
+			{
+			if (e.Button == MouseButtons.Right)
+				MainTable.ContextMenu.Show ((Control)sender, new Point (e.X,
+					e.Y + (e.RowIndex - MainTable.FirstDisplayedScrollingRowIndex) * MainTable.RowTemplate.Height));
 			}
 
 		// Просмотр иконок

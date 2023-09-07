@@ -36,7 +36,8 @@ namespace RD_AAOW
 		/// Конструктор. Запускает создание или редактирование записи
 		/// </summary>
 		/// <param name="Entry">Запись реестра</param>
-		public RegistryEntryEditor (RegistryEntry Entry)
+		/// <param name="New">Флаг режима создания новой записи</param>
+		public RegistryEntryEditor (RegistryEntry Entry, bool New)
 			{
 			// Инициализация
 			InitializeComponent ();
@@ -70,7 +71,8 @@ namespace RD_AAOW
 			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("REE_Title");
 
 			Localization.SetControlsText (this);
-			Apply.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Apply);
+			Apply.Text = Localization.GetDefaultText (New ? LzDefaultTextValues.Button_Add :
+				LzDefaultTextValues.Button_Apply);
 			Abort.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Cancel);
 
 			// Запуск

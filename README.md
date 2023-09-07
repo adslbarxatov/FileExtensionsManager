@@ -1,5 +1,5 @@
-# FileExtensionsManager v 2.4.6
-> PCC: 00055A1F5C1039A1
+# FileExtensionsManager v 2.5
+> PCC: 00056E1D4B809C5C
 
 
 

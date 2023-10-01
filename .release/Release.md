@@ -1,5 +1,4 @@
-_Changes for v 2.5_:
+_Changes for v 2.5.2_:
+- Updates and fixes have been applied to the update polling mechanism, as well as to other auxiliary functions;
 - Added a context menu for entries in all bases; it allows to edit, apply and remove associations in more comfortable way;
-- New identity has been applied;
-- Added the obvious URLs for videoguide and for text guide;
-- Implemented the access rights checker: it will test the availability of the Windows registry and the application placement for writing and notify user about possible problems
+- New identity has been applied

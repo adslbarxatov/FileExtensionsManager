@@ -1,12 +1,15 @@
-# FileExtensionsManager v 2.5.2
-> PCC: 00056F243201495A
+# FileExtensionsManager
 
-
+## Description
 
 A tool for managing Windows registry settings for file extensions.
 Detailed description of the app is now available on [its own page](https://adslbarxatov.github.io/FileExtensionsManager)
 
----
+&nbsp;
+
+
+
+## Описание
 
 Инструмент управления пользовательскими настройками расширений файлов в Windows.
 Подробное описание приложения теперь доступно на [отдельной странице](https://adslbarxatov.github.io/FileExtensionsManager/ru)

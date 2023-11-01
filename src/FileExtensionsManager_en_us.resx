@@ -204,17 +204,6 @@
   <data name="FileExtensionsManagerForm_BaseLabel" xml:space="preserve">
     <value>Current &amp;base:</value>
   </data>
-  <data name="HelpText" xml:space="preserve">
-    <value>Application allows you to store and apply custom settings for file extensions registered in the operating system. List of records displays registry mappings stored in currently selected base of records.
-
-Green indicates entries that already exist in Windows registry, blue indicates entries that partially correspond to user settings, and red indicates missing entries. If record is marked as deleted, then entries that are absent in registry are marked in green, otherwise they are marked in red. Presence of gray entries may indicate a lack of access to Windows registry.
-
-You can change the record by double-clicking on corresponding line, and add it using corresponding button. In both cases, information is edited in a special window, and their correctness is controlled by utility. You can also add entries from Windows registry file.
-
-You can apply entries one at a time or all at once (all that not applied). The “Exit” button saves all changes in all bases. If changes need to be undone, the application must be closed with a cross in the upper right corner of window.
-
-For now, utility only works with entries in registry branch HKEY_CLASSES_ROOT and only with parameter types REG_SZ, REG_DWORD, and REG_QWORD</value>
-  </data>
   <data name="IconsNotFound" xml:space="preserve">
     <value>File “{0:S}” contains no icons</value>
   </data>

@@ -1,5 +1,9 @@
 File extensions manager: changes log
 
+Version 2.5.3:
+• The offline quick help has been discontinued;
+• Completed the process of version control unification
+
 Version 2.5.2:
 • Updates and fixes have been applied to the update polling mechanism, as well as to other auxiliary functions
 

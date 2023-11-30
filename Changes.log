@@ -1,5 +1,9 @@
 File extensions manager: changes log
 
+Version 2.5.4:
+• App now sends the path of selected icon to the clipboard;
+• Added a new version of offline help
+
 Version 2.5.3:
 • The offline quick help has been discontinued;
 • Completed the process of version control unification

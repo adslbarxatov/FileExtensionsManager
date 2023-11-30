@@ -29,7 +29,7 @@ from Windows registry file.
 You can apply entries one at a time or all at once (all that not applied). The “Exit” button saves all changes in all bases.
 If changes need to be undone, the utility must be closed with a cross in the upper right corner of window.
 
-Version 1.3 adds quick registration of file extension. Registry entries are created in currently selected base that are
+The quick registration of file extensions is also available in the app. Registry entries are created in currently selected base that are
 necessary for correct mapping of the extension and the application for working with it. In addition, utility allows you to
 select an icon for the created file type using graphical interface. Function of icons viewing contained in executables,
 libraries, control panel components or icons is available from the main interface.

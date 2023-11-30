@@ -439,6 +439,9 @@ namespace RD_AAOW
 		private void FindIcon_Click (object sender, EventArgs e)
 			{
 			IconsExtractor ie = new IconsExtractor ();
+
+			if (ie.SelectedIconNumber >= 0)
+				RDGenerics.SendToClipboard (ie.SelectedIconFile + "," + ie.SelectedIconNumber.ToString ());
 			}
 
 		// Регистрация расширения

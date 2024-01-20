@@ -29,14 +29,14 @@ namespace RD_AAOW
 			// Настройка контролов
 			this.Text = ProgramDescription.AssemblyTitle;
 			if (!RDGenerics.IsRegistryAccessible)
-				this.Text += Localization.GetDefaultText (LzDefaultTextValues.Message_LimitedFunctionality);
+				this.Text += RDLocale.GetDefaultText (RDLDefaultTexts.Message_LimitedFunctionality);
 
 			RDGenerics.LoadWindowDimensions (this);
 
-			LanguageCombo.Items.AddRange (Localization.LanguagesNames);
+			LanguageCombo.Items.AddRange (RDLocale.LanguagesNames);
 			try
 				{
-				LanguageCombo.SelectedIndex = (int)Localization.CurrentLanguage;
+				LanguageCombo.SelectedIndex = (int)RDLocale.CurrentLanguage;
 				}
 			catch
 				{
@@ -73,8 +73,8 @@ namespace RD_AAOW
 			if (rebm.Count == 0)
 				{
 				RDGenerics.MessageBox (RDMessageTypes.Information_Left,
-					Localization.GetText ("BasesNotFound") + "." + Localization.RNRN +
-					Localization.GetText ("NewBaseAdded"));
+					RDLocale.GetText ("BasesNotFound") + "." + RDLocale.RNRN +
+					RDLocale.GetText ("NewBaseAdded"));
 
 				RegistryEntriesBaseManager _ = new RegistryEntriesBaseManager ();
 
@@ -153,10 +153,10 @@ namespace RD_AAOW
 
 		private void UpdateResults ()
 			{
-			Applied.Text = Localization.GetText ("AppliedText") + applied.ToString ();
-			PartiallyApplied.Text = Localization.GetText ("PartiallyAppliedText") + partiallyApplied.ToString ();
-			NotApplied.Text = Localization.GetText ("NotAppliedText") + notApplied.ToString ();
-			NoAccess.Text = Localization.GetText ("NoAccessText") + noAccess.ToString ();
+			Applied.Text = RDLocale.GetText ("AppliedText") + applied.ToString ();
+			PartiallyApplied.Text = RDLocale.GetText ("PartiallyAppliedText") + partiallyApplied.ToString ();
+			NotApplied.Text = RDLocale.GetText ("NotAppliedText") + notApplied.ToString ();
+			NoAccess.Text = RDLocale.GetText ("NoAccessText") + noAccess.ToString ();
 			}
 
 		// Выход из программы
@@ -168,8 +168,8 @@ namespace RD_AAOW
 		private void FileExtensionsManagerForm_FormClosing (object sender, FormClosingEventArgs e)
 			{
 			RDMessageButtons res = RDGenerics.LocalizedMessageBox (RDMessageTypes.Question_Center,
-				"SaveBasesMessage", LzDefaultTextValues.Button_Yes, LzDefaultTextValues.Button_No,
-				LzDefaultTextValues.Button_Cancel);
+				"SaveBasesMessage", RDLDefaultTexts.Button_Yes, RDLDefaultTexts.Button_No,
+				RDLDefaultTexts.Button_Cancel);
 
 			// Сохранение баз
 			if (res == RDMessageButtons.ButtonOne)
@@ -191,7 +191,7 @@ namespace RD_AAOW
 				return;
 
 			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Question_Center, "RemoveEntry",
-				LzDefaultTextValues.Button_YesNoFocus, LzDefaultTextValues.Button_No) != RDMessageButtons.ButtonOne)
+				RDLDefaultTexts.Button_YesNoFocus, RDLDefaultTexts.Button_No) != RDMessageButtons.ButtonOne)
 				return;
 
 			// Удаление
@@ -222,7 +222,7 @@ namespace RD_AAOW
 				return;
 
 			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Question_Center, "ApplyEntry",
-				LzDefaultTextValues.Button_Yes, LzDefaultTextValues.Button_No) !=
+				RDLDefaultTexts.Button_Yes, RDLDefaultTexts.Button_No) !=
 				RDMessageButtons.ButtonOne)
 				return;
 
@@ -234,12 +234,12 @@ namespace RD_AAOW
 					((uint)MainTable.SelectedRows[i].Index).ApplyEntry ())
 					{
 					case RegistryEntryApplicationResults.CannotGetAccess:
-						msg = Localization.GetText ("EntryIsUnavailable");
+						msg = RDLocale.GetText ("EntryIsUnavailable");
 						break;
 
 					case RegistryEntryApplicationResults.PartiallyApplied:
 					case RegistryEntryApplicationResults.NotApplied:
-						msg = Localization.GetText ("EntryNotApplied");
+						msg = RDLocale.GetText ("EntryNotApplied");
 						break;
 					}
 
@@ -258,12 +258,12 @@ namespace RD_AAOW
 			{
 			// Контроль
 			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning_Center, "ApplyAllEntries",
-				LzDefaultTextValues.Button_YesNoFocus, LzDefaultTextValues.Button_No) !=
+				RDLDefaultTexts.Button_YesNoFocus, RDLDefaultTexts.Button_No) !=
 				RDMessageButtons.ButtonOne)
 				return;
 
 			if (RDGenerics.LocalizedMessageBox (RDMessageTypes.Warning_Center, "ApplyAllEntries2",
-				LzDefaultTextValues.Button_Yes, LzDefaultTextValues.Button_No) !=
+				RDLDefaultTexts.Button_Yes, RDLDefaultTexts.Button_No) !=
 				RDMessageButtons.ButtonTwo)
 				return;
 
@@ -271,7 +271,7 @@ namespace RD_AAOW
 			uint res = rebm[BasesCombo.SelectedIndex].ApplyAllEntries ();
 
 			RDGenerics.MessageBox (RDMessageTypes.Success_Center,
-				string.Format (Localization.GetText ("EntriesApplied"), res,
+				string.Format (RDLocale.GetText ("EntriesApplied"), res,
 				rebm[BasesCombo.SelectedIndex].EntriesCount));
 
 			// Обновление таблицы
@@ -295,7 +295,7 @@ namespace RD_AAOW
 			uint res = rebm[BasesCombo.SelectedIndex].LoadRegistryFile (OFDialog.FileName);
 
 			RDGenerics.MessageBox (RDMessageTypes.Success_Center,
-				Localization.GetText ("EntriesAdded") + res.ToString ());
+				RDLocale.GetText ("EntriesAdded") + res.ToString ());
 
 			// Обновление таблицы
 			int row = 0;
@@ -327,8 +327,10 @@ namespace RD_AAOW
 			// Выполнение
 			if (!rebm[BasesCombo.SelectedIndex].SaveRegistryFile (SFDialog.FileName, idx))
 				RDGenerics.MessageBox (RDMessageTypes.Warning_Center,
-					Localization.GetFileProcessingMessage (SFDialog.FileName,
-					LzFileProcessingMessageTypes.Save_Failure));
+					/*Localization.GetFileProcessingMessage (SFDialog.FileName,
+					LzFileProcessingMessageTypes.Save_Failure)*/
+					string.Format (RDLocale.GetDefaultText (RDLDefaultTexts.Message_SaveFailure_Fmt),
+					SFDialog.FileName));
 			}
 
 		// Добавление записи
@@ -456,17 +458,17 @@ namespace RD_AAOW
 		private void LanguageCombo_SelectedIndexChanged (object sender, EventArgs e)
 			{
 			// Сохранение языка
-			Localization.CurrentLanguage = (SupportedLanguages)LanguageCombo.SelectedIndex;
+			RDLocale.CurrentLanguage = (RDLanguages)LanguageCombo.SelectedIndex;
 
 			// Локализация
-			OFDialog.Title = SFDialog.Title = Localization.GetText ("FEMF_OFDialogTitle");
-			OFDialog.Filter = SFDialog.Filter = Localization.GetText ("FEMF_OFDialogFilter");
+			OFDialog.Title = SFDialog.Title = RDLocale.GetText ("FEMF_OFDialogTitle");
+			OFDialog.Filter = SFDialog.Filter = RDLocale.GetText ("FEMF_OFDialogFilter");
 
-			Localization.SetControlsText (this);
-			Localization.SetControlsText (ButtonsPanel);
-			AddRecord.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Add);
-			EditRecord.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Edit);
-			Exit.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Exit);
+			RDLocale.SetControlsText (this);
+			RDLocale.SetControlsText (ButtonsPanel);
+			AddRecord.Text = RDLocale.GetDefaultText (RDLDefaultTexts.Button_Add);
+			EditRecord.Text = RDLocale.GetDefaultText (RDLDefaultTexts.Button_Edit);
+			Exit.Text = RDLocale.GetDefaultText (RDLDefaultTexts.Button_Exit);
 
 			UpdateResults ();
 			}

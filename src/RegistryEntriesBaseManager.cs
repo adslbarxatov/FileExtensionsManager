@@ -105,7 +105,7 @@ namespace RD_AAOW
 					{
 					FS = new FileStream (RDGenerics.AppStartupPath + BasesSubdirectory + "\\"
 						+ baseName + NewBaseFileExtension, FileMode.Open);
-					SR = new StreamReader (FS, RDGenerics.GetEncoding (SupportedEncodings.UTF8));
+					SR = new StreamReader (FS, RDGenerics.GetEncoding (RDEncodings.UTF8));
 					}
 				catch
 					{
@@ -195,11 +195,11 @@ namespace RD_AAOW
 				{
 				return false;
 				}
-			SW = new StreamWriter (FS, RDGenerics.GetEncoding (SupportedEncodings.UTF8));
+			SW = new StreamWriter (FS, RDGenerics.GetEncoding (RDEncodings.UTF8));
 
 			// Запись
 			SW.Write (ProgramDescription.AssemblyTitle + "; timestamp: " +
-				DateTime.Now.ToString ("dd.MM.yyyy, HH:mm") + Localization.RN);
+				DateTime.Now.ToString ("dd.MM.yyyy, HH:mm") + RDLocale.RN);
 
 			for (int i = 0; i < entries.Count; i++)
 				{
@@ -208,7 +208,7 @@ namespace RD_AAOW
 					entries[i].ValueObject + baseFileSplitters[0].ToString () +
 					((uint)(entries[i].ValueType)).ToString () + baseFileSplitters[0].ToString () +
 					(entries[i].PathMustBeDeleted ? "1" : "0") + baseFileSplitters[0].ToString () +
-					(entries[i].NameMustBeDeleted ? "1" : "0") + Localization.RN);
+					(entries[i].NameMustBeDeleted ? "1" : "0") + RDLocale.RN);
 				}
 
 			// Завершено
@@ -336,7 +336,7 @@ namespace RD_AAOW
 				{
 				return 0;
 				}
-			SR = new StreamReader (FS, RDGenerics.GetEncoding (SupportedEncodings.Unicode16));
+			SR = new StreamReader (FS, RDGenerics.GetEncoding (RDEncodings.Unicode16));
 
 			// Контроль состава файла
 			string s = SR.ReadLine ().ToLower (), s2;
@@ -432,7 +432,7 @@ namespace RD_AAOW
 				{
 				return false;
 				}
-			SW = new StreamWriter (FS, RDGenerics.GetEncoding (SupportedEncodings.Unicode16));
+			SW = new StreamWriter (FS, RDGenerics.GetEncoding (RDEncodings.Unicode16));
 
 			// Запись
 			SW.WriteLine ("Windows Registry Editor Version 5.00");

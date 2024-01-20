@@ -1,5 +1,8 @@
 File extensions manager: changes log
 
+Version 2.6:
+• Core updates have been applied
+
 Version 2.5.4:
 • App now sends the path of selected icon to the clipboard;
 • Added a new version of offline help

@@ -19,7 +19,7 @@ namespace RD_AAOW
 			Application.SetCompatibleTextRenderingDefault (false);
 
 			// Язык интерфейса и контроль XPUN
-			if (!Localization.IsXPUNClassAcceptable)
+			if (!RDLocale.IsXPUNClassAcceptable)
 				return;
 
 			// Проверка запуска единственной копии

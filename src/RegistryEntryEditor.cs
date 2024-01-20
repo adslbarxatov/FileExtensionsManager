@@ -49,11 +49,11 @@ namespace RD_AAOW
 
 			// Настройка контролов
 			KeyType.Items.Add (RegistryValueTypes.REG_SZ.ToString () +
-				Localization.GetText ("RegistryValue_String"));
+				RDLocale.GetText ("RegistryValue_String"));
 			KeyType.Items.Add (RegistryValueTypes.REG_DWORD.ToString () +
-				Localization.GetText ("RegistryValue_Int32"));
+				RDLocale.GetText ("RegistryValue_Int32"));
 			KeyType.Items.Add (RegistryValueTypes.REG_QWORD.ToString () +
-				Localization.GetText ("RegistryValue_Int64"));
+				RDLocale.GetText ("RegistryValue_Int64"));
 
 			if ((int)editedEntry.ValueType < KeyType.Items.Count)
 				KeyType.Text = KeyType.Items[(int)editedEntry.ValueType].ToString ();
@@ -68,12 +68,12 @@ namespace RD_AAOW
 			NameMustBeDeleted.Checked = editedEntry.NameMustBeDeleted;
 
 			// Локализация
-			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("REE_Title");
+			this.Text = ProgramDescription.AssemblyTitle + RDLocale.GetText ("REE_Title");
 
-			Localization.SetControlsText (this);
-			Apply.Text = Localization.GetDefaultText (New ? LzDefaultTextValues.Button_Add :
-				LzDefaultTextValues.Button_Apply);
-			Abort.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Cancel);
+			RDLocale.SetControlsText (this);
+			Apply.Text = RDLocale.GetDefaultText (New ? RDLDefaultTexts.Button_Add :
+				RDLDefaultTexts.Button_Apply);
+			Abort.Text = RDLocale.GetDefaultText (RDLDefaultTexts.Button_Cancel);
 
 			// Запуск
 			this.ShowDialog ();

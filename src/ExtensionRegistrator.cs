@@ -37,18 +37,18 @@ namespace RD_AAOW
 			this.AcceptButton = Apply;
 			this.CancelButton = Abort;
 
-			OFDialog.Title = Localization.GetText ("ER_OFDialogText");
-			OFDialog.Filter = Localization.GetText ("ER_OFDialogFilter");
+			OFDialog.Title = RDLocale.GetText ("ER_OFDialogText");
+			OFDialog.Filter = RDLocale.GetText ("ER_OFDialogFilter");
 
 			// Сохранение параметров
 			rebm = Manager;
 
 			// Настройка контролов
-			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("ER_Title");
+			this.Text = ProgramDescription.AssemblyTitle + RDLocale.GetText ("ER_Title");
 
-			Localization.SetControlsText (this);
-			Apply.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Apply);
-			Abort.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Cancel);
+			RDLocale.SetControlsText (this);
+			Apply.Text = RDLocale.GetDefaultText (RDLDefaultTexts.Button_Apply);
+			Abort.Text = RDLocale.GetDefaultText (RDLDefaultTexts.Button_Cancel);
 
 			// Запуск
 			this.ShowDialog ();
@@ -79,7 +79,7 @@ namespace RD_AAOW
 				if (FileExtension.Text.Contains (c[i].ToString ()))
 					{
 					RDGenerics.MessageBox (RDMessageTypes.Warning_Center,
-						string.Format (Localization.GetText ("UnsupportedCharacter"), c[i].ToString ()));
+						string.Format (RDLocale.GetText ("UnsupportedCharacter"), c[i].ToString ()));
 					return;
 					}
 				}
@@ -99,7 +99,7 @@ namespace RD_AAOW
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell", "",
 					"open")) ||
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open",
-					"", Localization.GetDefaultText (LzDefaultTextValues.Button_Open))) ||
+					"", RDLocale.GetDefaultText (RDLDefaultTexts.Button_Open))) ||
 				!rebm.AddEntry (new RegistryEntry ("HKEY_CLASSES_ROOT\\" + FileExtension.Text + "file\\shell\\open",
 					"Icon",
 				((IconsExtractor.GetIconsCount (FileApplication.Text) == 0) ? selectedIconFile :

@@ -89,8 +89,8 @@ namespace RD_AAOW
 			this.CancelButton = AbortButton;
 
 			// Настройка контролов
-			OFDialog.Title = Localization.GetText ("IE_OFDialogTitle");
-			OFDialog.Filter = Localization.GetText ("IE_OFDialogFilter");
+			OFDialog.Title = RDLocale.GetText ("IE_OFDialogTitle");
+			OFDialog.Filter = RDLocale.GetText ("IE_OFDialogFilter");
 
 			MainPicture.Width = (int)(iconPositionWidth * iconsHorizontalCount + 4);
 			MainPicture.Height = (int)(iconPositionHeight * iconsVerticalCount + 4);
@@ -104,11 +104,11 @@ namespace RD_AAOW
 			SelectButton.Left = this.Width / 2 - SelectButton.Width - 6;
 			AbortButton.Left = this.Width / 2 + 6;
 
-			AbortButton.Text = Localization.GetDefaultText (LzDefaultTextValues.Button_Cancel);
-			PageLabel.Text = Localization.GetText ("IE_PageLabel");
+			AbortButton.Text = RDLocale.GetDefaultText (RDLDefaultTexts.Button_Cancel);
+			PageLabel.Text = RDLocale.GetText ("IE_PageLabel");
 
 			// Запуск
-			this.Text = ProgramDescription.AssemblyTitle + Localization.GetText ("IE_Title");
+			this.Text = ProgramDescription.AssemblyTitle + RDLocale.GetText ("IE_Title");
 			this.ShowDialog ();
 			}
 
@@ -128,7 +128,7 @@ namespace RD_AAOW
 			if (iconsCount == 0)
 				{
 				RDGenerics.MessageBox (RDMessageTypes.Information_Center,
-					string.Format (Localization.GetText ("IconsNotFound"), OFDialog.FileName));
+					string.Format (RDLocale.GetText ("IconsNotFound"), OFDialog.FileName));
 				this.Close ();
 				return;
 				}
@@ -170,7 +170,7 @@ namespace RD_AAOW
 			MainPicture.BackgroundImage = (Bitmap)iconsView.Clone ();
 			PageNumber.Maximum = Math.Ceiling ((decimal)iconsCount /
 				((decimal)iconsVerticalCount * (decimal)iconsHorizontalCount));
-			TotalLabel.Text = Localization.GetText ("IE_TotalLabelText") + iconsCount.ToString ();
+			TotalLabel.Text = RDLocale.GetText ("IE_TotalLabelText") + iconsCount.ToString ();
 			allowExit = false;
 			this.Activate ();
 			}
@@ -208,7 +208,7 @@ namespace RD_AAOW
 			if (selectedNumber < iconsCount)
 				{
 				SelectButton.Enabled = true;
-				SelectButton.Text = Localization.GetText ("IE_SelectButtonText") + selectedNumber.ToString ();
+				SelectButton.Text = RDLocale.GetText ("IE_SelectButtonText") + selectedNumber.ToString ();
 
 				selectedIconNumber = (int)selectedNumber;
 				currentPage = PageNumber.Value;

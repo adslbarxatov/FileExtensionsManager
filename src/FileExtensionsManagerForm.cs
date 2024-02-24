@@ -327,8 +327,6 @@ namespace RD_AAOW
 			// Выполнение
 			if (!rebm[BasesCombo.SelectedIndex].SaveRegistryFile (SFDialog.FileName, idx))
 				RDGenerics.MessageBox (RDMessageTypes.Warning_Center,
-					/*Localization.GetFileProcessingMessage (SFDialog.FileName,
-					LzFileProcessingMessageTypes.Save_Failure)*/
 					string.Format (RDLocale.GetDefaultText (RDLDefaultTexts.Message_SaveFailure_Fmt),
 					SFDialog.FileName));
 			}

@@ -1,5 +1,10 @@
 File extensions manager: changes log
 
+Version 2.6.5:
+• Updated HypeHelp and Updates checker mechanics: this should fix apps freezing immediately
+  after launch (on some PCs);
+• Updated the HypeHelp links list
+
 Version 2.6.2:
 • Update for XPUN has been applied
 

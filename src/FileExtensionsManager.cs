@@ -26,6 +26,10 @@ namespace RD_AAOW
 			if (!RDGenerics.IsAppInstanceUnique (true))
 				return;
 
+			// Контроль разрешений
+			if (!RDGenerics.AppHasAccessRights (true, false))
+				return;
+
 			// Отображение справки и запроса на принятие Политики
 			if (!RDGenerics.AcceptEULA ())
 				return;

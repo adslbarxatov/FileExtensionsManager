@@ -28,8 +28,8 @@ namespace RD_AAOW
 			{
 			// Настройка контролов
 			this.Text = ProgramDescription.AssemblyTitle;
-			if (!RDGenerics.IsRegistryAccessible)
-				this.Text += RDLocale.GetDefaultText (RDLDefaultTexts.Message_LimitedFunctionality);
+			/*if (!RDGenerics.IsRegistryAccessible)
+				this.Text += RDLocale.GetDefaultText (RDLDefaultTexts.Message_LimitedFunctionality);*/
 
 			RDGenerics.LoadWindowDimensions (this);
 

@@ -28,9 +28,6 @@ namespace RD_AAOW
 			{
 			// Настройка контролов
 			this.Text = ProgramDescription.AssemblyTitle;
-			/*if (!RDGenerics.IsRegistryAccessible)
-				this.Text += RDLocale.GetDefaultText (RDLDefaultTexts.Message_LimitedFunctionality);*/
-
 			RDGenerics.LoadWindowDimensions (this);
 
 			LanguageCombo.Items.AddRange (RDLocale.LanguagesNames);
@@ -441,7 +438,7 @@ namespace RD_AAOW
 			IconsExtractor ie = new IconsExtractor ();
 
 			if (ie.SelectedIconNumber >= 0)
-				RDGenerics.SendToClipboard (ie.SelectedIconFile + "," + ie.SelectedIconNumber.ToString ());
+				RDGenerics.SendToClipboard (ie.SelectedIconFile + "," + ie.SelectedIconNumber.ToString (), true);
 			}
 
 		// Регистрация расширения

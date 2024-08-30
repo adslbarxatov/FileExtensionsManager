@@ -4,7 +4,8 @@
 
 A tool for managing Windows registry settings for file extensions.
 
-Detailed description of the app is available on [its own page](https://adslbarxatov.github.io/FileExtensionsManager).
+:warning: ***This project has been replaced with the [File associations manager](https://adslbarxatov.github.io/FileAssociationsManager).
+This repository will no longer receive updates***
 
 ---
 
@@ -19,7 +20,8 @@ By starting to work with this product, you fully agree with this Policy and acce
 
 Инструмент управления пользовательскими настройками расширений файлов в Windows.
 
-Подробное описание приложения доступно на [отдельной странице](https://adslbarxatov.github.io/FileExtensionsManager/ru).
+:warning: ***Проект заменён инструментом [File associations manager](https://adslbarxatov.github.io/FileAssociationsManager/ru).
+Данный репозиторий более не будет получать обновления***
 
 ---
 

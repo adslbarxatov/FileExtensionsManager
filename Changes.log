@@ -1,5 +1,9 @@
 File extensions manager: changes log
 
+Version 2.7:
+• The new identity has been applied;
+• The .reb file format has been deprecated
+
 Version 2.6.9:
 • The “App about” interface has been updated
 
